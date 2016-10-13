@@ -5,13 +5,13 @@ const tmcApi = require('app-modules/utils/tmc-api');
 const points = require('app-modules/utils/points');
 
 function groupByDateInterval({ dateGroups, value, getDate }) {
-  const unix = Math.round(+getDate(value) / 1000);
+  const timestamp = +getDate(value);
   const groupNames = Object.keys(dateGroups);
 
   for(let groupName in groupNames) {
     const [start, end] = dateGroups[groupName];
 
-    if(unix >= start && unix <= end) {
+    if(timestamp >= start && timestamp <= end) {
       return groupName;
     }
   }
@@ -97,17 +97,6 @@ function getUsersProgressData({ userId, courseId, query }, { cache = true } = {}
       starting: { value: _.random(5, 10) / 10, meta: {} }
     }
   });
-
-  const numberOfGroups = Object.keys(groups).length;
-
-  const groupSums = _.values(groups).reduce((sums, group) => {
-    Object.keys(group).forEach(key => {
-      sums[key] = sums[key] || 0;
-      sums[key] = sums[key] + group[key].value;
-    });
-
-    return sums;
-  }, {});
 
   return Promise.resolve({
     groups,

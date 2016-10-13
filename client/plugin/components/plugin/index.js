@@ -35,7 +35,7 @@ class Plugin extends React.Component {
     return (
       <div className={withClassPrefix('plugin')}>
         <PluginHeader>
-          {this.props.courseName}
+          My propgress in {this.props.courseName}
         </PluginHeader>
 
         <div className={withClassPrefix('divider')}></div>

@@ -23,11 +23,12 @@ export function getRadarChart({ points, name, average }) {
         gridLineInterpolation: 'polygon',
         lineWidth: 0,
         min: 0,
-        max: 10
+        max: 10,
+        tickInterval: 5
     },
     series: [
       {
-        name: 'Average',
+        name: 'My average',
         data: [average.starting * 10, average.exercises * 10, average.earliness * 10, average.scheduling * 10],
         color: CHART_SECONDARY_COLOR,
         fillOpacity: 0,

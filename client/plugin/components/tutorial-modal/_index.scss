@@ -48,6 +48,7 @@
   }
 
   &__footer {
+    border-top: 1px solid $colors__light-border;
     padding: $spacing;
   }
 }

@@ -43,7 +43,7 @@ class WeekSelector extends React.Component {
         <div className={withClassPrefix('week-selector__current')}>
           {this.props.label}
           <div className={withClassPrefix('week-selector__date-interval text-muted')}>
-            {moment(start * 1000).format(format)} - {moment(end * 1000).format(format)}
+            {moment.utc(start).format(format)} - {moment.utc(end).format(format)}
           </div>
         </div>
         {this.renderNext()}

@@ -1,4 +1,6 @@
 import pickBy from 'lodash.pickby';
+import mapValues from 'map-values';
+import moment from 'moment';
 
 import withClassPrefix from 'utils/class-prefix';
 import { OPEN_PAGE } from 'constants/actions';
@@ -17,7 +19,7 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
       throw new Error('Student dashboard already exists');
     }
 
-    const required = ['courseId', 'exerciseGroups', 'userId', 'accessToken'];
+    const required = ['courseId', 'courseName', 'exerciseGroups', 'userId', 'accessToken'];
 
     const notDefined = required
       .map(key => ({ key, value: options[key] }))
@@ -30,10 +32,17 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
 
     const { courseId, courseName, userId, accessToken } = options;
 
-    const exerciseGroups = pickBy(options.exerciseGroups, interval => {
+    const exerciseGroupsWithTimestamps = mapValues(options.exerciseGroups, interval => {
+      const [start, end] = interval;
+      const format = 'DD.MM.YYYY HH:mm';
+
+      return [+moment.utc(start, format).toDate(), +moment.utc(end, format).toDate()];
+    });
+
+    const exerciseGroups = pickBy(exerciseGroupsWithTimestamps, interval => {
       const [start, end] = interval;
 
-      const now = Math.floor(+(new Date()) / 1000);
+      const now = +new Date();
 
       return start <= now;
     });
@@ -45,7 +54,7 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
 
     for(let groupName of groupNames) {
       const [start, end] = exerciseGroups[groupName];
-      const now = Math.floor(+(new Date()) / 1000);
+      const now = +new Date();
 
       if(now >= start && now <= end) {
         activeGroup = groupName;
