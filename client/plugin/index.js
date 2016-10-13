@@ -16,6 +16,7 @@ import PluginLoader from 'components/plugin-loader';
 
 import syncStudentDashboardWithStore from 'utils/sync-student-dashboard-with-store';
 import withClassPrefix from 'utils/class-prefix';
+import { CLASS_PREFIX } from 'utils/class-prefix';
 
 highchartsMore(ReactHighcharts.Highcharts);
 
@@ -26,6 +27,7 @@ window.StudentDashboard = syncStudentDashboardWithStore(store, {
 function initialize() {
   const container = document.createElement('div');
 
+  container.setAttribute('id', `${CLASS_PREFIX}-plugin`)
   container.className = withClassPrefix('plugin-wrapper');
 
   document.querySelector('body').appendChild(container);

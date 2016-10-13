@@ -4,7 +4,6 @@
     var headTag = document.getElementsByTagName('head')[0];
     var scriptTag = document.createElement('script');
     var styleTag = document.createElement('link');
-    var iconStyleTag = document.createElement('link');
     var pendingEvents = 2;
     var loadedEvent = new Event('studentDashboardLoaded');
 
@@ -26,16 +25,11 @@
 
     bodyTag.appendChild(scriptTag);
     headTag.appendChild(styleTag);
-    headTag.appendChild(iconStyleTag);
 
     scriptTag.src = `${process.env.API_URL}/dist/js/plugin.min.js`;
 
     styleTag.setAttribute('rel', 'stylesheet');
 
     styleTag.href = `${process.env.API_URL}/dist/css/plugin.min.css`;
-
-    iconStyleTag.setAttribute('rel', 'stylesheet');
-
-    iconStyleTag.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
   });
 })();

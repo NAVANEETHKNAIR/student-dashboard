@@ -5,6 +5,8 @@ import withClassPrefix from 'utils/class-prefix';
 
 import { closePlugin } from 'state/plugin';
 
+import Icon from 'components/icon';
+
 class PluginHeader extends React.Component {
   render() {
     return (
@@ -16,7 +18,7 @@ class PluginHeader extends React.Component {
 
           <div className={withClassPrefix('plugin-header__actions clearfix')}>
             <button className={withClassPrefix('btn btn-sm btn-danger pull-right')} onClick={this.props.onClose}>
-              <i className="material-icons">visibility_off</i>
+              <Icon name="visibility_off"/>
             </button>
           </div>
         </div>

@@ -10,7 +10,7 @@ import VisualizationExplanation from 'components/visualizations/visualization-ex
 class RadarVisualization extends React.Component {
   renderPointLabel(points) {
     return (
-      <span className={withClassPrefix('label label-primary')}>{points * 10} / 10 points</span>
+      <span className={withClassPrefix('label label-primary')}>{points * 10} / 10 week points</span>
     );
   }
 

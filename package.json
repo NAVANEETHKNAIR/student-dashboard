@@ -40,6 +40,7 @@
     "gulp-sass": "^2.3.2",
     "gulp-sass-glob": "^1.0.6",
     "gulp-uglify": "^2.0.0",
+    "hashcode": "^1.0.3",
     "highcharts": "^5.0.0",
     "highcharts-more": "^0.1.2",
     "intro.js": "^2.3.0",

@@ -5,11 +5,13 @@ import withClassPrefix from 'utils/class-prefix';
 
 import { openPlugin } from 'state/plugin';
 
+import Icon from 'components/icon';
+
 class PluginOpener extends React.Component {
   render() {
     return (
       <button className={withClassPrefix('btn btn-primary plugin-opener')} onClick={this.props.onOpen}>
-        <i className="material-icons">timeline</i>
+        <Icon name="timeline"/>
       </button>
     );
   }

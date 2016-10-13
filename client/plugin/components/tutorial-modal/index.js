@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import withClassPrefix from 'utils/class-prefix';
 import { closeTutorial } from 'state/tutorial';
 
+import Icon from 'components/icon';
+
 class TutorialModal extends React.Component {
   render() {
     const content = (
@@ -20,8 +22,9 @@ class TutorialModal extends React.Component {
               </div>
 
               <div className={withClassPrefix('tutorial-modal__footer text-center')}>
-                <button className={withClassPrefix('btn btn-success')} onClick={this.props.onClose}>
-                  Got it!
+                <button className={withClassPrefix('btn btn-success btn-icon')} onClick={this.props.onClose}>
+                  <Icon name="done"/>
+                  <span>Got it!</span>
                 </button>
               </div>
             </div>

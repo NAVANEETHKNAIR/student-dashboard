@@ -2,7 +2,7 @@
 
 ## How to use
 
-*1)*
+**1)**
 
 Include the following script tag to your page:
 
@@ -10,7 +10,7 @@ Include the following script tag to your page:
   <script src="comingSoon.js"></script>
 ```
 
-*2)*
+**2)**
 
 Call `window.StudentDashboard.initialize` after Student Dashboard has loaded. `studentDashboardLoaded` event will be dispatched in `document` when Student Dashboard is ready.
 

@@ -8,6 +8,8 @@ import withClassPrefix from 'utils/class-prefix';
 import { goToNextExerciseGroup, goToPrevExerciseGroup } from 'state/plugin';
 import { selectActiveExerciseGroup, selectActiveIsLastExerciseGroup, selectActiveIsFirstExerciseGroup, selectActiveExerciseGroupDateInterval  } from 'selectors/plugin';
 
+import Icon from 'components/icon';
+
 class WeekSelector extends React.Component {
   onNext() {
     !this.props.nextDisabled && this.props.onNext();
@@ -20,7 +22,7 @@ class WeekSelector extends React.Component {
   renderNext() {
     return (
       <div className={cn(withClassPrefix('week-selector__action'), { [withClassPrefix('disabled')]: this.props.nextDisabled })} onClick={this.onNext.bind(this)}>
-        <i className="material-icons">keyboard_arrow_right</i>
+        <Icon name="keyboard_arrow_right"/>
       </div>
     );
   }
@@ -28,7 +30,7 @@ class WeekSelector extends React.Component {
   renderPrev() {
     return (
       <div className={cn(withClassPrefix('week-selector__action'), { [withClassPrefix('disabled')]: this.props.prevDisabled })} onClick={this.onPrev.bind(this)}>
-        <i className="material-icons">keyboard_arrow_left</i>
+        <Icon name="keyboard_arrow_left"/>
       </div>
     );
   }

@@ -5,7 +5,10 @@ const middlewares = require('./middlewares');
 
 router.post('/:courseId',
   tmcMiddlewares.getProfile(),
-  middlewares.getVisualizationTypeForUser(req => req.tmcProfile.username),
+  middlewares.getVisualizationTypeForUser({
+    getUserId: req => req.tmcProfile.username,
+    getCourseId: req => req.params.courseId
+  }),
   middlewares.getVisualizationForUser({
     getUserId: req => req.tmcProfile.username,
     getCourseId: req => req.params.courseId,

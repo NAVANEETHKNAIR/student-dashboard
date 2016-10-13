@@ -5,11 +5,14 @@ const visualizationConstants = require('app-modules/constants/visualizations');
 const errors = require('app-modules/errors');
 const visualizations = require('app-modules/utils/visualizations');
 
-function getVisualizationTypeForUser(getUserId) {
+const Participant = require('app-modules/models/participant');
+
+function getVisualizationTypeForUser({ getUserId, getCourseId }) {
   return (req, res, next) => {
     const userId = getUserId(req);
+    const courseId = getCourseId(req);
 
-    req.visualizationType = visualizationConstants.RADAR_VISUALIZATION;
+    req.visualizationType = [visualizationConstants.NO_VISUALIZATION, visualizationConstants.RADAR_VISUALIZATION][1];
 
     next();
   }
@@ -35,7 +38,13 @@ function getVisualizationForUser({ getUserId, getCourseId, getVisualizationType,
       return next(new errors.InvalidRequestError('Exercise groups are required'));
     }
 
-    visualizations.getUsersProgressData({ userId, courseId, query: { exerciseGroups } }, { cache })
+    let getData = Promise.resolve({});
+
+    if(visualizationType === visualizationConstants.RADAR_VISUALIZATION) {
+      getData = visualizations.getUsersProgressData({ userId, courseId, query: { exerciseGroups } }, { cache });
+    }
+
+    getData
       .then(visualization => {
         req.visualization = {
           type: visualizationType,

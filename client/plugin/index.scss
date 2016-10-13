@@ -1,4 +1,21 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/dist/assets/fonts/material-icons/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(/dist/assets/fonts/material-icons/MaterialIcons-Regular.woff2) format('woff2'),
+       url(/dist/assets/fonts/material-icons/MaterialIcons-Regular.woff) format('woff'),
+       url(/dist/assets/fonts/material-icons/MaterialIcons-Regular.ttf) format('truetype');
+}
+
 @import "sass/variables";
 @import "sass/mixins";
-@import "sass/theme";
-@import "components/**/*.scss"
+@import "sass/reset";
+
+#sd-plugin {
+  @import "sass/icons";
+  @import "sass/theme";
+  @import "components/**/*.scss";
+}

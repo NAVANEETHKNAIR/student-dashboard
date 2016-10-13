@@ -9,6 +9,7 @@ import PluginHeader from 'components/plugin-header';
 import Loader from 'components/loader';
 import Visualization from 'components/visualizations/visualization';
 import TutorialModal from 'components/tutorial-modal';
+import Icon from 'components/icon';
 
 class Plugin extends React.Component {
   renderVisualization() {
@@ -20,8 +21,9 @@ class Plugin extends React.Component {
   renderTutorialButton() {
     const content = (
       <div className={withClassPrefix('text-center m-t-1')}>
-        <button className={withClassPrefix('btn btn-success')} onClick={this.props.onOpenTutorial}>
-          What's this?
+        <button className={withClassPrefix('btn btn-success btn-icon')} onClick={this.props.onOpenTutorial}>
+          <Icon name="help_outline"/>
+          <span>What's this?</span>
         </button>
       </div>
     );
@@ -33,7 +35,7 @@ class Plugin extends React.Component {
 
   render() {
     return (
-      <div className={withClassPrefix('plugin')}>
+      <div className={withClassPrefix('plugin css-reset')}>
         <PluginHeader>
           My propgress in {this.props.courseName}
         </PluginHeader>

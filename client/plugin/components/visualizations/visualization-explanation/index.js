@@ -7,6 +7,8 @@ import { OPEN_EXPLANATION, CLOSE_EXPLANATION } from 'constants/actions';
 import { createAction } from 'state/actions';
 import withClassPrefix from 'utils/class-prefix';
 
+import Icon from 'components/icon';
+
 class VisualizationExplanation extends React.Component {
   constructor(props) {
     super(props);
@@ -74,7 +76,7 @@ class VisualizationExplanation extends React.Component {
       <div className={withClassPrefix('visualization-explanation')} ref="container">
         <div className={withClassPrefix('clearfix')}>
           <button className={buttonClasses} onClick={this.toggleExplanation.bind(this)}>
-            <i className="material-icons">info_outline</i>
+            <Icon name="info_outline"/>
           </button>
         </div>
 
