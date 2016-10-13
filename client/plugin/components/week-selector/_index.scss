@@ -1,0 +1,30 @@
+.week-selector {
+  padding: 0rem $spacing;
+  display: flex;
+
+  &__action {
+    flex: 0;
+    cursor: pointer;
+
+    &:not(.disabled) {
+      &:hover {
+        color: $colors__primary;
+      }
+    }
+  }
+
+  &__date-interval {
+    font-weight: normal;
+    font-size: 0.7em;
+    margin-top: 0.25rem;
+  }
+
+  &__current {
+    flex: 1;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+}

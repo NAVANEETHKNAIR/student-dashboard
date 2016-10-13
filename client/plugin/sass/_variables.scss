@@ -1,0 +1,26 @@
+$colors__primary: #528afc;
+$colors__success: #57b181;
+$colors__danger: #d9534f;
+$colors__muted: #818a91;
+$colors__light-border: rgba(0, 0, 0, .125);
+
+$font__color: #333;
+$font__family: sans-serif;
+
+$plugin__width: 400px;
+
+$tutorial__width: 600px;
+$tutorial__height: 400px;
+
+$visualization__height: 320px;
+$visualization__explanation-height: 300px;
+
+$spacing: 1.25rem;
+$border-radius: 0.25rem;
+
+$directions: (
+  "t" "top",
+  "b" "bottom",
+  "l" "left",
+  "r"  "right"
+);

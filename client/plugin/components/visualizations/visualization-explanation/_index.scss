@@ -1,0 +1,57 @@
+.visualization-explanation {
+  position: relative;
+
+  &__wrapper {
+    position: relative;
+    top: 0.25rem;
+
+    &:after, &:before {
+    	bottom: 100%;
+    	right: 0.5rem;
+    	border: solid transparent;
+    	content: " ";
+    	height: 0;
+    	width: 0;
+    	position: absolute;
+      z-index: 1;
+    	pointer-events: none;
+    }
+
+    &:after {
+    	border-color: rgba(255, 255, 255, 0);
+    	border-bottom-color: #ffffff;
+    	border-width: 10px;
+    	margin-left: -10px;
+    }
+
+    &:before {
+      border-color: transparent;
+    	border-bottom-color: $colors__light-border;
+    	border-width: 11px;
+    	margin-left: -11px;
+    }
+  }
+
+  &__container {
+    @include floating;
+
+    border-radius: .25rem;
+    overflow-y: auto;
+    max-height: $visualization__explanation-height;
+    position: absolute;
+    right: 0rem;
+    top: 0rem;
+    background-color: white;
+    z-index: 1;
+  }
+
+  &__content {
+    padding: $spacing;
+
+    > h4 {
+      &:first-child {
+        margin-top: 0rem;
+      }
+    }
+  }
+}

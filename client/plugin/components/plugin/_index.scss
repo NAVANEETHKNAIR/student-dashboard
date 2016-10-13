@@ -1,0 +1,23 @@
+.plugin {
+  @include floating;
+
+  z-index: 999;
+  font-family: $font__family;
+  color: $font__color;
+  position: fixed;
+  bottom: $spacing;
+  right: $spacing;
+  width: $plugin__width;
+  border-radius: $border-radius;
+  box-sizing: border-box;
+
+  &__content {
+    padding: $spacing;
+  }
+
+  @media(max-width: $plugin__width) {
+    width: 100%;
+    bottom: 0rem;
+    right: 0rem;
+  }
+}

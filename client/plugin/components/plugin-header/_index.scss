@@ -1,0 +1,22 @@
+.plugin-header {
+  padding: $spacing;
+
+  &__wrapper {
+    display: flex;
+  }
+
+  &__title {
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  &__actions {
+    i {
+      font-size: 0.9rem !important;
+    }
+  }
+}
