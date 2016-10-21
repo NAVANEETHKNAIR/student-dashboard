@@ -62,15 +62,14 @@ class WeekSelector extends React.Component {
     return (
       <TransitionMotion
         willLeave={({ data }) => {
-          const leaveDirection = data.start - start;
-          const left = leaveDirection >= 0
+          const left = data.start - start >= 0
             ? spring(100)
             : spring(-100);
 
           return { opacity: spring(0), left };
         }}
         willEnter={() => ({ opacity: 0, left: direction * 100 })}
-        styles={[{ key: `weekLabel-${start}`, style: { opacity: spring(1), left: spring(0) }, data: { label: this.props.label, start, end } }]}
+        styles={[{ key: `weekLaesbel-${start}`, style: { opacity: spring(1), left: spring(0) }, data: { label: this.props.label, start, end } }]}
       >
         {interpolated => (
           <div className={withClassPrefix('week-selector__current')}>
@@ -79,7 +78,7 @@ class WeekSelector extends React.Component {
                 <div key={key} style={prefix({ opacity: style.opacity, transform: `translateX(${style.left}%)` })} className={withClassPrefix('week-selector__label')}>
                   {data.label}
                   <div className={withClassPrefix('week-selector__date-interval text-muted')}>
-                    {moment.utc(data.start).format(format)} - {moment.utc(data.end).format(format)}
+                    {moment.utc(data.start * 1000).format(format)} - {moment.utc(data.end * 1000).format(format)}
                   </div>
                 </div>
               );

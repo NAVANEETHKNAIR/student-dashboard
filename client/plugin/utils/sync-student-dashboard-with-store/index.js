@@ -36,13 +36,12 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
       const [start, end] = interval;
       const format = 'DD.MM.YYYY HH:mm';
 
-      return [+moment.utc(start, format).toDate(), +moment.utc(end, format).toDate()];
+      return [moment.utc(start, format).unix(), moment.utc(end, format).unix()];
     });
 
     const exerciseGroups = pickBy(exerciseGroupsWithTimestamps, interval => {
       const [start, end] = interval;
-
-      const now = +new Date();
+      const now = Math.floor(+new Date() / 1000);
 
       return start <= now;
     });
@@ -54,7 +53,7 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
 
     for(let groupName of groupNames) {
       const [start, end] = exerciseGroups[groupName];
-      const now = +new Date();
+      const now = Math.floor(+new Date() / 1000);
 
       if(now >= start && now <= end) {
         activeGroup = groupName;

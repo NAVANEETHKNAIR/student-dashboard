@@ -4,6 +4,7 @@
 
   &__action {
     flex: 0;
+    user-select: none;
     cursor: pointer;
 
     &:not(.disabled) {
