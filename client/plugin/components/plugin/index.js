@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { TransitionMotion, spring } from 'react-motion';
+import prefix from 'react-prefixer';
 
 import withClassPrefix from 'utils/class-prefix';
 import { openTutorial } from 'state/tutorial';
@@ -8,7 +10,6 @@ import WeekSelector from 'components/week-selector';
 import PluginHeader from 'components/plugin-header';
 import Loader from 'components/loader';
 import Visualization from 'components/visualizations/visualization';
-import TutorialModal from 'components/tutorial-modal';
 import Icon from 'components/icon';
 
 class Plugin extends React.Component {
@@ -33,9 +34,9 @@ class Plugin extends React.Component {
       : null;
   }
 
-  render() {
+  renderContent(style) {
     return (
-      <div className={withClassPrefix('plugin css-reset')}>
+      <div className={withClassPrefix('plugin')} key='plugin' style={style}>
         <PluginHeader>
           My propgress in {this.props.courseName}
         </PluginHeader>
@@ -50,9 +51,23 @@ class Plugin extends React.Component {
           {this.renderVisualization()}
           {this.renderTutorialButton()}
         </div>
-
-        <TutorialModal/>
       </div>
+    );
+  }
+
+  render() {
+    return (
+      <TransitionMotion
+        willLeave={() => ({ scale: spring(0), opacity: spring(0) })}
+        willEnter={() => ({ scale: 0, opacity: 0 })}
+        styles={this.props.isOpen ? [{ key: 'plugin', style: { scale: spring(1), opacity: spring(1) } }] : []}
+      >
+        {interpolated => (
+          <div>
+            {interpolated.map(({ style }) => this.renderContent(prefix({ transform: `scale(${style.scale})`, opacity: style.opacity })))}
+          </div>
+        )}
+      </TransitionMotion>
     );
   }
 }
@@ -64,6 +79,7 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   visualizationLoading: state.visualization.loading,
   courseName: state.course.name,
+  isOpen: state.plugin.isOpen,
   tutorialIsFinished: state.user.tutorialFinished
 });
 

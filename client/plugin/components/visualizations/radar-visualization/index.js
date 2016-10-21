@@ -6,11 +6,14 @@ import withClassPrefix from 'utils/class-prefix';
 import { selectActiveExerciseGroup } from 'selectors/plugin';
 
 import VisualizationExplanation from 'components/visualizations/visualization-explanation';
+import ProgressLabel from 'components/progress-label';
 
 class RadarVisualization extends React.Component {
   renderPointLabel(points) {
     return (
-      <span className={withClassPrefix('label label-primary')}>{points * 10} / 10 week points</span>
+      <ProgressLabel progress={points * 100}>
+        {points * 10} / 10 week points
+      </ProgressLabel>
     );
   }
 

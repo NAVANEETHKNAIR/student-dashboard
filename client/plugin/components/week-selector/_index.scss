@@ -26,5 +26,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    position: relative;
+    height: 3.25rem;
+  }
+
+  &__label {
+    position: absolute;
+    text-align: center;
+    width: 100%;
   }
 }

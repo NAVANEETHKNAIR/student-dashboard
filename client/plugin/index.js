@@ -27,8 +27,7 @@ window.StudentDashboard = syncStudentDashboardWithStore(store, {
 function initialize() {
   const container = document.createElement('div');
 
-  container.setAttribute('id', `${CLASS_PREFIX}-plugin`)
-  container.className = withClassPrefix('plugin-wrapper');
+  container.className = withClassPrefix('plugin-wrapper css-reset');
 
   document.querySelector('body').appendChild(container);
 

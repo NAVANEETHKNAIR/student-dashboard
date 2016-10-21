@@ -38,11 +38,16 @@
     border-radius: .25rem;
     overflow-y: auto;
     max-height: $visualization__explanation-height;
+    width: $visualization_explanation-width;
     position: absolute;
     right: 0rem;
     top: 0rem;
     background-color: white;
     z-index: 1;
+
+    @media(max-width: $visualization_explanation-width) {
+      width: auto;
+    }
   }
 
   &__content {

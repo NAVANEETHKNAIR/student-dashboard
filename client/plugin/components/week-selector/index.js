@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { TransitionMotion, spring } from 'react-motion';
 import cn from 'classnames';
 import moment from 'moment';
+import prefix from 'react-prefixer';
 
 import withClassPrefix from 'utils/class-prefix';
 
@@ -11,12 +13,29 @@ import { selectActiveExerciseGroup, selectActiveIsLastExerciseGroup, selectActiv
 import Icon from 'components/icon';
 
 class WeekSelector extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      direction: 1
+    };
+  }
+
   onNext() {
     !this.props.nextDisabled && this.props.onNext();
   }
 
   onPrev() {
     !this.props.prevDisabled && this.props.onPrev();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const [startNow,] = this.props.dateInterval;
+    const [startNext,] = nextProps.dateInterval;
+
+    this.setState({
+      direction: startNext - startNow >= 0 ? 1 : -1
+    });
   }
 
   renderNext() {
@@ -35,19 +54,47 @@ class WeekSelector extends React.Component {
     );
   }
 
-  render() {
+  renderLabel() {
     const [start, end] = this.props.dateInterval;
     const format = 'DD.MM.YYYY';
+    const { direction } = this.state;
 
+    return (
+      <TransitionMotion
+        willLeave={({ data }) => {
+          const leaveDirection = data.start - start;
+          const left = leaveDirection >= 0
+            ? spring(100)
+            : spring(-100);
+
+          return { opacity: spring(0), left };
+        }}
+        willEnter={() => ({ opacity: 0, left: direction * 100 })}
+        styles={[{ key: `weekLabel-${start}`, style: { opacity: spring(1), left: spring(0) }, data: { label: this.props.label, start, end } }]}
+      >
+        {interpolated => (
+          <div className={withClassPrefix('week-selector__current')}>
+            {interpolated.map(({ style, key, data }) => {
+              return (
+                <div key={key} style={prefix({ opacity: style.opacity, transform: `translateX(${style.left}%)` })} className={withClassPrefix('week-selector__label')}>
+                  {data.label}
+                  <div className={withClassPrefix('week-selector__date-interval text-muted')}>
+                    {moment.utc(data.start).format(format)} - {moment.utc(data.end).format(format)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </TransitionMotion>
+    )
+  }
+
+  render() {
     return (
       <div className={withClassPrefix('week-selector')}>
         {this.renderPrev()}
-        <div className={withClassPrefix('week-selector__current')}>
-          {this.props.label}
-          <div className={withClassPrefix('week-selector__date-interval text-muted')}>
-            {moment.utc(start).format(format)} - {moment.utc(end).format(format)}
-          </div>
-        </div>
+        {this.renderLabel()}
         {this.renderNext()}
       </div>
     );
