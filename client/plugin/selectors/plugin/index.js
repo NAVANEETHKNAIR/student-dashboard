@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 
+import { NO_VISUALIZATION } from 'constants/visualizations';
+
 export const selectActiveExerciseGroup = state => state.plugin.activeExerciseGroup;
 export const selectExerciseGroupOrder = state => state.plugin.exerciseGroupOrder;
 export const selectExerciseGroups = state => state.plugin.exerciseGroups;
@@ -11,6 +13,8 @@ export const selectActiveExerciseGroupDateInterval = createSelector(
     return groups[activeGroup];
   }
 );
+
+export const selectOpenerIsVisible = state => !state.visualization.loading && state.visualization.type !== NO_VISUALIZATION && !state.plugin.isOpen;
 
 export const selectActiveIsLastExerciseGroup = createSelector(
   selectExerciseGroupOrder,

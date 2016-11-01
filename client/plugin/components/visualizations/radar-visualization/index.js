@@ -9,7 +9,7 @@ import { selectActiveExerciseGroup } from 'selectors/plugin';
 import VisualizationExplanation from 'components/visualizations/visualization-explanation';
 import ProgressLabel from 'components/progress-label';
 
-class RadarVisualization extends React.Component {
+export class RadarVisualization extends React.Component {
   renderPointLabel(points) {
     return (
       <ProgressLabel progress={points * 100}>

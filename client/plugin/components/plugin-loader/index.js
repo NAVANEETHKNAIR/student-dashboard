@@ -8,7 +8,7 @@ import Plugin from 'components/plugin';
 import PluginOpener from 'components/plugin-opener';
 import TutorialModal from 'components/tutorial-modal';
 
-class PluginLoader extends React.Component {
+export class PluginLoader extends React.Component {
   componentDidMount() {
     this.props.loadVisualization();
   }

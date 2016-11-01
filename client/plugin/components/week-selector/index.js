@@ -12,7 +12,7 @@ import { selectActiveExerciseGroup, selectActiveIsLastExerciseGroup, selectActiv
 
 import Icon from 'components/icon';
 
-class WeekSelector extends React.Component {
+export class WeekSelector extends React.Component {
   constructor() {
     super();
 
@@ -69,7 +69,7 @@ class WeekSelector extends React.Component {
           return { opacity: spring(0), left };
         }}
         willEnter={() => ({ opacity: 0, left: direction * 100 })}
-        styles={[{ key: `weekLaesbel-${start}`, style: { opacity: spring(1), left: spring(0) }, data: { label: this.props.label, start, end } }]}
+        styles={[{ key: `weekLabel-${start}`, style: { opacity: spring(1), left: spring(0) }, data: { label: this.props.label, start, end } }]}
       >
         {interpolated => (
           <div className={withClassPrefix('week-selector__current')}>

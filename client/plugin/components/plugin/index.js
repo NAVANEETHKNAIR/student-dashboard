@@ -12,7 +12,7 @@ import Loader from 'components/loader';
 import Visualization from 'components/visualizations/visualization';
 import Icon from 'components/icon';
 
-class Plugin extends React.Component {
+export class Plugin extends React.Component {
   renderVisualization() {
     return this.props.visualizationLoading
       ? <Loader/>

@@ -7,9 +7,17 @@ import { loadVisualization } from 'state/visualization';
 
 import RadarVisualization from 'components/visualizations/radar-visualization';
 
-class Visualization extends React.Component {
+export class Visualization extends React.Component {
   renderContent() {
-    return <RadarVisualization/>;
+    const mapTypeToComponent = {
+      [RADAR_VISUALIZATION]: RadarVisualization
+    }
+
+    const Component = mapTypeToComponent[this.props.type];
+
+    return Component
+      ? <Component/>
+      : null;
   }
 
   render() {

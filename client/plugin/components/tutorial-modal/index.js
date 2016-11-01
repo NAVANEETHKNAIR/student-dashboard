@@ -7,7 +7,7 @@ import { closeTutorial } from 'state/tutorial';
 
 import Icon from 'components/icon';
 
-class TutorialModal extends React.Component {
+export class TutorialModal extends React.Component {
   renderContent({ opacity, top }) {
     return (
       <div className={withClassPrefix('tutorial-modal')} key={'tutorialModal'}>

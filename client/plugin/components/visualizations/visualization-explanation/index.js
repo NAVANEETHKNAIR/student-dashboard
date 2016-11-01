@@ -9,7 +9,7 @@ import withClassPrefix from 'utils/class-prefix';
 
 import Icon from 'components/icon';
 
-class VisualizationExplanation extends React.Component {
+export class VisualizationExplanation extends React.Component {
   constructor(props) {
     super(props);
 

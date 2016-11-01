@@ -20,12 +20,12 @@ export function createAction({ name, meta = {} }) {
 export function createActionRequest({ name, meta, createdAtAdjustedToTz, hour, weekday, source, createdAt }) {
   return {
     type: CREATE_ACTION,
-    /*payload: {
+    payload: {
       request: {
         url: '/actions',
         method: 'POST',
         data: { name, meta, createdAtAdjustedToTz, hour, weekday, source, createdAt }
       }
-    }*/
+    }
   }
 }

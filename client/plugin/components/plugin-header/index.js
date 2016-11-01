@@ -7,7 +7,7 @@ import { closePlugin } from 'state/plugin';
 
 import Icon from 'components/icon';
 
-class PluginHeader extends React.Component {
+export class PluginHeader extends React.Component {
   render() {
     return (
       <div className={withClassPrefix('plugin-header clearfix')}>

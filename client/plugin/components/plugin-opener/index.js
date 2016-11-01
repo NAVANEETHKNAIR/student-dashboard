@@ -4,12 +4,12 @@ import { TransitionMotion, spring } from 'react-motion';
 import prefix from 'react-prefixer';
 
 import withClassPrefix from 'utils/class-prefix';
-import { NO_VISUALIZATION } from 'constants/visualizations';
 import { openPlugin } from 'state/plugin';
+import { selectOpenerIsVisible } from 'selectors/plugin';
 
 import Icon from 'components/icon';
 
-class PluginOpener extends React.Component {
+export class PluginOpener extends React.Component {
   renderContent(style) {
     return (
       <button className={withClassPrefix('btn btn-primary plugin-opener')} onClick={this.props.onOpen} style={style} key='pluginOpener'>
@@ -36,7 +36,7 @@ class PluginOpener extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isVisible: !state.visualization.loading && state.visualization.type !== NO_VISUALIZATION && !state.plugin.isOpen
+  isVisible: selectOpenerIsVisible(state)
 });
 
 const mapDispatchToProps = dispatch => ({
