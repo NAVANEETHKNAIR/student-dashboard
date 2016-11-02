@@ -92,28 +92,28 @@ function getUsersProgressData({ userId, courseId, query }, { cache = true } = {}
   const groups = _.mapValues(exerciseGroups, () => {
     return {
       earliness: {
-        value: _.random(5, 10) / 10,
+        value: _.random(0, 10) / 10,
         meta: {
           averageDays: _.random(1, 7),
           bestAverageDays: 3
         }
       },
       exercises: {
-        value: _.random(5, 10) / 10,
+        value: _.random(0, 10) / 10,
         meta: {
           points: _.random(0, 10),
           bestPoints: 10
         }
       },
       scheduling: {
-        value: _.random(5, 10) / 10,
+        value: _.random(0, 10) / 10,
         meta: {
           workingDays: _.random(1, 7),
           bestWorkingDays: 4
         }
       },
       starting: {
-        value: _.random(5, 10) / 10,
+        value: _.random(0, 10) / 10,
         meta: {
           startingDate: Math.floor(+(new Date()) / 1000),
           bestStartingDate: Math.floor(+(new Date()) / 1000)
@@ -128,4 +128,15 @@ function getUsersProgressData({ userId, courseId, query }, { cache = true } = {}
   });
 }
 
-module.exports = { getUsersProgressData }
+function getUsersEstimatedGrade(progressData) {
+  const values = _.values(progressData)
+
+  const optimalValueSum = values.length * 0.9;
+  const valueSum = Math.min(optimalValueSum, values.reduce((sum, value) => sum + value));
+
+  return optimalValueSum === 0
+    ? 0
+    : Math.round(valueSum / optimalValueSum * 5);
+}
+
+module.exports = { getUsersProgressData, getUsersEstimatedGrade }

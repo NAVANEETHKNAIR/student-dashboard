@@ -1,16 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RADAR_VISUALIZATION } from 'constants/visualizations';
+import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
 import withClassPrefix from 'utils/class-prefix';
 import { loadVisualization } from 'state/visualization';
 
 import RadarVisualization from 'components/visualizations/radar-visualization';
+import RadarVisualizationWithGrade from 'components/visualizations/radar-visualization-with-grade';
 
 export class Visualization extends React.Component {
   renderContent() {
     const mapTypeToComponent = {
-      [RADAR_VISUALIZATION]: RadarVisualization
+      [RADAR_VISUALIZATION]: RadarVisualization,
+      [RADAR_VISUALIZATION_WITH_GRADE]: RadarVisualizationWithGrade
     }
 
     const Component = mapTypeToComponent[this.props.type];
@@ -34,7 +36,7 @@ export class Visualization extends React.Component {
 }
 
 Visualization.propTypes = {
-  type: React.PropTypes.oneOf([RADAR_VISUALIZATION]).isRequired,
+  type: React.PropTypes.oneOf([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE]).isRequired,
   onUpdateVisualization: React.PropTypes.func
 }
 

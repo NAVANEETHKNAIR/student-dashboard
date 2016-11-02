@@ -1,28 +1,25 @@
-const { hashCode } = require('hashcode');
+const ParticipantCounter = require('./participant-counter');
 
-function getHashCode(userId) {
-  const middleChar = userId[Math.floor(userId.length / 2)];
-  const lastChar = userId[userId.length - 1];
-
-  return hashCode().value(`${lastChar}${userId}${middleChar}`);
-}
-
-function getGroupByHashCode(code) {
-  return (Math.abs(code) % 3).toString();
-}
+const participantConstants = require('app-modules/constants/participants');
 
 module.exports = schema => {
+
   schema.statics.getGroup = function({ userId, courseId }) {
     return this.findOne({ userId, courseId })
       .then(user => {
         if(user) {
           return user.group;
         } else {
-          const newParticipant = new this({ userId, courseId, group: getGroupByHashCode(getHashCode(userId)) })
+          return ParticipantCounter.increaseAndGetCounter(courseId)
+            .then(value => value % participantConstants.GROUP_COUNT)
+            .then(group => {
+              const newParticipant = new this({ userId, courseId, group });
 
-          return newParticipant.save()
-            .then(() => newParticipant.group);
+              return newParticipant.save()
+                .then(() => newParticipant.group);
+            });
         }
       });
   }
+
 }

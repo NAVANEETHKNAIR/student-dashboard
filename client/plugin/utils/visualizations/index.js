@@ -1,7 +1,7 @@
 import mapValues from 'map-values';
 
 import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
-import { RADAR_VISUALIZATION } from 'constants/visualizations';
+import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
 import { withDefaults } from 'utils/charts';
 
 export function getRadarChart({ points, name, average }) {
@@ -46,10 +46,23 @@ export function getRadarChart({ points, name, average }) {
 }
 
 export function getVisualization({ type, data }) {
+  let charts = {};
+
+  if([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE].includes(type)) {
+    charts = mapValues(data.groups, (value, key) => getRadarChart({ name: key, points: value, average: data.average }));
+  }
+
   switch(type) {
     case RADAR_VISUALIZATION:
       return {
-        charts: mapValues(data.groups, (value, key) => getRadarChart({ name: key, points: value, average: data.average })),
+        charts,
+        raw: data
+      }
+      break;
+    case RADAR_VISUALIZATION_WITH_GRADE:
+      return {
+        charts,
+        estimatedGrade: data.estimatedGrade,
         raw: data
       }
       break;

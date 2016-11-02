@@ -1,0 +1,28 @@
+.grade-estimate {
+  position: relative;
+
+  &__circle {
+    @include floating;
+
+    border-radius: 50%;
+    width: 60px;
+    line-height: 60px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    vertical-align: middle;
+    position: absolute;
+    left: 50%;
+    background-color: white;
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
+
+  &__progress {
+    top: 4px;
+    left: 4px;
+    width: 56px;
+    height: 56px;
+    overflow: visible;
+    position: absolute;
+  }
+}

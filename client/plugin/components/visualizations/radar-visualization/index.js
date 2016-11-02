@@ -5,7 +5,6 @@ import moment from 'moment';
 
 import withClassPrefix from 'utils/class-prefix';
 import { selectActiveExerciseGroup } from 'selectors/plugin';
-
 import VisualizationExplanation from 'components/visualizations/visualization-explanation';
 import ProgressLabel from 'components/progress-label';
 

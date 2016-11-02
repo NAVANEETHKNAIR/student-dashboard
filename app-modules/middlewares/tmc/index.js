@@ -20,7 +20,7 @@ function getProfile(getAccessToken) {
       .catch(err => next(new errors.ForbiddenError('Tmc access token is invalid on expired')));*/
 
     req.tmcProfile = {
-      username: 'test'
+      username: 'test2'
     };
 
     next();
