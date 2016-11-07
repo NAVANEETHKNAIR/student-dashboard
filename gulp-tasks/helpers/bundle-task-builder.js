@@ -33,11 +33,13 @@ module.exports = options => {
   }
 
   gulp.task(`scripts.${bundleName}`, scriptTaskBuilder(Object.assign({}, scripTaskOptions, {
-    webpackConfig: getWebpackConfig(true)
+    webpackConfig: getWebpackConfig(true),
+    production: false
   })));
 
   gulp.task(`build:scripts.${bundleName}`, scriptTaskBuilder(Object.assign({}, scripTaskOptions, {
-    webpackConfig: getWebpackConfig(false)
+    webpackConfig: getWebpackConfig(false),
+    production: true
   })));
 
   if(sassOptions) {
@@ -60,7 +62,7 @@ module.exports = options => {
     gulp.task(`build:styles.${bundleName}`, sassTaskBuilder(Object.assign({}, sassTaskOptions, { uglify: true })));
   }
 
-  gulp.task(`serve.${bundleName}`, serveTasks, () => {});
+  gulp.task(`serve.${bundleName}`, serveTasks);
 
-  gulp.task(`build.${bundleName}`, buildTasks, () => {});
+  gulp.task(`build.${bundleName}`, buildTasks);
 }

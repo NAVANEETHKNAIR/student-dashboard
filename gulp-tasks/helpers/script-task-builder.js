@@ -5,8 +5,13 @@ const uglify = require('gulp-uglify');
 const plumber = require('gulp-plumber');
 
 module.exports = options => () => {
-  const pipeline = gulp.src(options.src)
-    .pipe(plumber())
+  let pipeline = gulp.src(options.src);
+
+  if(!options.production) {
+    pipeline = pipeline.pipe(plumber());
+  }
+
+  return pipeline
     .pipe(webpack(options.webpackConfig))
     .pipe(rename(options.fileName))
     .pipe(gulp.dest(options.dest));

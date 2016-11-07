@@ -4,7 +4,7 @@ const tmcMiddlewares = require('app-modules/middlewares/tmc');
 const participantMiddlewares = require('app-modules/middlewares/participants');
 const middlewares = require('./middlewares');
 
-router.post('/:courseId',
+router.post('/:courseId/visualization',
   tmcMiddlewares.getProfile(),
   participantMiddlewares.getGroup({
     getCourseId: req => req.params.courseId,
@@ -14,6 +14,7 @@ router.post('/:courseId',
   middlewares.getVisualizationForUser({
     getUserId: req => req.tmcProfile.username,
     getCourseId: req => req.params.courseId,
+    getAccessToken: req => req.tmcProfile.accessToken,
     getVisualizationType: req => req.visualizationType,
     getQuery: req => req.body
   }),

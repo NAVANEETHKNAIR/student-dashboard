@@ -31,21 +31,14 @@ function getVisualizationTypeForUser(getGroup) {
   }
 }
 
-function getVisualizationForUser({ getUserId, getCourseId, getVisualizationType, getQuery, getOptions }) {
+function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVisualizationType, getQuery, getOptions }) {
   return (req, res, next) => {
-    const getDefaultOptions = () => ({
-      cache: 'true'
-    });
-
     const userId = getUserId(req);
     const courseId = getCourseId(req);
+    const accessToken = getAccessToken(req);
     const visualizationType = getVisualizationType(req);
 
-    const { exerciseGroups } = getQuery(req);
-
-    const options = (getOptions || getDefaultOptions)(req);
-
-    const cache = options.cache === 'false' ? false : true;
+    const { exerciseGroups, cache } = getQuery(req);
 
     if(!exerciseGroups) {
       return next(new errors.InvalidRequestError('Exercise groups are required'));
@@ -53,7 +46,7 @@ function getVisualizationForUser({ getUserId, getCourseId, getVisualizationType,
 
     let getData = Promise.resolve({});
 
-    const visualizationQuery = { userId, courseId, query: { exerciseGroups } };
+    const visualizationQuery = { userId, courseId, accessToken, query: { exerciseGroups } };
     const visualizationOptions = { cache };
 
     if(visualizationType === visualizationTypes.RADAR_VISUALIZATION) {
