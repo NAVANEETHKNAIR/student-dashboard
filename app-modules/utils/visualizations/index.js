@@ -8,21 +8,25 @@ function groupByDateInterval({ dateGroups, value, getDate }) {
   const timestamp = +getDate(value);
   const groupNames = Object.keys(dateGroups);
 
-  for(let groupName in groupNames) {
-    const [start, end] = dateGroups[groupName];
+  let groupName = '_';
 
-    if(timestamp >= start && timestamp <= end) {
-      return groupName;
+  groupNames.forEach(name => {
+    const [start, end] = dateGroups[name];
+
+    if(timestamp >= start * 1000 && timestamp <= end * 1000) {
+      groupName = name;
+
+      return;
     }
-  }
+  });
 
-  return '_';
+  return groupName;
 }
 
 function groupExercisesAndSubmissions({ exercises, submissions, dateGroups }) {
   return {
-    groupedExercises: _.groupBy(course.exercies || [], value => groupByDateInterval({ dateGroups, value, getDate: v => v.deadlineAt })),
-    groupedSubmissions: _.groupdBy(submissions || [], value => groupByDateInterval({ dateGroups, value, getDate: v => v.createdAt }))
+    groupedExercises: _.groupBy(exercises || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.deadline) })),
+    groupedSubmissions: _.groupBy(submissions || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.created_at) }))
   }
 }
 
@@ -38,11 +42,11 @@ function mergeGroupedExercisesAndSubmissions({ groupedExercises, groupedSubmissi
 }
 
 function getPoints({ submissions, exercises, exerciseIdToPoints }) {
-  const points = exercise.reduce((pointsArray, exercise) => [...pointsArray, ...(exerciseIdToPoints[exercise.id] || [])], []);
+  const exercisePoints = exercises.reduce((pointsArray, exercise) => [...pointsArray, ...(exerciseIdToPoints[exercise.id] || [])], []);
 
   return {
     earliness: points.getEarlinessPoints({ submissions, exercises }),
-    exercises: points.getExercisePoints({ exercises, points }),
+    exercises: points.getExercisePoints({ exercises, points: exercisePoints }),
     scheduling: points.getSchedulingPoints({ submissions, exercises }),
     starting: points.getStartingPoints({ submissions, exercises })
   }
@@ -63,19 +67,23 @@ function getPointAverages(groups) {
   return _.mapValues(groupSums, sum => _.round(sum / numberOfGroups, 1));
 }
 
-function getUsersProgressData({ userId, courseId, query }, { cache = true } = {}) {
+function getUsersProgressData({ userId, courseId, accessToken, query }, { cache = true } = {}) {
   const { exerciseGroups } = query;
 
-  /*const getCourse = tmcApi.getCourse({ courseId }, { cache })
-  const getSubmissions = tmcApi.getSubmissions({ courseId, userId }, { cache });
-  const getPoints = tmcApi.getPoints({ courseId, userId }, { cache });
+  const apiOptions = { cache };
+
+  const getExercisesForCourse = tmcApi.getExercisesForCourse({ courseId, accessToken }, apiOptions)
+    .then(exercises => exercises.filter(exercise => !!exercise.deadline));
+
+  const getUsersExercisePointsForCourse = tmcApi.getUsersExercisePointsForCourse({ courseId, accessToken }, apiOptions);
+  const getUsersSubmissionsForCourse = tmcApi.getUsersSubmissionsForCourse({ courseId, accessToken }, apiOptions);
 
   let exerciseIdToPoints = {};
 
-  return Promise.all([getCourse, getSubmissions, getPoints])
-    .spread((course, submissions, points) => {
+  Promise.all([getExercisesForCourse, getUsersSubmissionsForCourse, getUsersExercisePointsForCourse])
+    .spread((exercises, submissions, points) => {
       exerciseIdToPoints = points.reduce((pointsMap, point) => {
-        pointsMap[point.exerciseId.toString()] = point;
+        pointsMap[point.exercise_id.toString()] = point;
 
         return pointsMap;
       }, {});
@@ -87,7 +95,8 @@ function getUsersProgressData({ userId, courseId, query }, { cache = true } = {}
     })
     .then(groups => {
       return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
-    });*/
+    })
+    .then(console.log)
 
   const groups = _.mapValues(exerciseGroups, () => {
     return {

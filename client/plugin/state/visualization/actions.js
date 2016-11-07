@@ -8,7 +8,7 @@ export function loadVisualization({ cache = true } = {}) {
   return (dispatch, getState) => {
     const { plugin: { exerciseGroups }, course: { id: courseId } } = getState();
 
-    return dispatch(loadVisualizationRequest({ courseId, exerciseGroups }, { cache }))
+    return dispatch(loadVisualizationRequest({ courseId, exerciseGroups, cache }))
       .then(response => {
         if(!response.error) {
           const { data, type } = response.payload.data;
@@ -26,15 +26,16 @@ export function updateVisualization(update) {
   }
 }
 
-export function loadVisualizationRequest({ courseId, exerciseGroups }, { cache }) {
+export function loadVisualizationRequest({ courseId, exerciseGroups, cache }) {
   return {
     type: LOAD_VISUALIZATION,
     payload: {
       request: {
-        url: `/visualizations/${courseId}?cache=${cache}`,
+        url: `/courses/${courseId}/visualization`,
         method: 'POST',
         data: {
-          exerciseGroups
+          exerciseGroups,
+          cache
         }
       }
     }

@@ -9,15 +9,24 @@ function differenceInDays(dateA, dateB) {
   Maximize amount of points
 */
 function getExercisePoints({ exercises, points }) {
-  const allPoints = exercises.reduce((pointsArray, exercise) => [...pointsArray, exercise.points], []);
+  const allPoints = exercises.reduce((pointsArray, exercise) => [...pointsArray, exercise.available_points], []);
+
+  const meta = {
+    bestPoints: allPoints.length,
+    points: points.length
+  };
+
+  if(allPoints.length === 0) {
+    return {
+      value: 1,
+      meta
+    };
+  }
 
   return {
-    meta: {
-      maxPoints: allPoints.length,
-      points: points.length
-    },
-    value: _.round(points.length / allPoints.length, 2)
-  }
+    value: _.round(points.length / allPoints.length, 2),
+    meta
+  };
 }
 
 /*

@@ -38,7 +38,7 @@ export class Plugin extends React.Component {
     return (
       <div className={withClassPrefix('plugin')} key='plugin' style={style}>
         <PluginHeader>
-          My propgress in {this.props.courseName}
+          My progress in {this.props.courseName}
         </PluginHeader>
 
         <div className={withClassPrefix('divider')}></div>

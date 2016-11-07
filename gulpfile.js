@@ -47,6 +47,8 @@ buildBundleTasks({
   scripts: createScriptBundle({ entryPath: './client/plugin-loader', name: 'plugin-loader' })
 });
 
+gulp.task('build', ['assets', 'build.plugin', 'build.pluginLoader']);
+
 gulp.task('default', () => {
   gulp.run('serve.plugin');
 });
