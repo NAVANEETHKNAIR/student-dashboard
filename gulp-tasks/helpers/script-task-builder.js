@@ -7,7 +7,7 @@ const plumber = require('gulp-plumber');
 module.exports = options => () => {
   let pipeline = gulp.src(options.src);
 
-  if(!options.production) {
+  if(options.isDevelopment) {
     pipeline = pipeline.pipe(plumber());
   }
 

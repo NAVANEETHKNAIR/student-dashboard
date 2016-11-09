@@ -13,12 +13,22 @@ import { selectActiveExerciseGroup, selectActiveIsLastExerciseGroup, selectActiv
 import Icon from 'components/icon';
 
 export class WeekSelector extends React.Component {
-  constructor() {
-    super();
 
-    this.state = {
-      direction: 1
-    };
+  static propTypes = {
+    label: React.PropTypes.string.isRequired,
+    nextDisabled: React.PropTypes.bool,
+    prevDisabled: React.PropTypes.bool,
+    onNext: React.PropTypes.func,
+    onPrev: React.PropTypes.func
+  }
+
+  static defaultProps = {
+    nextDisabled: false,
+    prevDisabled: false
+  }
+
+  state = {
+    direction: 1
   }
 
   onNext() {
@@ -99,19 +109,6 @@ export class WeekSelector extends React.Component {
     );
   }
 }
-
-WeekSelector.propTypes = {
-  label: React.PropTypes.string.isRequired,
-  nextDisabled: React.PropTypes.bool,
-  prevDisabled: React.PropTypes.bool,
-  onNext: React.PropTypes.func,
-  onPrev: React.PropTypes.func
-};
-
-WeekSelector.defaultProps = {
-  nextDisabled: false,
-  prevDisabled: false
-};
 
 const mapStateToProps = state => ({
   label: selectActiveExerciseGroup(state),

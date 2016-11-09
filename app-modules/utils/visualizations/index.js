@@ -1,8 +1,15 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
+const moment = require('moment');
 
 const tmcApi = require('app-modules/utils/tmc-api');
-const points = require('app-modules/utils/points');
+const points = require('app-modules/utils/visualizations/points');
+
+function formatExercise(exercise) {
+  return Object.assign({}, exercise, {
+    published: exercise.deadline ? moment.utc(exercise.deadline).subtract(7, 'days').toISOString() : null
+  });
+}
 
 function groupByDateInterval({ dateGroups, value, getDate }) {
   const timestamp = +getDate(value);
@@ -82,6 +89,8 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
 
   Promise.all([getExercisesForCourse, getUsersSubmissionsForCourse, getUsersExercisePointsForCourse])
     .spread((exercises, submissions, points) => {
+      exercises = exercises.map(formatExercise);
+
       exerciseIdToPoints = points.reduce((pointsMap, point) => {
         pointsMap[point.exercise_id.toString()] = point;
 
@@ -96,7 +105,6 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
     .then(groups => {
       return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
     })
-    .then(console.log)
 
   const groups = _.mapValues(exerciseGroups, () => {
     return {

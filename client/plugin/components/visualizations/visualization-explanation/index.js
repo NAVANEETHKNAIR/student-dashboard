@@ -10,12 +10,18 @@ import withClassPrefix from 'utils/class-prefix';
 import Icon from 'components/icon';
 
 export class VisualizationExplanation extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      showExplanation: false
-    }
+  static propTypes = {
+    onClose: React.PropTypes.func,
+    onOpen: React.PropTypes.func
+  }
+
+  state = {
+    showExplanation: false
+  }
+
+  constructor() {
+    super();
 
     this.onOutsideClick = this.onOutsideClick.bind(this);
   }
@@ -85,11 +91,6 @@ export class VisualizationExplanation extends React.Component {
     );
   }
 }
-
-VisualizationExplanation.propTypes = {
-  onClose: React.PropTypes.func,
-  onOpen: React.PropTypes.func
-};
 
 const mapDispatchToProps = dispatch => ({
   onClose: () => dispatch(createAction({ name: CLOSE_EXPLANATION })),

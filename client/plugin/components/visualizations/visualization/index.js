@@ -9,6 +9,12 @@ import RadarVisualization from 'components/visualizations/radar-visualization';
 import RadarVisualizationWithGrade from 'components/visualizations/radar-visualization-with-grade';
 
 export class Visualization extends React.Component {
+
+  static defaultProps = {
+    type: React.PropTypes.oneOf([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE]).isRequired,
+    onUpdateVisualization: React.PropTypes.func
+  }
+
   renderContent() {
     const mapTypeToComponent = {
       [RADAR_VISUALIZATION]: RadarVisualization,
@@ -33,11 +39,6 @@ export class Visualization extends React.Component {
       </div>
     );
   }
-}
-
-Visualization.propTypes = {
-  type: React.PropTypes.oneOf([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE]).isRequired,
-  onUpdateVisualization: React.PropTypes.func
 }
 
 const mapStateToProps = state => ({

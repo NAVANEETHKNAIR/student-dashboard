@@ -10,7 +10,7 @@ export function withoutTitle(config) {
 }
 
 export function withoutCredits(config) {
-  return Object.assign({}, config || {}, {
+  return Object.assign({}, config || {}, {
     credits: {
       enabled: false
     }
@@ -18,7 +18,7 @@ export function withoutCredits(config) {
 }
 
 export function withoutLegend(config) {
-  return Object.assign({}, config || {}, {
+  return Object.assign({}, config || {}, {
     legend: {
       enabled: false
     }

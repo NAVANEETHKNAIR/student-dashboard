@@ -8,6 +8,12 @@ import withClassPrefix from 'utils/class-prefix';
 import { PRIMARY_COLOR } from 'constants/colors';
 
 class GradeEstimate extends React.Component {
+  
+  static propTypes = {
+    grade: React.PropTypes.number.isRequired,
+    onToggle: React.PropTypes.func
+  }
+
   renderContent(style, radius) {
     const STROKE_WIDTH = 8;
     const path = this.describeArc(30 - STROKE_WIDTH / 2, 30 - STROKE_WIDTH / 2, 30 - STROKE_WIDTH / 2, 0, radius);

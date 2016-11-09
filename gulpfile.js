@@ -4,18 +4,19 @@ const path = require('path');
 const gulp = require('gulp');
 const buildBundleTasks = require('gulp-tasks/helpers/bundle-task-builder');
 
+const { DEV_API_URL, PROD_API_URL } = require('gulp-tasks/constants');
+
 const DEST_SCRIPTS = path.resolve('./dist/js');
 const DEST_STYLESHEETS = path.resolve('./dist/css');
 
-function createScriptBundle({ entryPath, react = true, name, modulesDirectories = [] }) {
+function createScriptBundle({ entryPath, name, modules = [] }) {
   return {
-    react,
     entry: path.resolve(`${entryPath}/index.js`),
-    modulesDirectories: [path.resolve(entryPath), ...modulesDirectories],
+    modules: [path.resolve(entryPath), ...modules],
     output: DEST_SCRIPTS,
     getEnv: isDevelopment => {
       return {
-        API_URL: isDevelopment ? 'http://localhost:3000' : ''
+        API_URL: isDevelopment ? DEV_API_URL : PROD_API_URL
       }
     },
     fileName: `${name}.min.js`
@@ -33,7 +34,7 @@ function createSassBundle({ entryPath, name, classPrefix }) {
 }
 
 gulp.task('server', require('gulp-tasks/server'));
-
+gulp.task('deploy', require('gulp-tasks/deploy'));
 gulp.task('assets', require('gulp-tasks/assets'));
 
 buildBundleTasks({
@@ -49,6 +50,4 @@ buildBundleTasks({
 
 gulp.task('build', ['assets', 'build.plugin', 'build.pluginLoader']);
 
-gulp.task('default', () => {
-  gulp.run('serve.plugin');
-});
+gulp.task('default', ['serve.plugin']);

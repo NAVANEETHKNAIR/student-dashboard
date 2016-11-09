@@ -1,11 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
-module.exports = ({ modulesDirectories, entry, output, fileName, isDevelopment = true, env = {}, react = true }) => {
-  const presets = react === true
-    ? ['es2015', 'react']
-    : ['es2015'];
-
+module.exports = ({ modules, entry, output, fileName, isDevelopment = true, env = {} }) => {
   return {
     entry,
     devtool: isDevelopment ? 'eval-source-map' : '',
@@ -17,7 +13,8 @@ module.exports = ({ modulesDirectories, entry, output, fileName, isDevelopment =
           loader: 'babel-loader',
           exclude: /node_modules/,
           query: {
-            presets
+            plugins: ['transform-class-properties'],
+            presets: ['es2015', 'react']
           }
         },
         {
@@ -27,13 +24,13 @@ module.exports = ({ modulesDirectories, entry, output, fileName, isDevelopment =
       ]
     },
     resolve: {
-      modulesDirectories: ['node_modules', ...modulesDirectories]
+      modulesDirectories: ['node_modules', ...modules]
     },
     plugins: [
       new webpack.DefinePlugin({
         'process.env': JSON.stringify(env)
       }),
-      isDevelopment ? undefined : new webpack.optimize.UglifyJsPlugin({ minimize: true })
+      isDevelopment ? undefined : undefined
     ].filter(p => !!p),
     watch: isDevelopment
   };

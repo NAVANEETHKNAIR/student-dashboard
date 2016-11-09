@@ -11,12 +11,8 @@ import GradeEstimate from './grade-estimate';
 import Icon from 'components/icon';
 
 class RadarVisualizationWithGrade extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      gradeIsOpen: false
-    }
+  state = {
+    gradeIsOpen: false
   }
 
   renderGradeButton() {

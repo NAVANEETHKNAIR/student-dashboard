@@ -6,22 +6,30 @@ const sassGlob = require('gulp-sass-glob');
 const autoprefixer = require('gulp-autoprefixer');
 const classPrefix = require('gulp-class-prefix');
 const plumber = require('gulp-plumber');
+const watch = require('gulp-watch');
 
 module.exports = options => () => {
-  const pipeline = gulp.src(options.src)
+  let pipeline = gulp.src(options.src)
     .pipe(plumber())
+
+  if(options.watch) {
+    pipeline = pipeline
+      .pipe(watch(options.watch))
+  }
+
+  pipeline = pipeline
     .pipe(sassGlob())
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(rename(options.fileName));
 
   if(options.classPrefix) {
-    pipeline
+    pipeline = pipeline
       .pipe(classPrefix(options.classPrefix));
   }
 
   if(options.uglify === true) {
-    pipeline
+    pipeline = pipeline
       .pipe(cleanCSS({ compatibility: 'ie8' }));
   }
 

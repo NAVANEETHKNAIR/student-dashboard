@@ -2,7 +2,6 @@ const { pick } = require('lodash');
 
 const Action = require('app-modules/models/action');
 
-
 function createAction({ getUserId, getAttributes }) {
   return (req, res, next) => {
     const userId = getUserId(req);
