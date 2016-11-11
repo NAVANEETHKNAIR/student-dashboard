@@ -1,11 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 
-module.exports = ({ modules, entry, output, fileName, isDevelopment = true, env = {} }) => {
+module.exports = options => {
   return {
-    entry,
-    devtool: isDevelopment ? 'eval-source-map' : '',
-    output: { path: output, filename: fileName },
+    entry: options.entry,
+    devtool: options.isDevelopment ? 'eval-source-map' : '',
+    output: {
+      path: options.output,
+      filename: `${options.fileName}.js`
+    },
     module: {
       loaders: [
         {
@@ -24,14 +27,14 @@ module.exports = ({ modules, entry, output, fileName, isDevelopment = true, env 
       ]
     },
     resolve: {
-      modulesDirectories: ['node_modules', ...modules]
+      modulesDirectories: ['node_modules', ...(options.modules || [])]
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': JSON.stringify(env)
+        'process.env': JSON.stringify(options.env || {})
       }),
-      isDevelopment ? undefined : undefined
+      options.isDevelopment ? undefined: new webpack.optimize.UglifyJsPlugin({ minimize: true })
     ].filter(p => !!p),
-    watch: isDevelopment
+    watch: options.isDevelopment
   };
 }

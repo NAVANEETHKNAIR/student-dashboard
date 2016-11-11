@@ -9,10 +9,14 @@ const plumber = require('gulp-plumber');
 const watch = require('gulp-watch');
 
 module.exports = options => () => {
-  let pipeline = gulp.src(options.src)
-    .pipe(plumber())
+  let pipeline = gulp.src(options.entry);
 
-  if(options.watch) {
+  if(options.isDevelopment) {
+    pipeline = pipeline
+      .pipe(plumber());
+  }
+
+  if(options.watch && options.isDevelopment) {
     pipeline = pipeline
       .pipe(watch(options.watch))
   }
@@ -21,18 +25,18 @@ module.exports = options => () => {
     .pipe(sassGlob())
     .pipe(sass())
     .pipe(autoprefixer())
-    .pipe(rename(options.fileName));
+    .pipe(rename(`${options.fileName}.css`));
 
   if(options.classPrefix) {
     pipeline = pipeline
       .pipe(classPrefix(options.classPrefix));
   }
 
-  if(options.uglify === true) {
+  if(!options.isDevelopment) {
     pipeline = pipeline
       .pipe(cleanCSS({ compatibility: 'ie8' }));
   }
 
   return pipeline
-    .pipe(gulp.dest(options.dest));
+    .pipe(gulp.dest(options.output));
 }

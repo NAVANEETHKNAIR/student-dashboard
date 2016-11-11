@@ -2,52 +2,61 @@ require('app-module-path').addPath(__dirname);
 
 const path = require('path');
 const gulp = require('gulp');
-const buildBundleTasks = require('gulp-tasks/helpers/bundle-task-builder');
 
-const { DEV_API_URL, PROD_API_URL } = require('gulp-tasks/constants');
+const makeServerTask = require('gulp-tasks/server-task');
+const makeDeployTask = require('gulp-tasks/deploy-task');
+const constants = require('gulp-tasks/constants');
 
-const DEST_SCRIPTS = path.resolve('./dist/js');
-const DEST_STYLESHEETS = path.resolve('./dist/css');
+const scriptsDist = path.join(__dirname, 'dist', 'js');
+const stylesDist = path.join(__dirname, 'dist', 'css');
 
-function createScriptBundle({ entryPath, name, modules = [] }) {
-  return {
-    entry: path.resolve(`${entryPath}/index.js`),
-    modules: [path.resolve(entryPath), ...modules],
-    output: DEST_SCRIPTS,
-    getEnv: isDevelopment => {
-      return {
-        API_URL: isDevelopment ? DEV_API_URL : PROD_API_URL
-      }
+const registry = require('gulp-tasks/register-bundle-tasks')({
+  assetPaths: './assets/**/*',
+  assetDist: path.join(__dirname, 'dist', 'assets')
+});
+
+registry
+  .register('plugin', {
+    script: {
+      entry: path.join(__dirname, 'client', 'plugin', 'index.js'),
+      fileName: 'plugin',
+      output: scriptsDist,
+      modules: [path.join(__dirname, 'client', 'plugin')],
+      getEnv: isDevelopment => ({
+        API_URL: isDevelopment ? constants.DEV_API_URL : constants.PROD_API_URL
+      })
     },
-    fileName: `${name}.min.js`
-  }
-}
+    sass: {
+      entry: path.join(__dirname, 'client', 'plugin', 'index.scss'),
+      output: stylesDist,
+      fileName: 'plugin',
+      classPrefix: 'sd-',
+      watch: ['./client/plugin/**/*.scss']
+    }
+  })
+  .register('pluginLoader', {
+    script: {
+      entry: path.join(__dirname, 'client', 'plugin-loader', 'index.js'),
+      fileName: 'plugin-loader',
+      output: scriptsDist,
+      getEnv: isDevelopment => {
+        const apiUrl = isDevelopment ? constants.DEV_API_URL : constants.PROD_API_URL;
 
-function createSassBundle({ entryPath, name, classPrefix }) {
-  return {
-    entry: path.resolve(`${entryPath}/index.scss`),
-    output: DEST_STYLESHEETS,
-    fileName: `${name}.min.css`,
-    classPrefix,
-    watchPaths: [path.resolve(`${entryPath}/**/*.scss`)]
-  }
-}
+        return {
+          API_URL: apiUrl,
+          PLUGIN_SCRIPT_SOURCE: `${apiUrl}/dist/js/plugin.js`,
+          PLUGIN_STYLE_SOURCE: `${apiUrl}/dist/css/plugin.css`
+        }
+      }
+    }
+  })
+  .done()
 
-gulp.task('server', require('gulp-tasks/server'));
-gulp.task('deploy', require('gulp-tasks/deploy'));
-gulp.task('assets', require('gulp-tasks/assets'));
+gulp.task('server', makeServerTask({
+  watch: constants.NODEMON_PATHS,
+  env: constants.SERVER_ENV_CONFIG
+}));
 
-buildBundleTasks({
-  name: 'plugin',
-  scripts: createScriptBundle({ entryPath: './client/plugin', name: 'plugin' }),
-  sass: createSassBundle({ entryPath: './client/plugin', name: 'plugin', classPrefix: 'sd-' })
-});
+gulp.task('deploy', makeDeployTask());
 
-buildBundleTasks({
-  name: 'pluginLoader',
-  scripts: createScriptBundle({ entryPath: './client/plugin-loader', name: 'plugin-loader' })
-});
-
-gulp.task('build', ['assets', 'build.plugin', 'build.pluginLoader']);
-
-gulp.task('default', ['serve.plugin']);
+gulp.task('default', ['server', 'serve.plugin']);

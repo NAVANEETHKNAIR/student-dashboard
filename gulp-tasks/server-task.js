@@ -3,11 +3,11 @@ const nodemon = require('gulp-nodemon');
 
 const constants = require('./constants');
 
-module.exports = () => {
+module.exports = options => () => {
   nodemon({
     script: './bin/www',
     ext: 'js',
-    watch: constants.NODEMON_PATHS,
-    env: constants.ENV_CONFIG
+    watch: options.watch || [],
+    env: options.env || {}
   });
 }
