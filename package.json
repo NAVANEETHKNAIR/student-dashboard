@@ -9,7 +9,8 @@
     "start": "node ./bin/www",
     "dev": "gulp",
     "test": "",
-    "postinstall": "node ./node_modules/gulp/bin/gulp build"
+    "postinstall": "if [ $RUN_BUILD ]; then npm run-script build; fi",
+    "build": "node ./node_modules/gulp/bin/gulp build"
   },
   "dependencies": {
     "app-module-path": "^1.1.0",
