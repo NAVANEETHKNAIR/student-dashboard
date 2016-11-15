@@ -5,6 +5,8 @@ const gulp = require('gulp');
 
 const makeServerTask = require('gulp-tasks/server-task');
 const makeDeployTask = require('gulp-tasks/deploy-task');
+const makeTestTask = require('gulp-tasks/test-task');
+
 const constants = require('gulp-tasks/constants');
 
 const scriptsDist = path.join(__dirname, 'dist', 'js');
@@ -51,6 +53,8 @@ registry
     }
   })
   .done()
+
+gulp.task('test', makeTestTask({ paths: ['./app-modules/**/*.spec.js', './server/**/*.spec.js'] }));
 
 gulp.task('server', makeServerTask({
   watch: constants.NODEMON_PATHS,

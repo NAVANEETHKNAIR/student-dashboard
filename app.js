@@ -1,4 +1,5 @@
 require('app-module-path').addPath(__dirname);
+
 require('app-modules/utils/cache');
 
 const express = require('express');

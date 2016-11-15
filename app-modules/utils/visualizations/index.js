@@ -156,4 +156,7 @@ function getUsersEstimatedGrade(progressData) {
     : Math.round(valueSum / optimalValueSum * 5);
 }
 
-module.exports = { getUsersProgressData, getUsersEstimatedGrade }
+module.exports = {
+  getUsersProgressData,
+  getUsersEstimatedGrade
+}

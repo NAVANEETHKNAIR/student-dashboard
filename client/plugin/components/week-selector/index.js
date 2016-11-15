@@ -13,7 +13,6 @@ import { selectActiveExerciseGroup, selectActiveIsLastExerciseGroup, selectActiv
 import Icon from 'components/icon';
 
 export class WeekSelector extends React.Component {
-
   static propTypes = {
     label: React.PropTypes.string.isRequired,
     nextDisabled: React.PropTypes.bool,
