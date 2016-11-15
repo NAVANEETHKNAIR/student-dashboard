@@ -12,3 +12,5 @@ env:
   - TRAVIS=travis CXX=g++-4.8
 before_script:
   - npm run-script build
+script:
+  - npm test
