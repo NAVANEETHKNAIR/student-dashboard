@@ -1,5 +1,5 @@
 require('app-module-path').addPath(__dirname);
-require('dotenv').config();
+require('dotenv').config({ silent: true });
 
 const path = require('path');
 const gulp = require('gulp');
