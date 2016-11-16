@@ -1,4 +1,5 @@
 require('app-module-path').addPath(__dirname);
+require('dotenv').config();
 
 const path = require('path');
 const gulp = require('gulp');
@@ -24,9 +25,9 @@ registry
       fileName: 'plugin',
       output: scriptsDist,
       modules: [path.join(__dirname, 'client', 'plugin')],
-      getEnv: isDevelopment => ({
-        API_URL: isDevelopment ? constants.DEV_API_URL : constants.PROD_API_URL
-      })
+      env: {
+        API_URL: process.env.SDP_API_URL
+      }
     },
     sass: {
       entry: path.join(__dirname, 'client', 'plugin', 'index.scss'),
@@ -41,14 +42,10 @@ registry
       entry: path.join(__dirname, 'client', 'plugin-loader', 'index.js'),
       fileName: 'plugin-loader',
       output: scriptsDist,
-      getEnv: isDevelopment => {
-        const apiUrl = isDevelopment ? constants.DEV_API_URL : constants.PROD_API_URL;
-
-        return {
-          API_URL: apiUrl,
-          PLUGIN_SCRIPT_SOURCE: `${apiUrl}/dist/js/plugin.js`,
-          PLUGIN_STYLE_SOURCE: `${apiUrl}/dist/css/plugin.css`
-        }
+      env: {
+        API_URL: process.env.SDP_API_URL,
+        PLUGIN_SCRIPT_SOURCE: process.env.SDP_PLUGIN_SCRIPT_SOURCE,
+        PLUGIN_STYLE_SOURCE: process.env.SDP_PLUGIN_STYLE_SOURCE
       }
     }
   })
@@ -57,8 +54,7 @@ registry
 gulp.task('test', makeTestTask({ paths: ['./app-modules/**/*.spec.js', './server/**/*.spec.js'] }));
 
 gulp.task('server', makeServerTask({
-  watch: constants.NODEMON_PATHS,
-  env: constants.SERVER_ENV_CONFIG
+  watch: constants.NODEMON_PATHS
 }));
 
 gulp.task('deploy', makeDeployTask());

@@ -4,7 +4,10 @@
  * Module dependencies.
  */
 
+const path = require('path');
 const throng = require('throng');
+
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env')  });
 
 const throngConfig = {
   workers: process.env.WEB_CONCURRENCY || 1,

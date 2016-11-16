@@ -1,31 +1,27 @@
 const Promise = require('bluebird');
-const request = require('request-promise');
+const axios = require('axios');
 
 const { withCacheGetAndSet } = require('app-modules/utils/cache');
 
+const apiV8Client = axios.create({
+  baseURL: `${process.env.TMC_API_ALPHA_URL}/api/v8`
+});
+
+const apiBetaClient = axios.create({
+  baseURL: `${process.env.TMC_API_URL}/api/beta`
+});
+
 function getProfile(accessToken, { cache = true } = {}) {
-  const options = {
-    method: 'GET',
-    uri: `${process.env.TMC_AUTH_URL}/api/beta/participant?access_token=${accessToken}`
-  };
-
-  const getProfileRequest = () => {
-    return request(options)
-      .then(response => JSON.parse(response));
-  };
-
-  return getProfileRequest();
+  return apiBetaClient
+    .get('/participant', { params: { access_token: accessToken } })
+    .then(response => response.data);
 }
 
 function getCourse({ accessToken, courseId }, { cache = true } = {}) {
-  const options = {
-    method: 'GET',
-    uri: `${process.env.TMC_URL}/api/v8/courses/${courseId}?access_token=${accessToken}`
-  };
-
   const getCourseRequest = () => {
-    return request(options)
-      .then(response => JSON.parse(response));
+    return apiV8Client
+      .get(`/courses/${courseId}`, { params: { access_token: accessToken } })
+      .then(response => response.data);
   };
 
   if(cache) {
@@ -44,14 +40,10 @@ function getUsersExercisePointsForCourse({ accessToken, courseId }, { cache = tr
 }
 
 function getExercisesForCourse({ accessToken, courseId }, { cache = true } = {}) {
-  const options = {
-    method: 'GET',
-    uri: `${process.env.TMC_URL}/api/v8/courses/${courseId}/exercises?access_token=${accessToken}`
-  };
-
   const getPointsRequest = () => {
-    return request(options)
-      .then(response => JSON.parse(response));
+    return apiV8Client
+      .get(`/courses/${courseId}/exercises`, { params: { access_token: accessToken } })
+      .then(response => response.data);
   };
 
   if(cache) {

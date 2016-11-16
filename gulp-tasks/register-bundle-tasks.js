@@ -23,8 +23,6 @@ function registry(registryOptions) {
       serveTasks = [...serveTasks, `scripts.${bundleName}`];
       buildTasks = [...buildTasks, `build:scripts.${bundleName}`];
 
-      const getEnv = scriptOptions.getEnv || (() => ({}));
-
       const makeWebpackConfigForDev = isDevelopment => makeWebpackConfig({
         isDevelopment,
         entry: scriptOptions.entry,
@@ -32,7 +30,7 @@ function registry(registryOptions) {
         dist: scriptOptions.dist,
         fileName: scriptOptions.fileName,
         modules: scriptOptions.modules || [],
-        env: Object.assign({}, getEnv(isDevelopment), { NODE_ENV: isDevelopment ? 'development' : 'production' })
+        env: Object.assign({}, scriptOptions.env || {}, { NODE_ENV: isDevelopment ? 'development' : 'production' })
       });
 
       gulp.task(`scripts.${bundleName}`, makeScriptTask({

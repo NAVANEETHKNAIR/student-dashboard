@@ -1,6 +1,5 @@
 const ParticipantCounter = require('./participant-counter');
-
-const participantConstants = require('app-modules/constants/participants');
+const { GROUP_COUNT } = require('app-modules/constants/participants');
 
 module.exports = schema => {
 
@@ -11,7 +10,7 @@ module.exports = schema => {
           return user.group;
         } else {
           return ParticipantCounter.increaseAndGetCounter(courseId)
-            .then(value => value % participantConstants.GROUP_COUNT)
+            .then(value => value % GROUP_COUNT)
             .then(group => {
               const newParticipant = new this({ userId, courseId, group });
 

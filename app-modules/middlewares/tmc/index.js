@@ -11,20 +11,13 @@ function getProfile(getAccessToken) {
       return next(new errors.InvalidRequestError('Access token is required'));
     }
 
-    /*tmcApi.getProfile(accessToken)
+    tmcApi.getProfile(accessToken)
       .then(profile => {
         req.tmcProfile = Object.assign({ accessToken }, profile);
 
         return next();
       })
-      .catch(err => next(new errors.ForbiddenError('Tmc access token is invalid on expired')));*/
-
-    req.tmcProfile = {
-      username: 'test1',
-      accessToken
-    };
-
-    next();
+      .catch(err => next(new errors.ForbiddenError('Tmc access token is invalid on expired')));
   }
 }
 

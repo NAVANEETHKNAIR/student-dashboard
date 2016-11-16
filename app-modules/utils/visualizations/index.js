@@ -104,7 +104,7 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
     })
     .then(groups => {
       return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
-    })
+    });
 
   const groups = _.mapValues(exerciseGroups, () => {
     return {
