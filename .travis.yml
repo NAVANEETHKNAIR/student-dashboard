@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - "6.3.0"
+services:
+  - mongodb
 addons:
   apt:
     sources:
@@ -11,6 +13,7 @@ addons:
 env:
   - TRAVIS=travis CXX=g++-4.8
 before_script:
+  - sleep 15
   - npm run-script build
 script:
   - npm test

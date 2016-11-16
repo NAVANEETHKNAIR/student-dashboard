@@ -49,9 +49,9 @@ registry
       }
     }
   })
-  .done()
+  .done();
 
-gulp.task('test', makeTestTask({ paths: ['./app-modules/**/*.spec.js', './server/**/*.spec.js'] }));
+gulp.task('test', makeTestTask({ paths: ['./app-modules/**/_spec.js', './server/**/_spec.js'] }));
 
 gulp.task('server', makeServerTask({
   watch: constants.NODEMON_PATHS
