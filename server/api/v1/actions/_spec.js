@@ -1,20 +1,14 @@
 const request = require('supertest');
 const app = require('app');
 const nock = require('nock');
+const tmcApiMock = require('app-modules/test-utils/tmc-api-mock');
 const database = require('app-modules/test-utils/database');
 
 describe('Actions API', () => {
 
   before(() => {
-    nock(process.env.TMC_API_URL)
-      .get('/api/beta/participant?access_token=123')
-      .reply(403, {});
-
-    nock(process.env.TMC_API_URL)
-      .get('/api/beta/participant?access_token=456')
-      .reply(200, {
-        username: 'test'
-      });
+    tmcApiMock.mockAuthenticationFailure('123');
+    tmcApiMock.mockAuthenticationSuccess('456');
 
     return database.connect();
   });
@@ -39,6 +33,8 @@ describe('Actions API', () => {
   });
 
   after(() => {
+    nock.cleanAll();
+
     return database.disconnect();
   });
 });
