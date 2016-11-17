@@ -18,39 +18,27 @@ function getProfile(accessToken, { cache = true } = {}) {
 }
 
 function getCourse({ accessToken, courseId }, { cache = true } = {}) {
-  const getCourseRequest = () => {
-    return apiV8Client
-      .get(`/courses/${courseId}`, { params: { access_token: accessToken } })
-      .then(response => response.data);
-  };
-
-  if(cache) {
-    return withCacheGetAndSet(getCourseRequest, { key: `course-${courseId}`, ttl: '2h' })
-  } else {
-    return getCourseRequest();
-  }
+  return apiV8Client
+    .get(`/courses/${courseId}`, { params: { access_token: accessToken } })
+    .then(response => response.data);
 }
 
 function getUsersSubmissionsForCourse({ accessToken, courseId }, { cache = true } = {}) {
-  return Promise.resolve([]);
+  return apiV8Client
+    .get(`/courses/${courseId}/exercises/submissions/user`, { params: { access_token: accessToken } })
+    .then(response => response.data.submissions || []);
 }
 
 function getUsersExercisePointsForCourse({ accessToken, courseId }, { cache = true } = {}) {
-  return Promise.resolve([]);
+  return apiV8Client
+    .get(`/courses/${courseId}/points/user`, { params: { access_token: accessToken } })
+    .then(response => response.data);
 }
 
 function getExercisesForCourse({ accessToken, courseId }, { cache = true } = {}) {
-  const getPointsRequest = () => {
-    return apiV8Client
-      .get(`/courses/${courseId}/exercises`, { params: { access_token: accessToken } })
-      .then(response => response.data);
-  };
-
-  if(cache) {
-    return withCacheGetAndSet(getPointsRequest, { key: `points-${courseId}`, ttl: '2h' });
-  } else {
-    return getPointsRequest();
-  }
+  return apiV8Client
+    .get(`/courses/${courseId}/exercises`, { params: { access_token: accessToken } })
+    .then(response => response.data);
 }
 
 module.exports = { getCourse, getUsersSubmissionsForCourse, getUsersExercisePointsForCourse, getExercisesForCourse, getProfile };

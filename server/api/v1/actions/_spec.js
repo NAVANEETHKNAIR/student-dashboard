@@ -7,8 +7,9 @@ const database = require('app-modules/test-utils/database');
 describe('Actions API', () => {
 
   before(() => {
-    tmcApiMock.mockAuthenticationFailure('123');
-    tmcApiMock.mockAuthenticationSuccess('456');
+    tmcApiMock
+      .mockAuthenticationFailure({ accessToken: '123' })
+      .mockAuthenticationSuccess({ accessToken: '456' });
 
     return database.connect();
   });

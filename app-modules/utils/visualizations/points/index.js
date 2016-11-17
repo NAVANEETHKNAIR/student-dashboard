@@ -63,8 +63,8 @@ function getEarlinessPoints({ exercises, submissions }) {
       return exerciseMap;
     }, {});
 
-  const averageSubmissionDifferenceToDeadline = uniqueSubmissions.reduce((sum, submission) => sum + differenceInDays(new Date(exerciseIdToExercise[submission.exercise_id].deadline_at), new Date(submission.created_at)), 0) / uniqueSubmissions.length;
-  const deadlineDays = differenceInDays(exercises[0].deadline_at, exercises[0].published_at);
+  const averageSubmissionDifferenceToDeadline = uniqueSubmissions.reduce((sum, submission) => sum + differenceInDays(new Date(exerciseIdToExercise[submission.exercise_id].deadline), new Date(submission.created_at)), 0) / uniqueSubmissions.length;
+  const deadlineDays = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
 
   return {
     value: _.round(Math.min(averageSubmissionDifferenceToDeadline / (deadlineDays * 0.7), 1), 2),
@@ -95,7 +95,7 @@ function getSchedulingPoints({ exercises, submissions }) {
     return dateMap;
   }, {});
 
-  const daysToFinnish = differenceInDays(new Date(exercises[0].deadline_at), new Date(exercises[0].published_at));
+  const daysToFinnish = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
   const optimalDayCount = Math.round(daysToFinnish * 0.6);
 
   return {
@@ -124,7 +124,7 @@ function getStartingPoints({ exercises, submissions }) {
   const exerciseIdToExercise = exercises
     .reduce((exerciseMap, exercise) => {
       exerciseMap[exercise.id.toString()] =  Object.assign({}, exercise, {
-        daysToFinnish: differenceInDays(new Date(exercise.deadline_at), new Date(exercise.published_at))
+        daysToFinnish: differenceInDays(new Date(exercise.deadline), new Date(exercise.published))
       });
 
       return exerciseMap;
@@ -133,10 +133,10 @@ function getStartingPoints({ exercises, submissions }) {
   const earliestSubmission = _.minBy(submissions, submission => +new Date(submission.created_at));
   const submissionExercise = exerciseIdToExercise[earliestSubmission.exercise_id];
 
-  const submissionDelay = differenceInDays(new Date(earliestSubmission.created_at), new Date(submissionExercise.published_at));
+  const submissionDelay = differenceInDays(new Date(earliestSubmission.created_at), new Date(submissionExercise.published));
 
   return {
-    value: 1 - _.round(submissionDelay / submissionExercise.daysToFinnish, 2),
+    value: _.round(1 - submissionDelay / submissionExercise.daysToFinnish, 2),
     meta: {
       startingDate: null,
       bestStartingDate: null

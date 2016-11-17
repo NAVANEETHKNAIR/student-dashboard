@@ -11,6 +11,25 @@ function formatExercise(exercise) {
   });
 }
 
+function getExerciseIdToPoints(points) {
+  return points.reduce((pointsMap, point) => {
+    const exerciseId = point.exercise_id.toString();
+
+    pointsMap[exerciseId] = pointsMap[exerciseId] || [];
+    pointsMap[exerciseId] = [...pointsMap[exerciseId], point];
+
+    return pointsMap;
+  }, {});
+}
+
+function getExerciseNameToId(exercises) {
+  return exercises.reduce((exercisesMap, exercise) => {
+    exercisesMap[exercise.name || '_'] = exercise.id;
+
+    return exercisesMap;
+  }, {});
+}
+
 function groupByDateInterval({ dateGroups, value, getDate }) {
   const timestamp = +getDate(value);
   const groupNames = Object.keys(dateGroups);
@@ -85,17 +104,17 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
   const getUsersExercisePointsForCourse = tmcApi.getUsersExercisePointsForCourse({ courseId, accessToken }, apiOptions);
   const getUsersSubmissionsForCourse = tmcApi.getUsersSubmissionsForCourse({ courseId, accessToken }, apiOptions);
 
-  let exerciseIdToPoints = {};
+  let exerciseIdToPoints;
 
-  Promise.all([getExercisesForCourse, getUsersSubmissionsForCourse, getUsersExercisePointsForCourse])
+  return Promise.all([getExercisesForCourse, getUsersSubmissionsForCourse, getUsersExercisePointsForCourse])
     .spread((exercises, submissions, points) => {
       exercises = exercises.map(formatExercise);
 
-      exerciseIdToPoints = points.reduce((pointsMap, point) => {
-        pointsMap[point.exercise_id.toString()] = point;
+      const exerciseNameToId = getExerciseNameToId(exercises);
 
-        return pointsMap;
-      }, {});
+      submissions = submissions.map(submission => Object.assign({}, submission, { exercise_id: exerciseNameToId[submission.exercise_name] || null }));
+
+      exerciseIdToPoints = getExerciseIdToPoints(points);
 
       return groupExercisesAndSubmissions({ exercises, submissions, dateGroups: exerciseGroups });
     })
@@ -104,45 +123,13 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
     })
     .then(groups => {
       return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
+    })
+    .then(groups => {
+      return {
+        groups,
+        average: getPointAverages(groups)
+      };
     });
-
-  const groups = _.mapValues(exerciseGroups, () => {
-    return {
-      earliness: {
-        value: _.random(0, 10) / 10,
-        meta: {
-          averageDays: _.random(1, 7),
-          bestAverageDays: 3
-        }
-      },
-      exercises: {
-        value: _.random(0, 10) / 10,
-        meta: {
-          points: _.random(0, 10),
-          bestPoints: 10
-        }
-      },
-      scheduling: {
-        value: _.random(0, 10) / 10,
-        meta: {
-          workingDays: _.random(1, 7),
-          bestWorkingDays: 4
-        }
-      },
-      starting: {
-        value: _.random(0, 10) / 10,
-        meta: {
-          startingDate: Math.floor(+(new Date()) / 1000),
-          bestStartingDate: Math.floor(+(new Date()) / 1000)
-        }
-      }
-    }
-  });
-
-  return Promise.resolve({
-    groups,
-    average: getPointAverages(groups)
-  });
 }
 
 function getUsersEstimatedGrade(progressData) {

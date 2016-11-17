@@ -27,7 +27,7 @@ describe('points', () => {
   });
 
   it('should calculate earliness points correctly', () => {
-    const exercises = _.chain(new Array(3)).fill(0).map((e, i) => ({ id: i.toString(), published_at: toDate('14.11'), deadline_at: toDate('20.11') })).value();
+    const exercises = _.chain(new Array(3)).fill(0).map((e, i) => ({ id: i.toString(), published: toDate('14.11'), deadline: toDate('20.11') })).value();
 
     const submissionsA = [
       {
@@ -83,8 +83,8 @@ describe('points', () => {
     const exercises = [
       {
         exercise_id: '0',
-        published_at: toDate('14.11'),
-        deadline_at: toDate('20.11')
+        published: toDate('14.11'),
+        deadline: toDate('20.11')
       }
     ];
 
@@ -135,8 +135,8 @@ describe('points', () => {
     const exercises = [
       {
         id: '0',
-        published_at: toDate('14.11'),
-        deadline_at: toDate('20.11')
+        published: toDate('14.11'),
+        deadline: toDate('20.11')
       }
     ];
 
