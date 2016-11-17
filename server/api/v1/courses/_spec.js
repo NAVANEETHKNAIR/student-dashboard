@@ -53,11 +53,6 @@ describe('Courses API', () => {
     };
 
     tmcApiMock
-      .mockAuthenticationFailure({ accessToken: '123' })
-      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' })
-      .mockAuthenticationSuccess({ accessToken: '567', username: 'test2' })
-      .mockAuthenticationSuccess({ accessToken: '678', username: 'test3' })
-      .mockAuthenticationSuccess({ accessToken: '789', username: 'test4' })
       .mockGetExercises(exercises)
       .mockGetPoints(points)
       .mockGetSubmissions(submissions);
@@ -66,6 +61,9 @@ describe('Courses API', () => {
   });
 
   it('should not be able to get visualization without a valid TMC access token', done => {
+    tmcApiMock
+      .mockAuthenticationFailure({ accessToken: '123' });
+
     request(app)
       .post('/api/v1/courses/1/visualization')
       .set('Authorization', 'Bearer 123')
@@ -78,6 +76,9 @@ describe('Courses API', () => {
         'Week 1': [toUnix(toDate('14.11')), toUnix(toDate('20.11'))]
       }
     }
+
+    tmcApiMock
+      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' });
 
     request(app)
       .post('/api/v1/courses/1/visualization')
@@ -104,6 +105,12 @@ describe('Courses API', () => {
         'Week 1': [toUnix(toDate('14.11')), toUnix(toDate('20.11'))]
       }
     }
+
+    tmcApiMock
+      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' })
+      .mockAuthenticationSuccess({ accessToken: '567', username: 'test2' })
+      .mockAuthenticationSuccess({ accessToken: '678', username: 'test3' })
+      .mockAuthenticationSuccess({ accessToken: '789', username: 'test4' })
 
     const makeRequest = () => {
       return request(app)
@@ -139,6 +146,43 @@ describe('Courses API', () => {
       cb => {
         makeRequest()
           .set('Authorization', 'Bearer 789')
+          .end((err, res) => {
+            expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
+            cb();
+          });
+      }
+    ], done);
+  });
+
+  it('should give the same user the same visualization type', done => {
+    const body = {
+      exerciseGroups: {
+        'Week 1': [toUnix(toDate('14.11')), toUnix(toDate('20.11'))]
+      }
+    }
+
+    tmcApiMock
+      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' })
+      .mockAuthenticationSuccess({ accessToken: '567', username: 'test1' });
+
+    const makeRequest = () => {
+      return request(app)
+        .post('/api/v1/courses/1/visualization')
+        .send(body);
+    }
+
+    async.series([
+      cb => {
+        makeRequest()
+          .set('Authorization', 'Bearer 456')
+          .end((err, res) => {
+            expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
+            cb();
+          })
+      },
+      cb => {
+        makeRequest()
+          .set('Authorization', 'Bearer 567')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
             cb();

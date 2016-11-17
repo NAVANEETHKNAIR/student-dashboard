@@ -7,8 +7,7 @@ exported.mockAuthenticationSuccess = function({ accessToken, username = 'test' }
     .get(`/api/beta/participant?access_token=${accessToken}`)
     .reply(200, {
       username
-    })
-    .persist();
+    });
 
   return exported;
 }
@@ -16,8 +15,7 @@ exported.mockAuthenticationSuccess = function({ accessToken, username = 'test' }
 exported.mockAuthenticationFailure = function({ accessToken }) {
   nock(process.env.TMC_API_URL)
     .get(`/api/beta/participant?access_token=${accessToken}`)
-    .reply(403)
-    .persist();
+    .reply(403);
 
   return exported;
 }
