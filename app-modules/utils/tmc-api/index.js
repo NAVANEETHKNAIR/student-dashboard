@@ -8,7 +8,7 @@ const apiV8Client = axios.create({
 });
 
 const apiBetaClient = axios.create({
-  baseURL: `${process.env.TMC_API_URL}/api/beta`
+  baseURL: `${process.env.TMC_API_ALPHA_URL}/api/beta`
 });
 
 function getProfile(accessToken, { cache = true } = {}) {
@@ -23,15 +23,15 @@ function getCourse({ accessToken, courseId }, { cache = true } = {}) {
     .then(response => response.data);
 }
 
-function getUsersSubmissionsForCourse({ accessToken, courseId }, { cache = true } = {}) {
+function getUsersSubmissionsForCourse({ accessToken, userId, courseId }, { cache = true } = {}) {
   return apiV8Client
-    .get(`/courses/${courseId}/exercises/submissions/user`, { params: { access_token: accessToken } })
-    .then(response => response.data.submissions || []);
+    .get(`/courses/${courseId}/exercises/submissions/user/${userId}`, { params: { access_token: accessToken } })
+    .then(response => response.data);
 }
 
-function getUsersExercisePointsForCourse({ accessToken, courseId }, { cache = true } = {}) {
+function getUsersExercisePointsForCourse({ accessToken, userId, courseId }, { cache = true } = {}) {
   return apiV8Client
-    .get(`/courses/${courseId}/points/user`, { params: { access_token: accessToken } })
+    .get(`/courses/${courseId}/points/user/${userId}`, { params: { access_token: accessToken } })
     .then(response => response.data);
 }
 

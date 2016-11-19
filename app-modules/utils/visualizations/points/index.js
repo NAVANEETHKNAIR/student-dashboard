@@ -5,6 +5,10 @@ function differenceInDays(dateA, dateB) {
   return Math.round((+dateA - +dateB) / (1000 * 60 * 60 * 24));
 }
 
+function exerciseIdExists(exerciseIdToExercise) {
+  return value => value.exercise_id && !!exerciseIdToExercise[value.exercise_id.toString()];
+}
+
 /*
   Maximize amount of points
 */
@@ -33,21 +37,17 @@ function getExercisePoints({ exercises, points }) {
   Minimize average distance of the submission creation date to the published date
 */
 function getEarlinessPoints({ exercises, submissions }) {
-  if(submissions.length === 0 || exercises.length === 0) {
-    return {
-      value: 0,
-      meta: {
-        averageDays: null,
-        bestAverageDays: null
-      }
+  const emptyPoints = {
+    value: 0,
+    meta: {
+      averageDays: null,
+      bestAverageDays: null
     }
-  }
+  };
 
-  const uniqueSubmissions = _.chain(submissions)
-    .groupBy(submission => submission.exercise_id.toString())
-    .mapValues(submissions => _.minBy(submissions, submission => +(new Date(submission.created_at))))
-    .values()
-    .value();
+  if(submissions.length === 0 || exercises.length === 0) {
+    return emptyPoints;
+  }
 
   const exerciseIdToExercise = exercises
     .reduce((exerciseMap, exercise) => {
@@ -56,6 +56,17 @@ function getEarlinessPoints({ exercises, submissions }) {
       return exerciseMap;
     }, {});
 
+  const uniqueSubmissions = _.chain(submissions)
+    .filter(exerciseIdExists(exerciseIdToExercise))
+    .groupBy(submission => submission.exercise_id.toString())
+    .mapValues(submissions => _.minBy(submissions, submission => +(new Date(submission.created_at))))
+    .values()
+    .value();
+
+  if(uniqueSubmissions.length === 0) {
+    return emptyPoints;
+  }
+
   const exerciseIdToIsSubmitted = uniqueSubmissions
     .reduce((exerciseMap, submission) => {
       exerciseMap[submission.exercise_id.toString()] = true;
@@ -63,11 +74,14 @@ function getEarlinessPoints({ exercises, submissions }) {
       return exerciseMap;
     }, {});
 
-  const averageSubmissionDifferenceToDeadline = uniqueSubmissions.reduce((sum, submission) => sum + differenceInDays(new Date(exerciseIdToExercise[submission.exercise_id].deadline), new Date(submission.created_at)), 0) / uniqueSubmissions.length;
+  const averageSubmissionDifferenceToDeadline = uniqueSubmissions.reduce((sum, submission) => {
+    return sum + differenceInDays(new Date(exerciseIdToExercise[submission.exercise_id.toString()].deadline), new Date(submission.created_at))
+  }, 0) / uniqueSubmissions.length;
+
   const deadlineDays = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
 
   return {
-    value: _.round(Math.min(averageSubmissionDifferenceToDeadline / (deadlineDays * 0.7), 1), 2),
+    value: _.round(Math.min(averageSubmissionDifferenceToDeadline / (deadlineDays * 0.8), 1), 2),
     meta: {
       averageDays: null,
       bestAverageDays: null
@@ -111,14 +125,16 @@ function getSchedulingPoints({ exercises, submissions }) {
   Minimize earliest submission creation date to published at
 */
 function getStartingPoints({ exercises, submissions }) {
-  if(submissions.length === 0 || exercises.length === 0) {
-    return {
-      value: 0,
-      meta: {
-        startingDate: null,
-        bestStartingDate: null
-      }
+  const emptyPoints = {
+    value: 0,
+    meta: {
+      startingDate: null,
+      bestStartingDate: null
     }
+  };
+
+  if(submissions.length === 0 || exercises.length === 0) {
+    return emptyPoints;
   }
 
   const exerciseIdToExercise = exercises
@@ -130,13 +146,21 @@ function getStartingPoints({ exercises, submissions }) {
       return exerciseMap;
     }, {});
 
-  const earliestSubmission = _.minBy(submissions, submission => +new Date(submission.created_at));
-  const submissionExercise = exerciseIdToExercise[earliestSubmission.exercise_id];
+  const earliestSubmission = _.chain(submissions)
+    .filter(exerciseIdExists(exerciseIdToExercise))
+    .minBy(submission => +new Date(submission.created_at))
+    .value();
+
+  if(!earliestSubmission) {
+    return emptyPoints;
+  }
+
+  const submissionExercise = exerciseIdToExercise[earliestSubmission.exercise_id.toString()];
 
   const submissionDelay = differenceInDays(new Date(earliestSubmission.created_at), new Date(submissionExercise.published));
 
   return {
-    value: _.round(1 - submissionDelay / submissionExercise.daysToFinnish, 2),
+    value: Math.min(1, _.round(1 - submissionDelay / submissionExercise.daysToFinnish, 2)),
     meta: {
       startingDate: null,
       bestStartingDate: null

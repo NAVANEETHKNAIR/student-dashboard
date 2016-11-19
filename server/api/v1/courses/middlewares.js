@@ -4,7 +4,7 @@ const _ = require('lodash');
 const visualizationTypes = require('app-modules/constants/visualizations');
 const errors = require('app-modules/errors');
 const visualizations = require('app-modules/utils/visualizations');
-
+const { withCacheGetAndSet } = require('app-modules/utils/cache');
 const Participant = require('app-modules/models/participant');
 
 function getVisualizationTypeForUser(getGroup) {
@@ -31,7 +31,7 @@ function getVisualizationTypeForUser(getGroup) {
   }
 }
 
-function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVisualizationType, getQuery, getOptions }) {
+function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVisualizationType, getQuery }) {
   return (req, res, next) => {
     const userId = getUserId(req);
     const courseId = getCourseId(req);
@@ -44,23 +44,35 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
       return next(new errors.InvalidRequestError('Exercise groups are required'));
     }
 
-    let getData = Promise.resolve({});
-
-    const visualizationQuery = { userId, courseId, accessToken, query: { exerciseGroups } };
-    const visualizationOptions = { cache };
-
-    if(visualizationType === visualizationTypes.RADAR_VISUALIZATION) {
-      getData = visualizations.getUsersProgressData(visualizationQuery, visualizationOptions);
-    } else if(visualizationType === visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE) {
-      getData = visualizations.getUsersProgressData(visualizationQuery, visualizationOptions)
-        .then(progressData => {
-          return Object.assign({}, progressData, {
-            estimatedGrade: visualizations.getUsersEstimatedGrade(progressData.average)
-          });
-        });
+    const wrapToCache = promise => {
+      return cache === true
+        ? withCacheGetAndSet(() => promise, { key: `visualization-${courseId}-${userId}`, ttl: '2h' })
+        : promise;
     }
 
-    getData
+    let getData = () => wrapToCache(Promise.resolve({}));
+
+    const visualizationQuery = { courseId, userId, accessToken, query: { exerciseGroups } };
+
+    if(visualizationType === visualizationTypes.RADAR_VISUALIZATION) {
+      getData = () => wrapToCache(visualizations.getUsersProgressData(visualizationQuery));
+    } else if(visualizationType === visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE) {
+      let data = {};
+
+      getData = () => {
+        const promise = visualizations.getUsersProgressData(visualizationQuery)
+          .then(progressData => {
+            data = progressData;
+
+            return visualizations.getUsersEstimatedGrade(progressData)
+          })
+          .then(estimatedGrade => Object.assign({}, data, { estimatedGrade }));
+
+        return wrapToCache(promise);
+      };
+    }
+
+    getData()
       .then(visualization => {
         req.visualization = {
           type: visualizationType,

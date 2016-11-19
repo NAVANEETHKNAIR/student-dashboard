@@ -4,6 +4,7 @@ const moment = require('moment');
 
 const tmcApi = require('app-modules/utils/tmc-api');
 const points = require('app-modules/utils/visualizations/points');
+const gradeEstimator = require('app-modules/utils/grade-estimator');
 
 function formatExercise(exercise) {
   return Object.assign({}, exercise, {
@@ -50,9 +51,21 @@ function groupByDateInterval({ dateGroups, value, getDate }) {
 }
 
 function groupExercisesAndSubmissions({ exercises, submissions, dateGroups }) {
+  const groupedExercises = _.groupBy(exercises || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.deadline) }));
+
+  const exerciseIdToGroup = exercises.reduce((mapper, exercise) => {
+    mapper[exercise.id.toString()] = groupByDateInterval({ dateGroups, value: exercise, getDate: e => new Date(e.deadline) });
+
+    return mapper;
+  }, {});
+
   return {
     groupedExercises: _.groupBy(exercises || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.deadline) })),
-    groupedSubmissions: _.groupBy(submissions || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.created_at) }))
+    groupedSubmissions: _.groupBy(submissions || [], value => {
+      return !value.exercise_id || !exerciseIdToGroup[value.exercise_id.toString()]
+        ? '_'
+        : exerciseIdToGroup[value.exercise_id.toString()];
+    })
   }
 }
 
@@ -93,16 +106,14 @@ function getPointAverages(groups) {
   return _.mapValues(groupSums, sum => _.round(sum / numberOfGroups, 1));
 }
 
-function getUsersProgressData({ userId, courseId, accessToken, query }, { cache = true } = {}) {
+function getUsersProgressData({ userId, courseId, accessToken, query }) {
   const { exerciseGroups } = query;
 
-  const apiOptions = { cache };
-
-  const getExercisesForCourse = tmcApi.getExercisesForCourse({ courseId, accessToken }, apiOptions)
+  const getExercisesForCourse = tmcApi.getExercisesForCourse({ courseId, accessToken })
     .then(exercises => exercises.filter(exercise => !!exercise.deadline));
 
-  const getUsersExercisePointsForCourse = tmcApi.getUsersExercisePointsForCourse({ courseId, accessToken }, apiOptions);
-  const getUsersSubmissionsForCourse = tmcApi.getUsersSubmissionsForCourse({ courseId, accessToken }, apiOptions);
+  const getUsersExercisePointsForCourse = tmcApi.getUsersExercisePointsForCourse({ courseId, userId, accessToken });
+  const getUsersSubmissionsForCourse = tmcApi.getUsersSubmissionsForCourse({ courseId, userId, accessToken });
 
   let exerciseIdToPoints;
 
@@ -122,6 +133,9 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
       return mergeGroupedExercisesAndSubmissions({ groupedExercises, groupedSubmissions });
     })
     .then(groups => {
+      return _.omit(groups, ['_']);
+    })
+    .then(groups => {
       return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
     })
     .then(groups => {
@@ -133,14 +147,7 @@ function getUsersProgressData({ userId, courseId, accessToken, query }, { cache 
 }
 
 function getUsersEstimatedGrade(progressData) {
-  const values = _.values(progressData)
-
-  const optimalValueSum = values.length * 0.9;
-  const valueSum = Math.min(optimalValueSum, values.reduce((sum, value) => sum + value));
-
-  return optimalValueSum === 0
-    ? 0
-    : Math.round(valueSum / optimalValueSum * 5);
+  return gradeEstimator.getGradeEstimate(progressData);
 }
 
 module.exports = {

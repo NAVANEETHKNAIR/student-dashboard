@@ -1,19 +1,23 @@
 const request = require('supertest');
-const nock = require('nock');
 const moment = require('moment');
 const expect = require('expect');
 const _ = require('lodash');
 const async = require('async');
+const Promise = require('bluebird');
+const sinon = require('sinon');
 
-const visualizationTypes = require('app-modules/constants/visualizations');
 const app = require('app');
-const tmcApiMock = require('app-modules/test-utils/tmc-api-mock');
+const visualizationTypes = require('app-modules/constants/visualizations');
 const database = require('app-modules/test-utils/database');
+
+const tmcApi = require('app-modules/utils/tmc-api');
+const gradeEstimator = require('app-modules/utils/grade-estimator');
 
 const toDate = dateString => moment(dateString, 'DD.MM').unix() * 1000;
 const toUnix = t => Math.floor(t / 1000);
 
 describe('Courses API', () => {
+  let gradeEstimatorStub, tmcApiExercisesStub, tmcApiPointsStub, tmcApiSubmissionsStub;
 
   before(() => {
     const exercises = [
@@ -43,45 +47,49 @@ describe('Courses API', () => {
       }
     ];
 
-    const submissions = {
-      submissions: [
-        {
-          created_at: toDate('18.11'),
-          exercise_name: 'Ex 1'
-        }
-      ]
-    };
+    const submissions = [
+      {
+        created_at: toDate('18.11'),
+        exercise_name: 'Ex 1'
+      }
+    ];
 
-    tmcApiMock
-      .mockGetExercises(exercises)
-      .mockGetPoints(points)
-      .mockGetSubmissions(submissions);
+    gradeEstimatorStub = sinon.stub(gradeEstimator, 'getGradeEstimate').returns(Promise.resolve(5));
+    tmcApiExercisesStub = sinon.stub(tmcApi, 'getExercisesForCourse').returns(Promise.resolve(exercises));
+    tmcApiPointsStub = sinon.stub(tmcApi, 'getUsersExercisePointsForCourse').returns(Promise.resolve(points));
+    tmcApiSubmissionsStub = sinon.stub(tmcApi, 'getUsersSubmissionsForCourse').returns(Promise.resolve(submissions));
 
     return database.connect();
   });
 
   it('should not be able to get visualization without a valid TMC access token', done => {
-    tmcApiMock
-      .mockAuthenticationFailure({ accessToken: '123' });
+    const tmcApiStub = sinon.stub(tmcApi, 'getProfile')
+      .returns(Promise.reject());
 
     request(app)
-      .post('/api/v1/courses/1/visualization')
+      .post('/api/v1/courses/1/visualization/user')
       .set('Authorization', 'Bearer 123')
-      .expect(403, done);
+      .expect(403, () => {
+        tmcApiStub.restore();
+        done();
+      });
   });
 
-  it('should be abole to get visualization with a valid TMC access token', done => {
+  it('should be able to get visualization with a valid TMC access token', done => {
     const body = {
       exerciseGroups: {
         'Week 1': [toUnix(toDate('14.11')), toUnix(toDate('20.11'))]
       }
     }
 
-    tmcApiMock
-      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' });
+    const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+      .returns(Promise.resolve({
+        accessToken: '456',
+        id: '1'
+      }));
 
     request(app)
-      .post('/api/v1/courses/1/visualization')
+      .post('/api/v1/courses/1/visualization/user')
       .send(body)
       .set('Authorization', 'Bearer 456')
       .expect(200)
@@ -95,6 +103,8 @@ describe('Courses API', () => {
             expect(param.value).toNotBe(0);
           });
 
+        tmcApiProfileStub.restore();
+
         done();
       });
   });
@@ -106,48 +116,62 @@ describe('Courses API', () => {
       }
     }
 
-    tmcApiMock
-      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' })
-      .mockAuthenticationSuccess({ accessToken: '567', username: 'test2' })
-      .mockAuthenticationSuccess({ accessToken: '678', username: 'test3' })
-      .mockAuthenticationSuccess({ accessToken: '789', username: 'test4' })
-
     const makeRequest = () => {
       return request(app)
-        .post('/api/v1/courses/1/visualization')
+        .post('/api/v1/courses/1/visualization/user')
         .send(body);
     }
 
     async.series([
       cb => {
+        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+          .returns(Promise.resolve({ accessToken: '456', id: '1' }));
+
         makeRequest()
           .set('Authorization', 'Bearer 456')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
+
+            tmcApiProfileStub.restore();
             cb();
           })
       },
       cb => {
+        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+          .returns(Promise.resolve({ accessToken: '567', id: '2' }));
+
         makeRequest()
           .set('Authorization', 'Bearer 567')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE);
+
+            tmcApiProfileStub.restore();
             cb();
           });
       },
       cb => {
+        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+          .returns(Promise.resolve({ accessToken: '678', id: '3' }));
+
         makeRequest()
           .set('Authorization', 'Bearer 678')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.NO_VISUALIZATION);
+
+            tmcApiProfileStub.restore();
             cb();
           });
       },
       cb => {
+        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+          .returns(Promise.resolve({ accessToken: '789', id: '4' }));
+
         makeRequest()
           .set('Authorization', 'Bearer 789')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
+
+            tmcApiProfileStub.restore();
             cb();
           });
       }
@@ -161,13 +185,12 @@ describe('Courses API', () => {
       }
     }
 
-    tmcApiMock
-      .mockAuthenticationSuccess({ accessToken: '456', username: 'test1' })
-      .mockAuthenticationSuccess({ accessToken: '567', username: 'test1' });
+    const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+      .returns(Promise.resolve({ accessToken: '456', id: '1' }));
 
     const makeRequest = () => {
       return request(app)
-        .post('/api/v1/courses/1/visualization')
+        .post('/api/v1/courses/1/visualization/user')
         .send(body);
     }
 
@@ -182,13 +205,16 @@ describe('Courses API', () => {
       },
       cb => {
         makeRequest()
-          .set('Authorization', 'Bearer 567')
+          .set('Authorization', 'Bearer 456')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
             cb();
           });
       }
-    ], done);
+    ], () => {
+      tmcApiProfileStub.restore();
+      done();
+    });
   });
 
   afterEach(() => {
@@ -196,7 +222,10 @@ describe('Courses API', () => {
   });
 
   after(() => {
-    nock.cleanAll();
+    gradeEstimatorStub.restore();
+    tmcApiExercisesStub.restore();
+    tmcApiPointsStub.restore();
+    tmcApiSubmissionsStub.restore();
 
     return database.disconnect();
   });

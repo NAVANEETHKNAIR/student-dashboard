@@ -31,7 +31,7 @@ export function loadVisualizationRequest({ courseId, exerciseGroups, cache }) {
     type: LOAD_VISUALIZATION,
     payload: {
       request: {
-        url: `/courses/${courseId}/visualization`,
+        url: `/courses/${courseId}/visualization/user`,
         method: 'POST',
         data: {
           exerciseGroups,

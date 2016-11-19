@@ -19,7 +19,7 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
       throw new Error('Student dashboard already exists');
     }
 
-    const required = ['courseId', 'courseName', 'exerciseGroups', 'userId', 'accessToken'];
+    const required = ['courseId', 'courseName', 'exerciseGroups', 'accessToken'];
 
     const notDefined = required
       .map(key => ({ key, value: options[key] }))
@@ -65,7 +65,7 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
     store.dispatch(setExerciseGroups(exerciseGroups));
     store.dispatch(setActiveExerciseGroup(activeGroup));
     store.dispatch(updateCourse({ id: courseId, name: courseName }));
-    store.dispatch(updateUser({ id: userId, accessToken }));
+    store.dispatch(updateUser({ id: userId || null, accessToken }));
     store.dispatch(createAction({ name: OPEN_PAGE }));
 
     onInitialize();

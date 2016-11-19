@@ -10,7 +10,7 @@ import RadarVisualizationWithGrade from 'components/visualizations/radar-visuali
 
 export class Visualization extends React.Component {
 
-  static defaultProps = {
+  static propTypes = {
     type: React.PropTypes.oneOf([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE]).isRequired,
     onUpdateVisualization: React.PropTypes.func
   }
@@ -34,7 +34,7 @@ export class Visualization extends React.Component {
         {this.renderContent()}
 
         <div className={withClassPrefix('text-muted text-center text-sm m-t-1')}>
-          Visualization updates every two hours. <span className={withClassPrefix('link')} onClick={this.props.onUpdateVisualization}>Update now</span>.
+          <span className={withClassPrefix('link')} onClick={this.props.onUpdateVisualization}>Update visualization</span>
         </div>
       </div>
     );

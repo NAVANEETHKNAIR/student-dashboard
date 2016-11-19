@@ -76,7 +76,7 @@ export class VisualizationExplanation extends React.Component {
   }
 
   render() {
-    const buttonClasses = cn({ [withClassPrefix('btn-active')]: this.state.showExplanation }, withClassPrefix('btn btn-primary btn-sm pull-right'));
+    const buttonClasses = withClassPrefix(cn({ 'btn-active': this.state.showExplanation }, 'btn btn-primary btn-sm pull-right'));
 
     return (
       <div className={withClassPrefix('visualization-explanation')} ref="container">
