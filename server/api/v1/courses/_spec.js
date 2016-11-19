@@ -211,9 +211,9 @@ describe('Courses API', () => {
             cb();
           });
       }
-    ], () => {
+    ], err => {
       tmcApiProfileStub.restore();
-      done();
+      done(err);
     });
   });
 
