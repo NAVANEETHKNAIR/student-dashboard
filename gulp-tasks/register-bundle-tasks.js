@@ -34,22 +34,28 @@ function registry(registryOptions) {
       });
 
       gulp.task(`scripts.${bundleName}`, makeScriptTask({
-        webpackConfig: makeWebpackConfigForDev(true)
+        webpackConfig: makeWebpackConfigForDev(true),
+        isDevelopment: true
       }));
 
       gulp.task(`build:scripts.${bundleName}`, ['assets'], makeScriptTask({
-        webpackConfig: makeWebpackConfigForDev(false)
+        webpackConfig: makeWebpackConfigForDev(false),
+        isDevelopment: false
       }));
     }
 
     if(sassOptions) {
-      serveTasks = [...serveTasks, `styles.${bundleName}`];
+      serveTasks = [...serveTasks, `watch:styles.${bundleName}`];
       buildTasks = [...buildTasks, `build:styles.${bundleName}`];
 
       const makeSasOptions = isDevelopment => Object.assign({}, sassOptions, { isDevelopment });
 
       gulp.task(`styles.${bundleName}`, makeSassTask(makeSasOptions(true)));
       gulp.task(`build:styles.${bundleName}`, ['assets'], makeSassTask(makeSasOptions(false)));
+
+      gulp.task(`watch:styles.${bundleName}`, [`styles.${bundleName}`], () => {
+        gulp.watch(sassOptions.watch, [`styles.${bundleName}`]);
+      });
     }
 
     gulp.task(`serve.${bundleName}`, serveTasks);

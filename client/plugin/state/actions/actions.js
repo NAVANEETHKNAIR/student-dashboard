@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export const CREATE_ACTION = 'ACTIONS::CREATE_ACTION';
+export const CREATE_ACTION = 'ACTIONS_CREATE_ACTION';
 
 export function createAction({ name, meta = {} }) {
   return (dispatch, getState) => {

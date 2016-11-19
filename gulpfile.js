@@ -34,7 +34,7 @@ registry
       output: stylesDist,
       fileName: 'plugin',
       classPrefix: 'sd-',
-      watch: ['./client/plugin/**/*.scss']
+      watch: './client/plugin/**/*.scss'
     }
   })
   .register('pluginLoader', {

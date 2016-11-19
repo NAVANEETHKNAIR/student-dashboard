@@ -3,11 +3,32 @@ import { connect } from 'react-redux';
 
 import withClassPrefix from 'utils/class-prefix';
 
+import { openTutorial } from 'state/tutorial';
 import { closePlugin } from 'state/plugin';
 
 import Icon from 'components/icon';
 
 export class PluginHeader extends React.Component {
+  renderCloseButton() {
+    return (
+      <button className={withClassPrefix('btn btn-sm btn-danger pull-right')} onClick={this.props.onClose}>
+        <Icon name="visibility_off"/>
+      </button>
+    );
+  }
+
+  renderTutorialButton() {
+    const content = (
+      <button className={withClassPrefix('btn btn-sm btn-primary pull-right')} onClick={this.props.onOpenTutorial}>
+        <Icon name="help_outline"/>
+      </button>
+    );
+
+    return !this.props.tutorialIsFinished
+      ? content
+      : null;
+  }
+
   render() {
     return (
       <div className={withClassPrefix('plugin-header clearfix')}>
@@ -17,9 +38,8 @@ export class PluginHeader extends React.Component {
           </div>
 
           <div className={withClassPrefix('plugin-header__actions clearfix')}>
-            <button className={withClassPrefix('btn btn-sm btn-danger pull-right')} onClick={this.props.onClose}>
-              <Icon name="visibility_off"/>
-            </button>
+            {this.renderCloseButton()}
+            {this.renderTutorialButton()}
           </div>
         </div>
       </div>
@@ -27,11 +47,16 @@ export class PluginHeader extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  tutorialIsFinished: state.user.tutorialFinished
+});
+
 const mapDispatchToProps = dispatch => ({
-  onClose: () => dispatch(closePlugin())
+  onClose: () => dispatch(closePlugin()),
+  onOpenTutorial: () => dispatch(openTutorial())
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(PluginHeader);

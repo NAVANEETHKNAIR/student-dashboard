@@ -2,11 +2,12 @@ import * as actionConstants from 'constants/actions';
 
 import { createAction } from 'state/actions';
 
-export const OPEN_PLUGIN = 'PLUGIN::OPEN_PLUGIN';
-export const CLOSE_PLUGIN = 'PLUGIN::CLOSE_PLUGIN';
-export const SET_ACTIVE_EXERCISE_GROUP = 'PLUGIN::SET_ACTIVE_EXERCISE_GROUP';
-export const SET_EXERCISE_GROUPS = 'COURSE::SET_EXERCISE_GROUPS';
-export const SET_EXERCISE_GROUP_ORDER = 'COURSE::SET_EXERCISE_GROUP_ORDER';
+export const OPEN_PLUGIN = 'PLUGIN_OPEN_PLUGIN';
+export const CLOSE_PLUGIN = 'PLUGIN_CLOSE_PLUGIN';
+export const SET_ACTIVE_EXERCISE_GROUP = 'PLUGIN_SET_ACTIVE_EXERCISE_GROUP';
+export const SET_EXERCISE_GROUPS = 'PLUGIN_SET_EXERCISE_GROUPS';
+export const SET_EXERCISE_GROUP_ORDER = 'PLUGIN_SET_EXERCISE_GROUP_ORDER';
+export const RESET_PLUGIN = 'PLUGIN_RESET_PLUGIN';
 
 export function setActiveExerciseGroup(group) {
   return {
@@ -60,6 +61,12 @@ export function openPlugin() {
   return dispatch => {
     dispatch(createAction({ name: actionConstants.OPEN_PLUGIN }));
     dispatch(openPluginCreator());
+  }
+}
+
+export function resetPlugin() {
+  return {
+    type: RESET_PLUGIN
   }
 }
 

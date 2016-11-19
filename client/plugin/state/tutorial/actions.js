@@ -1,7 +1,7 @@
 import { finishTutorial } from 'state/user';
 
-export const OPEN_TUTORIAL = 'TUTORIAL::OPEN_TUTORIAL';
-export const CLOSE_TUTORIAL = 'TUTORIAL::CLOSE_TUTORIAL';
+export const OPEN_TUTORIAL = 'TUTORIAL_OPEN_TUTORIAL';
+export const CLOSE_TUTORIAL = 'TUTORIAL_CLOSE_TUTORIAL';
 
 export function openTutorial() {
   return {

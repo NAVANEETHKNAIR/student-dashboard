@@ -1,6 +1,6 @@
 import { tutorialIsFinished, setTutorialAsFinished } from 'utils/store';
 
-export const UPDATE_USER = 'USER::UPDATE_USER';
+export const UPDATE_USER = 'USER_UPDATE_USER';
 
 export function updateUser(update) {
   return {

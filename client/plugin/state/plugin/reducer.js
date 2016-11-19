@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-create-reducer';
 
-import { OPEN_PLUGIN, CLOSE_PLUGIN, SET_EXERCISE_GROUPS, SET_EXERCISE_GROUP_ORDER, SET_ACTIVE_EXERCISE_GROUP } from './actions';
+import { RESET_PLUGIN, OPEN_PLUGIN, CLOSE_PLUGIN, SET_EXERCISE_GROUPS, SET_EXERCISE_GROUP_ORDER, SET_ACTIVE_EXERCISE_GROUP } from './actions';
 
 const initialState = {
   isOpen: false,
@@ -10,6 +10,9 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
+  [RESET_PLUGIN](state, action) {
+    return initialState;
+  },
   [OPEN_PLUGIN](state, action) {
     return Object.assign({}, state, { isOpen: true });
   },

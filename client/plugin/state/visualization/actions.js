@@ -1,8 +1,8 @@
 import { getVisualization } from 'utils/visualizations';
 
-export const UPDATE_VISUALIZATION = 'VISUALIZATION::UPDATE_VISUALIZATION';
-export const LOAD_VISUALIZATION = 'VISUALIZATION::LOAD_VISUALIZATION';
-export const LOAD_VISUALIZATION_ERROR = 'VISUALIZATION::LOAD_VISUALIZATION_ERROR';
+export const UPDATE_VISUALIZATION = 'VISUALIZATION_UPDATE_VISUALIZATION';
+export const LOAD_VISUALIZATION = 'VISUALIZATION_LOAD_VISUALIZATION';
+export const LOAD_VISUALIZATION_ERROR = 'VISUALIZATION_LOAD_VISUALIZATION_ERROR';
 
 export function loadVisualization({ cache = true } = {}) {
   return (dispatch, getState) => {

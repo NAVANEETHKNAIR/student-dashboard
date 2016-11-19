@@ -1,4 +1,4 @@
-export const UPDATE_COURSE = 'COURSE::UPDATE_COURSE';
+export const UPDATE_COURSE = 'COURSE_UPDATE_COURSE';
 
 export function updateCourse(update) {
   return {

@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import withClassPrefix from 'utils/class-prefix';
 import { OPEN_PAGE } from 'constants/actions';
-import { setActiveExerciseGroup, setExerciseGroupOrder, setExerciseGroups } from 'state/plugin';
+import { setActiveExerciseGroup, setExerciseGroupOrder, setExerciseGroups, resetPlugin } from 'state/plugin';
 import { updateCourse } from 'state/course';
 import { updateUser } from 'state/user';
 import { createAction } from 'state/actions';
@@ -74,6 +74,13 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
   }
 
   self.destroy = () => {
+    const body = document.querySelector('body');
+    const container = document.querySelector(`.${withClassPrefix('plugin-wrapper')}`);
+
+    store.dispatch(resetPlugin());
+
+    body.removeChild(container);
+
     return self;
   }
 

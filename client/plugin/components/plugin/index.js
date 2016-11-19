@@ -4,7 +4,6 @@ import { TransitionMotion, spring } from 'react-motion';
 import prefix from 'react-prefixer';
 
 import withClassPrefix from 'utils/class-prefix';
-import { openTutorial } from 'state/tutorial';
 
 import WeekSelector from 'components/week-selector';
 import PluginHeader from 'components/plugin-header';
@@ -17,21 +16,6 @@ export class Plugin extends React.Component {
     return this.props.visualizationLoading
       ? <Loader/>
       : <Visualization/>;
-  }
-
-  renderTutorialButton() {
-    const content = (
-      <div className={withClassPrefix('text-center m-t-1')}>
-        <button className={withClassPrefix('btn btn-success btn-icon')} onClick={this.props.onOpenTutorial}>
-          <Icon name="help_outline"/>
-          <span>What's this?</span>
-        </button>
-      </div>
-    );
-
-    return !this.props.tutorialIsFinished
-      ? content
-      : null;
   }
 
   renderContent(style) {
@@ -49,7 +33,6 @@ export class Plugin extends React.Component {
 
         <div className={withClassPrefix('plugin__content')}>
           {this.renderVisualization()}
-          {this.renderTutorialButton()}
         </div>
       </div>
     );
@@ -72,18 +55,12 @@ export class Plugin extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  onOpenTutorial: () => dispatch(openTutorial())
-});
-
 const mapStateToProps = state => ({
   visualizationLoading: state.visualization.loading,
   courseName: state.course.name,
-  isOpen: state.plugin.isOpen,
-  tutorialIsFinished: state.user.tutorialFinished
+  isOpen: state.plugin.isOpen
 });
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Plugin);
