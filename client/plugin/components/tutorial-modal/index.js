@@ -4,6 +4,9 @@ import { TransitionMotion, spring } from 'react-motion';
 
 import withClassPrefix from 'utils/class-prefix';
 import { closeTutorial } from 'state/tutorial';
+import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
+import { selectExerciseGroupOrder, selectActiveExerciseGroup } from 'selectors/plugin';
+import { RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
 
 import Icon from 'components/icon';
 
@@ -19,8 +22,20 @@ export class TutorialModal extends React.Component {
             <div className={withClassPrefix('tutorial-modal__body')}>
               <div className={withClassPrefix('tutorial-modal__body-content')}>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Donec ultricies nisl ut felis, suspendisse potenti. Lorem ipsum ligula ut hendrerit mollis, ipsum erat vehicula risus, eu suscipit sem libero nec erat. Aliquam erat volutpat. Sed congue augue vitae neque. Nulla consectetuer porttitor pede. Fusce purus morbi tortor magna condimentum vel, placerat id blandit sit amet tortor.
+                  This is a radar visualization of your progress in {this.props.courseName} during exercise weeks {this.props.exerciseGroups.join(', ')}.
                 </p>
+
+                <p>
+                  The <strong style={{ color: CHART_PRIMARY_COLOR }}>blue</strong> area of the radar consists of the points you've received during {this.props.activeExerciseGroup} from the parameters around the radar.
+                  You can get up to 10 points from each parameter. The bigger the blue area is, the better you're doing.
+                  Press the info info button above the radar to see what the parameters mean and how they are calculated.
+                </p>
+
+                <p>
+                  The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of your overall average of the points you've received during all the exercise weeks. You can navigate between different exercise weeks by pressing the the arrow buttons.
+                </p>
+
+                {this.props.visualizationType === RADAR_VISUALIZATION_WITH_GRADE && this.renderGradeEstimationTutorial()}
               </div>
             </div>
 
@@ -33,6 +48,14 @@ export class TutorialModal extends React.Component {
           </div>
         </div>
       </div>
+    );
+  }
+
+  renderGradeEstimationTutorial() {
+    return (
+      <p>
+        To see your estimated grade from the course, press the "Estimate my grade" button. Estimation is based on the progress data of the students from previous courses and the grades they've received.
+      </p>
     );
   }
 
@@ -63,7 +86,11 @@ export class TutorialModal extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isOpen: state.tutorial.isOpen
+  isOpen: state.tutorial.isOpen,
+  courseName: state.course.name,
+  exerciseGroups: selectExerciseGroupOrder(state),
+  activeExerciseGroup: selectActiveExerciseGroup(state),
+  visualizationType: state.visualization.type
 });
 
 const mapDispatchToProps = dispatch => ({
