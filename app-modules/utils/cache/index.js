@@ -23,6 +23,14 @@ function del(key) {
   return cache.del(key);
 }
 
+function withCacheSet(getPromise, { key, ttl } =  {}) {
+  return getPromise()
+    .then(cacheData => {
+      return set(key, cacheData, { ttl })
+        .then(() => cacheData);
+    });
+}
+
 function withCacheGetAndSet(getPromise, { key, ttl } = {}) {
   return get(key)
     .then(cacheData => {
@@ -39,4 +47,10 @@ function withCacheGetAndSet(getPromise, { key, ttl } = {}) {
     });
 }
 
-module.exports = { get, set, del, withCacheGetAndSet };
+module.exports = {
+  get,
+  set,
+  del,
+  withCacheSet,
+  withCacheGetAndSet
+};
