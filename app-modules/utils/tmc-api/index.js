@@ -1,8 +1,6 @@
 const Promise = require('bluebird');
 const axios = require('axios');
 
-const { withCacheGetAndSet } = require('app-modules/utils/cache');
-
 const apiV8Client = axios.create({
   baseURL: `${process.env.TMC_API_ALPHA_URL}/api/v8`
 });

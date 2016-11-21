@@ -6,10 +6,14 @@ const mongoCacheOptions = {
   collection: 'tmcCache',
 };
 
-const cache = new Cacheman('tmc', {
-  engine: new EngineMongo(process.env.MONGO_URI, mongoCacheOptions),
-  promise: Promise
-});
+let cache;
+
+function connect() {
+  cache = new Cacheman('tmc', {
+    engine: new EngineMongo(process.env.MONGO_URI, mongoCacheOptions),
+    promise: Promise
+  });
+}
 
 function get(key) {
   return cache.get(key);
@@ -21,6 +25,14 @@ function set(key, value, { ttl = '1d' } = {}) {
 
 function del(key) {
   return cache.del(key);
+}
+
+function withCacheSet(getPromise, { key, ttl } =  {}) {
+  return getPromise()
+    .then(cacheData => {
+      return set(key, cacheData, { ttl })
+        .then(() => cacheData);
+    });
 }
 
 function withCacheGetAndSet(getPromise, { key, ttl } = {}) {
@@ -39,4 +51,11 @@ function withCacheGetAndSet(getPromise, { key, ttl } = {}) {
     });
 }
 
-module.exports = { get, set, del, withCacheGetAndSet };
+module.exports = {
+  connect,
+  get,
+  set,
+  del,
+  withCacheSet,
+  withCacheGetAndSet
+};

@@ -1,7 +1,5 @@
 require('app-module-path').addPath(__dirname);
 
-require('app-modules/utils/cache');
-
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');

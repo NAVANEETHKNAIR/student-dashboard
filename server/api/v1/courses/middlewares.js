@@ -4,7 +4,7 @@ const _ = require('lodash');
 const visualizationTypes = require('app-modules/constants/visualizations');
 const errors = require('app-modules/errors');
 const visualizations = require('app-modules/utils/visualizations');
-const { withCacheGetAndSet } = require('app-modules/utils/cache');
+const cacheUtil = require('app-modules/utils/cache');
 const Participant = require('app-modules/models/participant');
 
 function getVisualizationTypeForUser(getGroup) {
@@ -45,9 +45,11 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
     }
 
     const wrapToCache = promise => {
+      const cacheOptions = { key: `visualization-${courseId}-${userId}`, ttl: '2h' };
+
       return cache === true
-        ? withCacheGetAndSet(() => promise, { key: `visualization-${courseId}-${userId}`, ttl: '2h' })
-        : promise;
+        ? cacheUtil.withCacheGetAndSet(() => promise, cacheOptions)
+        : cacheUtil.withCacheSet(() => promise, cacheOptions);
     }
 
     let getData = () => wrapToCache(Promise.resolve({}));

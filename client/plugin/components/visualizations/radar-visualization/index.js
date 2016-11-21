@@ -17,54 +17,78 @@ export class RadarVisualization extends React.Component {
     );
   }
 
-  formatDate(unixTimestamp) {
-    return moment(unixTimestamp * 1000).format('dddd DD.MM');
+  formatDate(date) {
+    return moment(date).format('dddd DD.MM');
   }
 
   renderExplanation() {
+    const { starting, scheduling, earliness, exercises } = this.props.data;
+
     return (
       <VisualizationExplanation>
-        <h4>Starting {this.renderPointLabel(this.props.data.starting.value)}</h4>
+        <h4>Starting {this.renderPointLabel(starting.value)}</h4>
 
         <p className={withClassPrefix('text-muted text-sm m-t-0')}>
           How early you've started solving exercises.
         </p>
 
-        <p>
-          Your first submission was on {this.formatDate(this.props.data.starting.meta.startingDate)} while the best date to start was on {this.formatDate(this.props.data.starting.meta.bestStartingDate)}.
-        </p>
+        {this.withNoDataInfo(starting)(
+          <p>
+            Your first submission was on {this.formatDate(starting.meta.startingDate)} while the best date to start was on {this.formatDate(starting.meta.bestStartingDate)}.
+          </p>
+        )}
 
-        <h4>Exercise points {this.renderPointLabel(this.props.data.exercises.value)}</h4>
+        <h4>Exercise points {this.renderPointLabel(exercises.value)}</h4>
 
         <p className={withClassPrefix('text-muted text-sm m-t-0')}>
           How many exercise points you've earned.
         </p>
 
-        <p>
-          You've earned {this.props.data.exercises.meta.points} points out of total of {this.props.data.exercises.meta.bestPoints}.
-        </p>
+        {this.withNoDataInfo(exercises)(
+          <p>
+            You've earned {exercises.meta.points} points out of total of {exercises.meta.bestPoints}.
+          </p>
+        )}
 
-        <h4>Earliness {this.renderPointLabel(this.props.data.earliness.value)}</h4>
+        <h4>Earliness {this.renderPointLabel(earliness.value)}</h4>
 
         <p className={withClassPrefix('text-muted text-sm m-t-0')}>
           By average how far from deadline you've solved exercise.
         </p>
 
-        <p>
-          Your submission are by average {this.props.data.earliness.meta.averageDays} days before the deadline while the optimal average is more than or equal to {this.props.data.earliness.meta.bestAverageDays} days.
-        </p>
+        {this.withNoDataInfo(earliness)(
+          <p>
+            Your submission are by average {earliness.meta.averageDays} days before the deadline while the optimal average is more than or equal to {earliness.meta.bestAverageDays} days.
+          </p>
+        )}
 
-        <h4>Scheduling {this.renderPointLabel(this.props.data.scheduling.value)}</h4>
+        <h4>Scheduling {this.renderPointLabel(scheduling.value)}</h4>
 
         <p className={withClassPrefix('text-muted text-sm m-t-0')}>
           On how many days you've been solving exercises.
         </p>
 
-        <p className={withClassPrefix('m-b-0')}>
-          You've been solving exercises on {this.props.data.scheduling.meta.workingDays} days while the optimal number of days is {this.props.data.scheduling.meta.bestWorkingDays}.
-        </p>
+        {this.withNoDataInfo(scheduling)(
+          <p>
+            You've been solving exercises on {scheduling.meta.workingDays} days while the optimal number of days is at least {scheduling.meta.bestWorkingDays}.
+          </p>
+        )}
       </VisualizationExplanation>
     );
+  }
+
+  withNoDataInfo(param) {
+    return content => {
+      if(!!param.meta.noData) {
+        return (
+          <p className={withClassPrefix('text-muted')}>
+            There's not enough data to calculate your points. Maybe you haven't made any submissions?
+          </p>
+        );
+      } else {
+        return content;
+      }
+    }
   }
 
   renderChart() {

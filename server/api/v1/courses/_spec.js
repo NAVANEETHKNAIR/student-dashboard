@@ -6,18 +6,18 @@ const async = require('async');
 const Promise = require('bluebird');
 const sinon = require('sinon');
 
-const app = require('app');
 const visualizationTypes = require('app-modules/constants/visualizations');
 const database = require('app-modules/test-utils/database');
 
 const tmcApi = require('app-modules/utils/tmc-api');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
+const cacheUtil = require('app-modules/utils/cache');
 
 const toDate = dateString => moment(dateString, 'DD.MM').unix() * 1000;
 const toUnix = t => Math.floor(t / 1000);
 
 describe('Courses API', () => {
-  let gradeEstimatorStub, tmcApiExercisesStub, tmcApiPointsStub, tmcApiSubmissionsStub;
+  let app, gradeEstimatorStub, tmcApiExercisesStub, tmcApiPointsStub, tmcApiSubmissionsStub, cacheGetStub, cacheSetStub;
 
   before(() => {
     const exercises = [
@@ -54,10 +54,15 @@ describe('Courses API', () => {
       }
     ];
 
+    cacheGetStub = sinon.stub(cacheUtil, 'withCacheGetAndSet', getPromise => getPromise());
+    cacheSetStub = sinon.stub(cacheUtil, 'withCacheSet', getPromise => getPromise());
+
     gradeEstimatorStub = sinon.stub(gradeEstimator, 'getGradeEstimate').returns(Promise.resolve(5));
     tmcApiExercisesStub = sinon.stub(tmcApi, 'getExercisesForCourse').returns(Promise.resolve(exercises));
     tmcApiPointsStub = sinon.stub(tmcApi, 'getUsersExercisePointsForCourse').returns(Promise.resolve(points));
     tmcApiSubmissionsStub = sinon.stub(tmcApi, 'getUsersSubmissionsForCourse').returns(Promise.resolve(submissions));
+
+    app = require('app');
 
     return database.connect();
   });
@@ -226,6 +231,8 @@ describe('Courses API', () => {
     tmcApiExercisesStub.restore();
     tmcApiPointsStub.restore();
     tmcApiSubmissionsStub.restore();
+    cacheGetStub.restore();
+    cacheSetStub.restore();
 
     return database.disconnect();
   });

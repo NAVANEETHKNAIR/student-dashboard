@@ -41,7 +41,8 @@ function getEarlinessPoints({ exercises, submissions }) {
     value: 0,
     meta: {
       averageDays: null,
-      bestAverageDays: null
+      bestAverageDays: null,
+      noData: true
     }
   };
 
@@ -83,8 +84,8 @@ function getEarlinessPoints({ exercises, submissions }) {
   return {
     value: _.round(Math.min(averageSubmissionDifferenceToDeadline / (deadlineDays * 0.8), 1), 2),
     meta: {
-      averageDays: null,
-      bestAverageDays: null
+      averageDays: _.round(averageSubmissionDifferenceToDeadline, 1),
+      bestAverageDays: _.round(deadlineDays * 0.8, 1)
     }
   }
 }
@@ -98,7 +99,8 @@ function getSchedulingPoints({ exercises, submissions }) {
       value: 0,
       meta: {
         workingDays: null,
-        bestWorkingDays: null
+        bestWorkingDays: null,
+        noData: true
       }
     }
   }
@@ -111,12 +113,13 @@ function getSchedulingPoints({ exercises, submissions }) {
 
   const daysToFinnish = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
   const optimalDayCount = Math.round(daysToFinnish * 0.6);
+  const submissionDatesCount = _.keys(submissionDates).length;
 
   return {
-    value: _.round(Math.min(_.keys(submissionDates).length, optimalDayCount) / optimalDayCount, 2),
+    value: _.round(Math.min(submissionDatesCount, optimalDayCount) / optimalDayCount, 2),
     meta: {
-      workingDays: null,
-      bestWorkingDays: null
+      workingDays: submissionDatesCount,
+      bestWorkingDays: optimalDayCount
     }
   }
 }
@@ -129,7 +132,8 @@ function getStartingPoints({ exercises, submissions }) {
     value: 0,
     meta: {
       startingDate: null,
-      bestStartingDate: null
+      bestStartingDate: null,
+      noData: true
     }
   };
 
@@ -162,8 +166,8 @@ function getStartingPoints({ exercises, submissions }) {
   return {
     value: Math.min(1, _.round(1 - submissionDelay / submissionExercise.daysToFinnish, 2)),
     meta: {
-      startingDate: null,
-      bestStartingDate: null
+      startingDate: new Date(earliestSubmission.created_at),
+      bestStartingDate: new Date(submissionExercise.published)
     }
   }
 }
