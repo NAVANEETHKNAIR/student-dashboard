@@ -8,7 +8,6 @@ const path = require('path');
 const throng = require('throng');
 
 require('dotenv').config({ path: path.resolve(__dirname, '..', '.env')  });
-
 const throngConfig = {
   workers: process.env.WEB_CONCURRENCY || 1,
   lifetime: Infinity,
@@ -20,6 +19,8 @@ function start(id) {
   var debug = require('debug')('student-dashboard:server');
   var http = require('http');
   var mongoose = require('mongoose');
+
+  require('../app-modules/utils/cache').connect();
 
   /**
    * Get port from environment and store in Express.

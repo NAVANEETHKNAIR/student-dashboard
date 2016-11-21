@@ -6,10 +6,14 @@ const mongoCacheOptions = {
   collection: 'tmcCache',
 };
 
-const cache = new Cacheman('tmc', {
-  engine: new EngineMongo(process.env.MONGO_URI, mongoCacheOptions),
-  promise: Promise
-});
+let cache;
+
+function connect() {
+  cache = new Cacheman('tmc', {
+    engine: new EngineMongo(process.env.MONGO_URI, mongoCacheOptions),
+    promise: Promise
+  });
+}
 
 function get(key) {
   return cache.get(key);
@@ -48,6 +52,7 @@ function withCacheGetAndSet(getPromise, { key, ttl } = {}) {
 }
 
 module.exports = {
+  connect,
   get,
   set,
   del,

@@ -197,7 +197,6 @@ describe('Points', () => {
     expect(pointsGood.value).toBe(1);
     expect(moment(pointsGood.meta.startingDate).format('DD.MM')).toBe('14.11')
     expect(moment(pointsGood.meta.bestStartingDate).format('DD.MM')).toBe('14.11');
-
   });
 
 });
