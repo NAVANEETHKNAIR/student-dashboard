@@ -27,12 +27,12 @@ export class TutorialModal extends React.Component {
 
                 <p>
                   The <strong style={{ color: CHART_PRIMARY_COLOR }}>blue</strong> area of the radar consists of the points you've received during {this.props.activeExerciseGroup} from the parameters around the radar.
-                  You can get up to 10 points from each parameter. The bigger the blue area is, the better you're doing.
-                  Press the info info button above the radar to see what the parameters mean and how they are calculated.
+                  You can get from 0 up to 10 points from each parameter. The bigger the blue area is, the better you're doing.
+                  Press the info button above the radar to see what the parameters mean and how they are calculated.
                 </p>
 
                 <p>
-                  The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of your overall average of the points you've received during all the exercise weeks. You can navigate between different exercise weeks by pressing the the arrow buttons.
+                  The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of your overall average of the points you've received during all the exercise weeks. You can navigate between different exercise weeks by pressing the arrow buttons.
                 </p>
 
                 {this.props.visualizationType === RADAR_VISUALIZATION_WITH_GRADE && this.renderGradeEstimationTutorial()}
