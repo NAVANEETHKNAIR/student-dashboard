@@ -1,8 +1,6 @@
 const gulp = require('gulp');
 const nodemon = require('gulp-nodemon');
 
-const constants = require('./constants');
-
 module.exports = options => () => {
   nodemon({
     script: './bin/www',

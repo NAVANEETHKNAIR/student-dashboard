@@ -10,10 +10,10 @@ import { Provider } from 'react-redux';
 import ReactHighcharts from 'react-highcharts';
 import highchartsMore from 'highcharts-more';
 
-import store from 'state/store';
+import './style';
 
 import PluginLoader from 'components/plugin-loader';
-
+import store from 'state/store';
 import syncStudentDashboardWithStore from 'utils/sync-student-dashboard-with-store';
 import withClassPrefix from 'utils/class-prefix';
 import { CLASS_PREFIX } from 'utils/class-prefix';

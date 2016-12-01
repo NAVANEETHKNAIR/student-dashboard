@@ -10,6 +10,8 @@ import { RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
 
 import Icon from 'components/icon';
 
+import './style';
+
 export class TutorialModal extends React.Component {
   renderContent({ opacity, top }) {
     return (
@@ -41,7 +43,8 @@ export class TutorialModal extends React.Component {
 
             <div className={withClassPrefix('tutorial-modal__footer text-center')}>
               <button className={withClassPrefix('btn btn-success btn-icon')} onClick={this.props.onClose}>
-                <Icon name="done"/>
+                <Icon name="check"/>
+                {' '}
                 <span>Got it!</span>
               </button>
             </div>

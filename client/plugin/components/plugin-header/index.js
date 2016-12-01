@@ -8,19 +8,21 @@ import { closePlugin } from 'state/plugin';
 
 import Icon from 'components/icon';
 
+import './style';
+
 export class PluginHeader extends React.Component {
   renderCloseButton() {
     return (
-      <button className={withClassPrefix('btn btn-sm btn-danger pull-right')} onClick={this.props.onClose}>
-        <Icon name="visibility_off"/>
+      <button className={withClassPrefix('btn btn-sm btn-circle btn-danger pull-right')} onClick={this.props.onClose}>
+        <Icon name="eye-slash"/>
       </button>
     );
   }
 
   renderTutorialButton() {
     const content = (
-      <button className={withClassPrefix('btn btn-sm btn-primary pull-right')} onClick={this.props.onOpenTutorial}>
-        <Icon name="help_outline"/>
+      <button className={withClassPrefix('btn btn-sm btn-circle btn-primary pull-right')} onClick={this.props.onOpenTutorial}>
+        <Icon name="question"/>
       </button>
     );
 

@@ -1,0 +1,25 @@
+@import "variables";
+@import "mixins";
+
+@include plugin-selector() {
+  .plugin-opener {
+    @include floating;
+
+    z-index: 999;
+    border-radius: 50%;
+    width: 3.5rem;
+    height: 3.5rem;
+    vertical-align: middle;
+    text-align: center;
+    position: fixed;
+    bottom: $spacing;
+    right: $spacing;
+    padding: 0rem;
+
+    > i {
+      font-size: 1.3rem !important;
+      vertical-align: middle;
+      line-height: 3.5rem !important;
+    }
+  }
+}

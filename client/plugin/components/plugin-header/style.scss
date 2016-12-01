@@ -1,0 +1,31 @@
+@import "variables";
+@import "mixins";
+
+@include plugin-selector() {
+  .plugin-header {
+    padding: $spacing;
+
+    &__wrapper {
+      display: flex;
+    }
+
+    &__actions {
+      .btn {
+        margin-left: $spacing / 2;
+
+        &:last-child {
+          margin: 0px;
+        }
+      }
+    }
+
+    &__title {
+      flex: 1;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  }
+}

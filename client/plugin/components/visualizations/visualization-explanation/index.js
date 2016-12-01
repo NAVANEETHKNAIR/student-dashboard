@@ -6,8 +6,9 @@ import { findDOMNode } from 'react-dom';
 import { OPEN_EXPLANATION, CLOSE_EXPLANATION } from 'constants/actions';
 import { createAction } from 'state/actions';
 import withClassPrefix from 'utils/class-prefix';
-
 import Icon from 'components/icon';
+
+import './style';
 
 export class VisualizationExplanation extends React.Component {
 
@@ -76,13 +77,13 @@ export class VisualizationExplanation extends React.Component {
   }
 
   render() {
-    const buttonClasses = withClassPrefix(cn({ 'btn-active': this.state.showExplanation }, 'btn btn-primary btn-sm pull-right'));
+    const buttonClasses = withClassPrefix(cn({ 'btn-active': this.state.showExplanation }, 'btn btn-primary btn-sm btn-circle pull-right'));
 
     return (
       <div className={withClassPrefix('visualization-explanation')} ref="container">
         <div className={withClassPrefix('clearfix')}>
           <button className={buttonClasses} onClick={this.toggleExplanation.bind(this)}>
-            <Icon name="info_outline"/>
+            <Icon name="info"/>
           </button>
         </div>
 

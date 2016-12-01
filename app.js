@@ -11,16 +11,28 @@ const cors = require('cors');
 
 mongoose.Promise = require('bluebird');
 
+const revManifest = require('./rev-manifest');
 const app = express();
 
 const server = require('./server');
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use('/dist', (req, res, next) => {
+  res.set('Cache-Control', `max-age=${60 * 60 * 24 * 360}`);
+  next();
+});
 app.use('/dist', cors());
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
+
+app.use((req, res, next) => {
+  req.revManifest = revManifest || {};
+  next();
+});
 
 app.use(server);
 

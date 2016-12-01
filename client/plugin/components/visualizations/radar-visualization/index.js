@@ -8,6 +8,8 @@ import { selectActiveExerciseGroup } from 'selectors/plugin';
 import VisualizationExplanation from 'components/visualizations/visualization-explanation';
 import ProgressLabel from 'components/progress-label';
 
+import './style';
+
 export class RadarVisualization extends React.Component {
   renderPointLabel(points) {
     return (

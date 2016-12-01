@@ -3,33 +3,31 @@
     var bodyTag = document.getElementsByTagName('body')[0];
     var headTag = document.getElementsByTagName('head')[0];
     var scriptTag = document.createElement('script');
+    var scriptTagIcon = document.createElement('script');
     var styleTag = document.createElement('link');
-    var pendingEvents = 2;
+    var pendingEvents = 3;
     var loadedEvent = new Event('studentDashboardLoaded');
 
-    scriptTag.onload = function() {
+    var updatePendingEvents = function() {
       pendingEvents--;
 
       if(pendingEvents === 0) {
         document.dispatchEvent(loadedEvent);
       }
-    };
+    }
 
-    styleTag.onload = function() {
-      pendingEvents--;
+    scriptTag.onload = updatePendingEvents;
+    scriptTagIcon.onload = updatePendingEvents;
+    styleTag.onload = updatePendingEvents;
 
-      if(pendingEvents === 0) {
-        document.dispatchEvent(loadedEvent);
-      }
-    };
-
+    bodyTag.appendChild(scriptTagIcon);
     bodyTag.appendChild(scriptTag);
     headTag.appendChild(styleTag);
 
-    scriptTag.src = process.env.PLUGIN_SCRIPT_SOURCE;
+    scriptTag.src = "<%= scriptUrl %>";
+    scriptTagIcon.src = 'https://use.fontawesome.com/ed2f73836b.js';
 
     styleTag.setAttribute('rel', 'stylesheet');
-
-    styleTag.href = process.env.PLUGIN_STYLE_SOURCE;
+    styleTag.href = "<%= styleUrl %>";
   });
 })();

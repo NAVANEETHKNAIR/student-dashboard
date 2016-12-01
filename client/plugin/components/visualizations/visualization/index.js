@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
 import withClassPrefix from 'utils/class-prefix';
 import { loadVisualization } from 'state/visualization';
-
 import RadarVisualization from 'components/visualizations/radar-visualization';
 import RadarVisualizationWithGrade from 'components/visualizations/radar-visualization-with-grade';
 

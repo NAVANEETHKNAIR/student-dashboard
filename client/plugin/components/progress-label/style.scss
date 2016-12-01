@@ -1,0 +1,38 @@
+@import "variables";
+@import "mixins";
+
+@include plugin-selector() {
+  .progress-label {
+    background-color: darken(white, 20%);
+    position: relative;
+    font-size: 0.6rem;
+    line-height: 0.8rem;
+    border-radius: 1rem;
+    overflow-y: hidden;
+    vertical-align: middle;
+    text-transform: uppercase;
+    display: inline-block;
+
+    &__label {
+      position: relative;
+      z-index: 1;
+      color: white;
+      padding: 0.1rem 0.6rem;
+      line-height: 0.8rem;
+      display: inline-block;
+      white-space: nowrap;
+      font-weight: bold;
+    }
+
+    &__progress {
+      border-radius: 1rem 0px 0px 1rem;
+      background-color: $colors__primary;
+      z-index: 0;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      height: 100%;
+      display: inline-block;
+    }
+  }
+}

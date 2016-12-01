@@ -4,59 +4,44 @@ require('dotenv').config({ silent: true });
 const path = require('path');
 const gulp = require('gulp');
 
-const makeServerTask = require('gulp-tasks/server-task');
-const makeDeployTask = require('gulp-tasks/deploy-task');
+const makeNodemonTask = require('gulp-tasks/nodemon-task');
 const makeTestTask = require('gulp-tasks/test-task');
+const makeScriptTask = require('gulp-tasks/script-task');
+const makeWebpackConfig = require('gulp-tasks/webpack-config');
+const makeRevTask = require('gulp-tasks/rev-task');
 
-const constants = require('gulp-tasks/constants');
+const dist = path.join(__dirname, 'dist');
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-const scriptsDist = path.join(__dirname, 'dist', 'js');
-const stylesDist = path.join(__dirname, 'dist', 'css');
-
-const registry = require('gulp-tasks/register-bundle-tasks')({
-  assetPaths: './assets/**/*',
-  assetDist: path.join(__dirname, 'dist', 'assets')
-});
-
-registry
-  .register('plugin', {
-    script: {
-      entry: path.join(__dirname, 'client', 'plugin', 'index.js'),
-      fileName: 'plugin',
-      output: scriptsDist,
-      modules: [path.join(__dirname, 'client', 'plugin')],
-      env: {
-        API_URL: process.env.SDP_API_URL
-      }
+gulp.task('script.plugin', makeScriptTask({
+  webpackConfig: makeWebpackConfig({
+    entry: path.join(__dirname, 'client', 'plugin', 'index.js'),
+    output: dist,
+    modules: [path.join(__dirname, 'client', 'plugin')],
+    fileName: 'plugin',
+    sassLoader: {
+      includePaths: [path.resolve(__dirname, 'client', 'plugin', 'style')]
     },
-    sass: {
-      entry: path.join(__dirname, 'client', 'plugin', 'index.scss'),
-      output: stylesDist,
-      fileName: 'plugin',
-      classPrefix: 'sd-',
-      watch: './client/plugin/**/*.scss'
-    }
-  })
-  .register('pluginLoader', {
-    script: {
-      entry: path.join(__dirname, 'client', 'plugin-loader', 'index.js'),
-      fileName: 'plugin-loader',
-      output: scriptsDist,
-      env: {
-        API_URL: process.env.SDP_API_URL,
-        PLUGIN_SCRIPT_SOURCE: process.env.SDP_PLUGIN_SCRIPT_SOURCE,
-        PLUGIN_STYLE_SOURCE: process.env.SDP_PLUGIN_STYLE_SOURCE
-      }
-    }
-  })
-  .done();
+    env: {
+      NODE_ENV: process.env.NODE_ENV,
+      SD_API_URL: process.env.SD_API_URL
+    },
+    isDevelopment
+  }),
+  isDevelopment
+}));
 
 gulp.task('test', makeTestTask({ paths: ['./app-modules/**/_spec.js', './server/**/_spec.js'] }));
 
-gulp.task('server', makeServerTask({
-  watch: constants.NODEMON_PATHS
+gulp.task('nodemon', makeNodemonTask({
+  watch: ['./app-modules', './server', 'app.js']
 }));
 
-gulp.task('deploy', makeDeployTask());
+gulp.task('rev', ['script.plugin'], makeRevTask({
+  entry: ['./dist/*/*.js', './dist/*/*.css'],
+  output: './dist'
+}));
+
+gulp.task('build', ['rev']);
 
 gulp.task('default', ['server', 'serve.plugin']);

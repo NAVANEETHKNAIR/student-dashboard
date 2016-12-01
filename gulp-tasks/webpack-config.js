@@ -1,25 +1,25 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = options => {
   return {
     entry: options.entry,
     devtool: options.isDevelopment ? 'eval-source-map' : '',
     output: {
-      path: options.output,
+      path: path.join(options.output, 'js'),
       filename: `${options.fileName}.js`
     },
     module: {
       loaders: [
         {
-          test: /\.js$/,
-          loader: 'eslint-loader',
+          test: /.jsx?$/,
+          loaders: ['babel-loader', 'eslint-loader'],
           exclude: /node_modules/
         },
         {
-          test: /.jsx?$/,
-          loader: 'babel-loader',
-          exclude: /node_modules/
+          test: /.scss$/,
+          loader: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader')
         },
         {
             test: /\.json$/,
@@ -27,14 +27,17 @@ module.exports = options => {
         }
       ]
     },
+    sassLoader: options.sassLoader || {},
     resolve: {
-      modulesDirectories: ['node_modules', ...(options.modules || [])]
+      modulesDirectories: ['node_modules', ...(options.modules || [])],
+      extensions: ['', '.js', '.jsx', '.scss']
     },
     plugins: [
       new webpack.DefinePlugin({
         'process.env': JSON.stringify(options.env || {})
       }),
-      options.isDevelopment ? undefined : new webpack.optimize.UglifyJsPlugin({ minimize: true })
+      new ExtractTextPlugin(path.join(options.output, 'css', `${options.fileName}.css`)),
+      options.isDevelopment ? null : new webpack.optimize.UglifyJsPlugin({ minimize: true })
     ].filter(p => !!p),
     watch: options.isDevelopment
   };

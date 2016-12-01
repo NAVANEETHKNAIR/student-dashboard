@@ -7,6 +7,7 @@ const errorMiddlewares = require('app-modules/middlewares/errors');
 
 router.use('/api', cors());
 router.use('/api', require('./api'));
+router.use('/plugin-loader', require('./plugin-loader'));
 
 router.use((req, res, next) => {
   next(new errors.NotFoundError(`Path "${req.path}" was not found`));

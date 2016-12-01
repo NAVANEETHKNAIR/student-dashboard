@@ -7,6 +7,8 @@ import { TransitionMotion, spring } from 'react-motion';
 import withClassPrefix from 'utils/class-prefix';
 import { PRIMARY_COLOR } from 'constants/colors';
 
+import './style';
+
 class GradeEstimate extends React.Component {
   
   static propTypes = {

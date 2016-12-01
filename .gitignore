@@ -1,5 +1,6 @@
 node_modules
 dist
+rev-manifest.json
 .DS_Store
 .env
 train-data-parser/data

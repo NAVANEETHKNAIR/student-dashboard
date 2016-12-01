@@ -18,10 +18,16 @@
   box-shadow: 0px 4px 8px rgba(0,0,0,.2);
 }
 
+@mixin plugin-selector() {
+  .plugin-wrapper {
+    @content;
+  }
+}
+
 @mixin button($background, $color) {
   color: $color;
   background-color: $background;
-  border-color: darken($background, 2);
+  border-color: darken($background, 8);
 
   &:hover {
     background-color: darken($background, 5);

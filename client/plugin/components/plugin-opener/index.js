@@ -9,11 +9,13 @@ import { selectOpenerIsVisible } from 'selectors/plugin';
 
 import Icon from 'components/icon';
 
+import './style';
+
 export class PluginOpener extends React.Component {
   renderContent(style) {
     return (
       <button className={withClassPrefix('btn btn-primary plugin-opener')} onClick={this.props.onOpen} style={style} key='pluginOpener'>
-        <Icon name="timeline"/>
+        <Icon name="line-chart"/>
       </button>
     );
   }

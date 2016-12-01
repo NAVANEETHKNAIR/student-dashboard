@@ -23,7 +23,7 @@ class RadarVisualizationWithGrade extends React.Component {
         <GradeEstimate grade={this.props.estimatedGrade} isOpen={this.state.gradeIsOpen} onToggle={this.toggleGrade.bind(this)}/>
 
         <button className={withClassPrefix(buttonClasses)} onClick={this.toggleGrade.bind(this)}>
-          <Icon name="school"/> Estimate my grade
+          <Icon name="graduation-cap"/> Estimate my grade
         </button>
       </div>
     );

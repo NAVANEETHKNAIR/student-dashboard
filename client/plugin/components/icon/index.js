@@ -4,7 +4,7 @@ import withClassPrefix from 'utils/class-prefix';
 class Icon extends React.Component {
   render() {
     return (
-      <i className={withClassPrefix('material-icons')}>{this.props.name}</i>
+      <i className={`fa fa-${this.props.name}`}></i>
     );
   }
 }
