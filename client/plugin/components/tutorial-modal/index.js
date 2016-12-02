@@ -10,8 +10,6 @@ import { RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
 
 import Icon from 'components/icon';
 
-import './style';
-
 export class TutorialModal extends React.Component {
   renderContent({ opacity, top }) {
     return (

@@ -10,8 +10,6 @@ import { goToNextExerciseGroup, goToPrevExerciseGroup } from 'state/plugin';
 import { selectActiveExerciseGroup, selectActiveIsLastExerciseGroup, selectActiveIsFirstExerciseGroup, selectActiveExerciseGroupDateInterval  } from 'selectors/plugin';
 import Icon from 'components/icon';
 
-import './style';
-
 export class WeekSelector extends React.Component {
   static propTypes = {
     label: React.PropTypes.string.isRequired,

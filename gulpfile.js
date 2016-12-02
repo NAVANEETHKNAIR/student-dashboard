@@ -20,7 +20,7 @@ gulp.task('script.plugin', makeScriptTask({
     modules: [path.join(__dirname, 'client', 'plugin')],
     fileName: 'plugin',
     sassLoader: {
-      includePaths: [path.resolve(__dirname, 'client', 'plugin', 'style')]
+      includePaths: [path.resolve(__dirname, 'client', 'plugin')]
     },
     env: {
       NODE_ENV: process.env.NODE_ENV,

@@ -72,6 +72,7 @@
     "highcharts": "^5.0.0",
     "highcharts-more": "^0.1.2",
     "highland": "^2.10.1",
+    "import-glob-loader": "^1.1.0",
     "intro.js": "^2.3.0",
     "json-loader": "^0.5.4",
     "keymirror": "^0.1.1",

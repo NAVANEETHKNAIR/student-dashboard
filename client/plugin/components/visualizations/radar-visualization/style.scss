@@ -1,12 +1,7 @@
-@import "variables";
-@import "mixins";
-
-@include plugin-selector() {
-  .radar-visualization {
-    &__chart {
-      > div {
-        height: $visualization__height;
-      }
+.radar-visualization {
+  &__chart {
+    > div {
+      height: $visualization__height;
     }
   }
 }

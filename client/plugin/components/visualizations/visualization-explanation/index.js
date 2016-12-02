@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import { findDOMNode } from 'react-dom';
+import prefix from 'react-prefixer';
+import { TransitionMotion, spring } from 'react-motion';
 
 import { OPEN_EXPLANATION, CLOSE_EXPLANATION } from 'constants/actions';
 import { createAction } from 'state/actions';
 import withClassPrefix from 'utils/class-prefix';
 import Icon from 'components/icon';
-
-import './style';
 
 export class VisualizationExplanation extends React.Component {
 
@@ -25,6 +25,7 @@ export class VisualizationExplanation extends React.Component {
     super();
 
     this.onOutsideClick = this.onOutsideClick.bind(this);
+    this.toggleExplanation = this.toggleExplanation.bind(this);
   }
 
   toggleExplanation() {
@@ -56,9 +57,9 @@ export class VisualizationExplanation extends React.Component {
     }
   }
 
-  renderContent() {
+  renderContent({ opacity, scale }) {
     return (
-      <div className={withClassPrefix('visualization-explanation__wrapper')}>
+      <div className={withClassPrefix('visualization-explanation__wrapper')} style={prefix({ opacity, transform: `scale(${scale})` })}>
         <div className={withClassPrefix('visualization-explanation__container')}>
           <div className={withClassPrefix('visualization-explanation__content')}>
             {this.props.children}
@@ -82,12 +83,31 @@ export class VisualizationExplanation extends React.Component {
     return (
       <div className={withClassPrefix('visualization-explanation')} ref="container">
         <div className={withClassPrefix('clearfix')}>
-          <button className={buttonClasses} onClick={this.toggleExplanation.bind(this)}>
+          <button className={buttonClasses} onClick={this.toggleExplanation}>
             <Icon name="info"/>
           </button>
         </div>
 
-        {this.state.showExplanation && this.renderContent()}
+        <TransitionMotion
+          willLeave={() => ({ opacity: spring(0), scale: spring(0) })}
+          willEnter={() => ({ opacity: 0, scale: 0 })}
+          styles={
+            this.state.showExplanation
+              ? [{ key: 'explanation', style: { opacity: spring(1), scale: spring(1) } }]
+              : []
+          }
+        >
+          {interpolated => {
+            return (
+              <div className={withClassPrefix('visualization-explanation__motion-wrapper')}>
+                {interpolated.map(({ style }) => this.renderContent({
+                  scale: `${style.scale}`,
+                  opacity: style.opacity
+                }))}
+              </div>
+            );
+          }}
+        </TransitionMotion>
       </div>
     );
   }

@@ -3,8 +3,6 @@ import { Motion, spring } from 'react-motion';
 
 import withClassPrefix from 'utils/class-prefix';
 
-import './style';
-
 class ProgressLabel extends React.Component {
   render() {
     return (

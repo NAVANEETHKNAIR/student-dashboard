@@ -9,8 +9,6 @@ import { selectOpenerIsVisible } from 'selectors/plugin';
 
 import Icon from 'components/icon';
 
-import './style';
-
 export class PluginOpener extends React.Component {
   renderContent(style) {
     return (

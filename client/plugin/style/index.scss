@@ -2,3 +2,7 @@
 @import "mixins";
 @import "reset";
 @import "theme";
+
+@include plugin-selector() {
+  @import "components";
+}

@@ -1,31 +1,26 @@
-@import "variables";
-@import "mixins";
+.plugin-header {
+  padding: $spacing;
 
-@include plugin-selector() {
-  .plugin-header {
-    padding: $spacing;
+  &__wrapper {
+    display: flex;
+  }
 
-    &__wrapper {
-      display: flex;
-    }
+  &__actions {
+    .btn {
+      margin-left: $spacing / 2;
 
-    &__actions {
-      .btn {
-        margin-left: $spacing / 2;
-
-        &:last-child {
-          margin: 0px;
-        }
+      &:last-child {
+        margin: 0px;
       }
     }
+  }
 
-    &__title {
-      flex: 1;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow-x: hidden;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
+  &__title {
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    font-weight: bold;
+    font-size: 1.1rem;
   }
 }

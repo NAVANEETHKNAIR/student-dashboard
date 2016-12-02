@@ -8,8 +8,6 @@ import { closePlugin } from 'state/plugin';
 
 import Icon from 'components/icon';
 
-import './style';
-
 export class PluginHeader extends React.Component {
   renderCloseButton() {
     return (

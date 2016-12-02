@@ -16,6 +16,8 @@ const app = express();
 
 const server = require('./server');
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
@@ -23,7 +25,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/dist', (req, res, next) => {
-  res.set('Cache-Control', `max-age=${60 * 60 * 24 * 360}`);
+  if(!isDevelopment) {
+    res.set('Cache-Control', `max-age=${60 * 60 * 24 * 360}`);
+  }
+
   next();
 });
 app.use('/dist', cors());
