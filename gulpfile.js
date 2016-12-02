@@ -5,7 +5,7 @@ const path = require('path');
 const gulp = require('gulp');
 
 const makeNodemonTask = require('gulp-tasks/nodemon-task');
-const makeTestTask = require('gulp-tasks/test-task');
+const makeMochaTask = require('gulp-tasks/mocha-task');
 const makeScriptTask = require('gulp-tasks/script-task');
 const makeWebpackConfig = require('gulp-tasks/webpack-config');
 const makeRevTask = require('gulp-tasks/rev-task');
@@ -31,7 +31,9 @@ gulp.task('script.plugin', makeScriptTask({
   isDevelopment
 }));
 
-gulp.task('test', makeTestTask({ paths: ['./app-modules/**/_spec.js', './server/**/_spec.js'] }));
+gulp.task('test.server', makeMochaTask({
+  paths: ['./app-modules/**/__tests__/*.js', './server/**/__tests__/*.js']
+}));
 
 gulp.task('nodemon', makeNodemonTask({
   watch: ['./app-modules', './server', 'app.js']
@@ -44,4 +46,6 @@ gulp.task('rev', ['script.plugin'], makeRevTask({
 
 gulp.task('build', ['rev']);
 
-gulp.task('default', ['server', 'serve.plugin']);
+gulp.task('test', ['test.server']);
+
+gulp.task('default', ['nodemon', 'script.plugin']);

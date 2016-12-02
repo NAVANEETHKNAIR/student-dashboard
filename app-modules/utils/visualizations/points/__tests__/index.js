@@ -2,7 +2,7 @@ const expect = require('expect');
 const _ = require('lodash');
 const moment = require('moment');
 
-const points = require('./index.js');
+const points = require('../index.js');
 
 const isAround = (a, b, maxDistance = 0.2) => Math.abs(a - b) <= maxDistance;
 const toDate = dateString => moment(dateString, 'DD.MM').unix() * 1000;
