@@ -47,7 +47,7 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
     const wrapToCache = getPromise => {
       const cacheOptions = { key: `visualization-${courseId}-${userId}`, ttl: '2h' };
 
-      return false === true
+      return cache === true
         ? cacheUtil.withCacheGetAndSet(getPromise, cacheOptions)
         : cacheUtil.withCacheSet(getPromise, cacheOptions);
     }
