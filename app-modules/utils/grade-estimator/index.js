@@ -1,10 +1,14 @@
 const hl = require('highland');
+const _ = require('lodash');
 
 const GradeEntity = require('app-modules/models/grade-entity');
 const Promise = require('bluebird');
 
 function getGradeEstimate(points) {
   return new Promise((resolve, reject) => {
+    let nearestNeighbours = [];
+    let n = 2;
+
     hl(GradeEntity.find().cursor())
       .map(entity => {
         const { exercises, earliness, starting, scheduling, grade } = entity;
@@ -18,13 +22,14 @@ function getGradeEstimate(points) {
           distance: sqrt(sum)
         };
       })
-      .sortBy((a, b) => a.distance - b.distance)
-      .take(1)
-      .toCallback((err, entity) => {
+      .each(entity => {
+        nearestNeighbours = _.chain([...nearestNeighbours, entity]).sortBy(['distance']).take(n).value();
+      })
+      .toCallback(err => {
         if(err) {
           reject(err);
         } else {
-          resolve(entity.grade);
+          resolve(Math.max(nearestNeighbours[0].grade, nearestNeighbours[1].grade));
         }
       });
   });

@@ -44,34 +44,32 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
       return next(new errors.InvalidRequestError('Exercise groups are required'));
     }
 
-    const wrapToCache = promise => {
+    const wrapToCache = getPromise => {
       const cacheOptions = { key: `visualization-${courseId}-${userId}`, ttl: '2h' };
 
-      return cache === true
-        ? cacheUtil.withCacheGetAndSet(() => promise, cacheOptions)
-        : cacheUtil.withCacheSet(() => promise, cacheOptions);
+      return false === true
+        ? cacheUtil.withCacheGetAndSet(getPromise, cacheOptions)
+        : cacheUtil.withCacheSet(getPromise, cacheOptions);
     }
 
-    let getData = () => wrapToCache(Promise.resolve({}));
+    let getData = () => wrapToCache(() => Promise.resolve({}));
 
     const visualizationQuery = { courseId, userId, accessToken, query: { exerciseGroups } };
 
     if(visualizationType === visualizationTypes.RADAR_VISUALIZATION) {
-      getData = () => wrapToCache(visualizations.getUsersProgressData(visualizationQuery));
+      getData = () => wrapToCache(() => visualizations.getUsersProgressData(visualizationQuery));
     } else if(visualizationType === visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE) {
       let data = {};
 
-      getData = () => {
-        const promise = visualizations.getUsersProgressData(visualizationQuery)
+      getData = () => wrapToCache(() => {
+        return visualizations.getUsersProgressData(visualizationQuery)
           .then(progressData => {
             data = progressData;
 
             return visualizations.getUsersEstimatedGrade(progressData.average)
           })
           .then(estimatedGrade => Object.assign({}, data, { estimatedGrade }));
-
-        return wrapToCache(promise);
-      };
+      });
     }
 
     getData()
