@@ -24,6 +24,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use('/dist', (req, res, next) => {
   if(!isDevelopment) {
     res.set('Cache-Control', `max-age=${60 * 60 * 24 * 360}`);
@@ -31,6 +32,7 @@ app.use('/dist', (req, res, next) => {
 
   next();
 });
+
 app.use('/dist', cors());
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
 

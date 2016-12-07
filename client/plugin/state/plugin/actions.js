@@ -57,6 +57,22 @@ export function closePlugin() {
   }
 }
 
+export function closeGradeEstimate() {
+  return dispatch => dispatch(createAction({ name: actionConstants.CLOSE_GRADE_ESTIMATE }));
+}
+
+export function openGradeEstimate() {
+  return dispatch => dispatch(createAction({ name: actionConstants.OPEN_GRADE_ESTIMATE }));
+}
+
+export function closeExplanation() {
+  return dispatch => dispatch(createAction({ name: actionConstants.CLOSE_EXPLANATION }));
+}
+
+export function openExplanation() {
+  return dispatch => dispatch(createAction({ name: actionConstants.OPEN_EXPLANATION }));
+}
+
 export function openPlugin() {
   return dispatch => {
     dispatch(createAction({ name: actionConstants.OPEN_PLUGIN }));

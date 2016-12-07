@@ -5,6 +5,7 @@ import prefix from 'react-prefixer';
 
 import withClassPrefix from 'utils/class-prefix';
 
+import { loadVisualization } from 'state/visualization';
 import WeekSelector from 'components/week-selector';
 import PluginHeader from 'components/plugin-header';
 import Loader from 'components/loader';
@@ -13,9 +14,18 @@ import Icon from 'components/icon';
 
 export class Plugin extends React.Component {
   renderVisualization() {
-    return this.props.visualizationLoading
-      ? <Loader/>
-      : <Visualization/>;
+    if(this.props.visualizationLoading) {
+      return <Loader/>;
+    } else if(!this.props.visualizationLoading && !this.props.visualizationError) {
+      return <Visualization/>;
+    } else {
+      return (
+        <div className={withClassPrefix('text-muted text-center')}>
+          Couldn't load the visualization from the server.
+          Try logging in again and <a className={withClassPrefix('link')} onClick={this.props.onReloadVisualization}>reloading the visualization</a>.
+        </div>
+      )
+    }
   }
 
   renderContent(style) {
@@ -57,10 +67,16 @@ export class Plugin extends React.Component {
 
 const mapStateToProps = state => ({
   visualizationLoading: state.visualization.loading,
+  visualizationError: state.visualization.error,
   courseName: state.course.name,
   isOpen: state.plugin.isOpen
 });
 
+const mapDispatchToProps = dispatch => ({
+  onReloadVisualization: () => dispatch(loadVisualization())
+});
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Plugin);

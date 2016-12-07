@@ -5,8 +5,7 @@ import { findDOMNode } from 'react-dom';
 import prefix from 'react-prefixer';
 import { TransitionMotion, spring } from 'react-motion';
 
-import { OPEN_EXPLANATION, CLOSE_EXPLANATION } from 'constants/actions';
-import { createAction } from 'state/actions';
+import { openExplanation, closeExplanation } from 'state/plugin';
 import withClassPrefix from 'utils/class-prefix';
 import Icon from 'components/icon';
 
@@ -59,7 +58,7 @@ export class VisualizationExplanation extends React.Component {
 
   renderContent({ opacity, scale }) {
     return (
-      <div className={withClassPrefix('visualization-explanation__wrapper')} style={prefix({ opacity, transform: `scale(${scale})` })}>
+      <div className={withClassPrefix('visualization-explanation__wrapper')} style={prefix({ opacity, transform: `scaleY(${scale})` })}>
         <div className={withClassPrefix('visualization-explanation__container')}>
           <div className={withClassPrefix('visualization-explanation__content')}>
             {this.props.children}
@@ -114,8 +113,8 @@ export class VisualizationExplanation extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onClose: () => dispatch(createAction({ name: CLOSE_EXPLANATION })),
-  onOpen: () => dispatch(createAction({ name: OPEN_EXPLANATION }))
+  onClose: () => dispatch(closeExplanation()),
+  onOpen: () => dispatch(openExplanation())
 });
 
 export default connect(

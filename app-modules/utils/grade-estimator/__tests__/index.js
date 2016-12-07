@@ -4,11 +4,11 @@ const database = require('app-modules/test-utils/database');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
 const GradeEntity = require('app-modules/models/grade-entity');
 
+console.log('ad')
+
 describe('Grade estimator', () => {
 
-  before(() => {
-    return database.connect();
-  });
+  before(database.connect);
 
   it('should return grade of the closest neighbor', () => {
     const entityA = new GradeEntity({
@@ -40,12 +40,8 @@ describe('Grade estimator', () => {
       });
   });
 
-  afterEach(() => {
-    return database.clean();
-  });
+  afterEach(database.clean);
 
-  after(() => {
-    return database.disconnect();
-  });
+  after(database.disconnect);
 
 });

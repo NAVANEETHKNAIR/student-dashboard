@@ -66,7 +66,7 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
           .then(progressData => {
             data = progressData;
 
-            return visualizations.getUsersEstimatedGrade(progressData)
+            return visualizations.getUsersEstimatedGrade(progressData.average)
           })
           .then(estimatedGrade => Object.assign({}, data, { estimatedGrade }));
 

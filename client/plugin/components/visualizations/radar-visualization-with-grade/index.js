@@ -4,8 +4,7 @@ import cn from 'classnames';
 
 import withClassPrefix from 'utils/class-prefix';
 import { selectActiveExerciseGroup } from 'selectors/plugin';
-import { createAction } from 'state/actions';
-import { CLOSE_GRADE_ESTIMATE, OPEN_GRADE_ESTIMATE } from 'constants/actions';
+import { openGradeEstimate, closeGradeEstimate } from 'state/plugin';
 import RadarVisualization from 'components/visualizations/radar-visualization';
 import GradeEstimate from './grade-estimate';
 import Icon from 'components/icon';
@@ -58,8 +57,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onCloseEstimatedGrade: () => dispatch(createAction({ name: CLOSE_GRADE_ESTIMATE })),
-  onOpenEstimatedGrade: () => dispatch(createAction({ name: OPEN_GRADE_ESTIMATE }))
+  onCloseEstimatedGrade: () => dispatch(closeGradeEstimate()),
+  onOpenEstimatedGrade: () => dispatch(openGradeEstimate())
 });
 
 export default connect(

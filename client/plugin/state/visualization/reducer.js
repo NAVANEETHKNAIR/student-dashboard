@@ -1,6 +1,7 @@
 import { createReducer } from 'redux-create-reducer';
 
-import { UPDATE_VISUALIZATION, LOAD_VISUALIZATION, LOAD_VISUALIZATION_ERROR } from 'state/visualization';
+import { getVisualization } from 'utils/visualizations';
+import { UPDATE_VISUALIZATION, LOAD_VISUALIZATION, LOAD_VISUALIZATION_FAIL, LOAD_VISUALIZATION_SUCCESS } from 'state/visualization';
 import { RESET_PLUGIN } from 'state/plugin';
 
 const initialState = {
@@ -17,7 +18,12 @@ export default createReducer(initialState, {
   [LOAD_VISUALIZATION](state, action) {
     return Object.assign({}, state, { loading: true });
   },
-  [LOAD_VISUALIZATION_ERROR](state, action) {
+  [LOAD_VISUALIZATION_SUCCESS](state, action) {
+    const { data, type } = action.payload.data;
+
+    return Object.assign({}, state, { data: getVisualization({ data, type }), type, loading: false, error: false });
+  },
+  [LOAD_VISUALIZATION_FAIL](state, action) {
     return Object.assign({}, state, { error: true, loading: false });
   },
   [UPDATE_VISUALIZATION](state, action) {

@@ -4,6 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = options => {
   return {
+    bail: !options.isDevelopment,
     entry: options.entry,
     devtool: options.isDevelopment ? 'eval-source-map' : '',
     output: {

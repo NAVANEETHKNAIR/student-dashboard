@@ -3,11 +3,9 @@ import mapValues from 'map-values';
 import moment from 'moment';
 
 import withClassPrefix from 'utils/class-prefix';
-import { OPEN_PAGE } from 'constants/actions';
 import { setActiveExerciseGroup, setExerciseGroupOrder, setExerciseGroups, resetPlugin } from 'state/plugin';
 import { updateCourse } from 'state/course';
 import { updateUser } from 'state/user';
-import { createAction } from 'state/actions';
 
 const nop = () => () => {};
 
@@ -66,7 +64,6 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
     store.dispatch(setActiveExerciseGroup(activeGroup));
     store.dispatch(updateCourse({ id: courseId, name: courseName }));
     store.dispatch(updateUser({ id: userId || null, accessToken }));
-    store.dispatch(createAction({ name: OPEN_PAGE }));
 
     onInitialize();
 
