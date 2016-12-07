@@ -58,7 +58,7 @@ export class VisualizationExplanation extends React.Component {
 
   renderContent({ opacity, scale }) {
     return (
-      <div className={withClassPrefix('visualization-explanation__wrapper')} style={prefix({ opacity, transform: `scaleY(${scale})` })}>
+      <div className={withClassPrefix('visualization-explanation__wrapper')} style={prefix({ opacity, transform: `scaleY(${scale})` })} key="explanation">
         <div className={withClassPrefix('visualization-explanation__container')}>
           <div className={withClassPrefix('visualization-explanation__content')}>
             {this.props.children}
