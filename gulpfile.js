@@ -40,7 +40,7 @@ gulp.task('nodemon', makeNodemonTask({
 }));
 
 gulp.task('rev', ['script.plugin'], makeRevTask({
-  entry: ['./dist/js/*.js', './dist/css/*.css'],
+  entry: ['./dist/**/*.js', './dist/**/*.css'],
   output: './dist'
 }));
 
