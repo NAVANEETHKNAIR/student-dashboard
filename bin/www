@@ -6,7 +6,7 @@
 const path = require('path');
 
 require('app-module-path').addPath(path.resolve(__dirname, '..'));
-require('dotenv').config({ path: path.resolve(__dirname, '..', '.env')  });
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env'), silent: true });
 
 const http = require('http');
 const mongoose = require('mongoose');
