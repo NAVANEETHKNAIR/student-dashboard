@@ -37,6 +37,8 @@ app.use('/dist', cors());
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
 app.use((req, res, next) => {
+  console.log(revManifest);
+
   req.revManifest = revManifest || {};
   next();
 });
