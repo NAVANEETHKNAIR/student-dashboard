@@ -4,8 +4,6 @@ const database = require('app-modules/test-utils/database');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
 const GradeEntity = require('app-modules/models/grade-entity');
 
-console.log('ad')
-
 describe('Grade estimator', () => {
 
   before(database.connect);
