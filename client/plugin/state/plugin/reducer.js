@@ -4,6 +4,7 @@ import { RESET_PLUGIN, OPEN_PLUGIN, CLOSE_PLUGIN, SET_EXERCISE_GROUPS, SET_EXERC
 
 const initialState = {
   isOpen: false,
+  hasBeenOpened: false,
   activeExerciseGroup: null,
   exerciseGroups: {},
   exerciseGroupOrder: []
@@ -14,7 +15,7 @@ export default createReducer(initialState, {
     return initialState;
   },
   [OPEN_PLUGIN](state, action) {
-    return Object.assign({}, state, { isOpen: true });
+    return Object.assign({}, state, { isOpen: true, hasBeenOpened: true });
   },
   [CLOSE_PLUGIN](state, action) {
     return Object.assign({}, state, { isOpen: false });

@@ -6,7 +6,7 @@ import withClassPrefix from 'utils/class-prefix';
 import { closeTutorial } from 'state/tutorial';
 import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
 import { selectExerciseGroupOrder, selectActiveExerciseGroup } from 'selectors/plugin';
-import { RADAR_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
+import { gradeEstimateTypes, radarVisualizationTypes, textualVisualizationTypes } from 'constants/visualizations';
 
 import Icon from 'components/icon';
 
@@ -22,20 +22,17 @@ export class TutorialModal extends React.Component {
             <div className={withClassPrefix('tutorial-modal__body')}>
               <div className={withClassPrefix('tutorial-modal__body-content')}>
                 <p>
-                  This is a radar visualization of your progress in {this.props.courseName} during exercise weeks {this.props.exerciseGroups.join(', ')}.
+                  This is a visualization of your progress in course {this.props.courseName} during exercise weeks {this.props.exerciseGroups.join(', ')}.
                 </p>
+
+                {textualVisualizationTypes.includes(this.props.visualizationType) && this.renderTextualTutorial()}
+                {radarVisualizationTypes.includes(this.props.visualizationType) && this.renderRadarTutorial()}
 
                 <p>
-                  The <strong style={{ color: CHART_PRIMARY_COLOR }}>blue</strong> area of the radar consists of the points you've received during {this.props.activeExerciseGroup} from the parameters around the radar.
-                  You can get from 0 up to 10 points from each parameter. The bigger the blue area is, the better you're doing.
-                  Press the info button above the radar to see what the parameters mean and how they are calculated.
+                  You can navigate between different exercise weeks by pressing the arrow buttons (the <Icon name="chevron-left" /> and <Icon name="chevron-right" /> icons).
                 </p>
 
-                <p>
-                  The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of your overall average of the points you've received during all the exercise weeks. You can navigate between different exercise weeks by pressing the arrow buttons.
-                </p>
-
-                {this.props.visualizationType === RADAR_VISUALIZATION_WITH_GRADE && this.renderGradeEstimationTutorial()}
+                {gradeEstimateTypes.includes(this.props.visualizationType) && this.renderGradeEstimationTutorial()}
               </div>
             </div>
 
@@ -52,10 +49,36 @@ export class TutorialModal extends React.Component {
     );
   }
 
+  renderTextualTutorial() {
+    return (
+      <div>
+        <p>
+          Parameters on the list describe your progress in a certain area during the chosen exercise week. You can receive from 0 up to 10 points from each parameter. The points you've received is indicated by a progress bar next to the parameter's name. Below the parameter's name you'll find a short description what the parameter is measuring. The way your points are calculated is described below parameter's description.
+        </p>
+      </div>
+    );
+  }
+
+  renderRadarTutorial() {
+    return (
+      <div>
+        <p>
+          The <strong style={{ color: CHART_PRIMARY_COLOR }}>blue</strong> area of the radar consists of the points you've received during {this.props.activeExerciseGroup} from the parameters around the radar.
+          You can get from 0 up to 10 points from each parameter. The bigger the blue area is, the better you're doing.
+          Press the "info" button (the button with <Icon name="info" /> icon) above the radar to see what the parameters mean and how they are calculated.
+        </p>
+
+        <p>
+          The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of your overall average of the points you've received during all the exercise weeks.
+        </p>
+      </div>
+    );
+  }
+
   renderGradeEstimationTutorial() {
     return (
       <p>
-        To see your estimated grade from the course, press the "Estimate my grade" button. Estimation is based on the progress data of the students from previous courses and the grades they've received.
+        To see your estimated grade for the course, press the "Estimate my grade" button (the button with <Icon name="graduation-cap" /> icon). Estimation is based on the progress data of the students from previous courses and the grades they've received.
       </p>
     );
   }

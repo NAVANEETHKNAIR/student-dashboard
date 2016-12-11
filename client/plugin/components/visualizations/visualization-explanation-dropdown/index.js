@@ -5,11 +5,11 @@ import { findDOMNode } from 'react-dom';
 import prefix from 'react-prefixer';
 import { TransitionMotion, spring } from 'react-motion';
 
-import { openExplanation, closeExplanation } from 'state/plugin';
+import { toggleExplanation } from 'state/visualization';
 import withClassPrefix from 'utils/class-prefix';
 import Icon from 'components/icon';
 
-export class VisualizationExplanation extends React.Component {
+export class VisualizationExplanationDropdown extends React.Component {
 
   static propTypes = {
     onClose: React.PropTypes.func,
@@ -24,35 +24,13 @@ export class VisualizationExplanation extends React.Component {
     super();
 
     this.onOutsideClick = this.onOutsideClick.bind(this);
-    this.toggleExplanation = this.toggleExplanation.bind(this);
-  }
-
-  toggleExplanation() {
-    const { showExplanation } = this.state;
-
-    if(showExplanation) {
-      this.props.onClose();
-    } else {
-      this.props.onOpen();
-    }
-
-    this.setState({
-      showExplanation: !showExplanation
-    });
   }
 
   onOutsideClick(e) {
-    const container = findDOMNode(this.refs.container);
-    const isInside = e.target === container || container.contains(e.target);
+    const isOutside = e.target && !this.container.contains(e.target);
 
-    if(!isInside) {
-      if(this.state.showExplanation === true) {
-        this.props.onClose();
-      }
-
-      this.setState({
-        showExplanation: false
-      });
+    if(isOutside && this.props.isOpen) {
+      this.props.onToggle();
     }
   }
 
@@ -77,12 +55,13 @@ export class VisualizationExplanation extends React.Component {
   }
 
   render() {
-    const buttonClasses = withClassPrefix(cn({ 'btn-active': this.state.showExplanation }, 'btn btn-primary btn-sm btn-circle pull-right'));
+    const buttonClasses = withClassPrefix(cn({ 'btn-active': this.props.isOpen }, 'btn btn-primary btn-sm btn-circle pull-right'));
 
     return (
-      <div className={withClassPrefix('visualization-explanation')} ref="container">
+      <div className={withClassPrefix('visualization-explanation')} ref={node => this.container = node}>
+
         <div className={withClassPrefix('clearfix')}>
-          <button className={buttonClasses} onClick={this.toggleExplanation}>
+          <button className={buttonClasses} onClick={this.props.onToggle}>
             <Icon name="info"/>
           </button>
         </div>
@@ -91,7 +70,7 @@ export class VisualizationExplanation extends React.Component {
           willLeave={() => ({ opacity: spring(0), scale: spring(0) })}
           willEnter={() => ({ opacity: 0, scale: 0 })}
           styles={
-            this.state.showExplanation
+            this.props.isOpen
               ? [{ key: 'explanation', style: { opacity: spring(1), scale: spring(1) } }]
               : []
           }
@@ -112,12 +91,15 @@ export class VisualizationExplanation extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  isOpen: state.visualization.explanationIsOpen
+});
+
 const mapDispatchToProps = dispatch => ({
-  onClose: () => dispatch(closeExplanation()),
-  onOpen: () => dispatch(openExplanation())
+  onToggle: () => dispatch(toggleExplanation()),
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
-)(VisualizationExplanation);
+)(VisualizationExplanationDropdown);

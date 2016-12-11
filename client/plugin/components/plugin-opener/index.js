@@ -6,13 +6,14 @@ import prefix from 'react-prefixer';
 import withClassPrefix from 'utils/class-prefix';
 import { openPlugin } from 'state/plugin';
 import { selectOpenerIsVisible } from 'selectors/plugin';
-
+import Notification from 'components/notification';
 import Icon from 'components/icon';
 
 export class PluginOpener extends React.Component {
   renderContent(style) {
     return (
       <button className={withClassPrefix('btn btn-primary plugin-opener')} onClick={this.props.onOpen} style={style} key='pluginOpener'>
+        <Notification />
         <Icon name="line-chart"/>
       </button>
     );

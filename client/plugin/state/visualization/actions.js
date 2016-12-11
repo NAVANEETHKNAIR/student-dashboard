@@ -1,19 +1,23 @@
-import { createAction } from 'state/actions';
-
 import {
   OPEN_PAGE,
   UPDATE_VISUALIZATION as UPDATE_VISUALIZATION_ACTION
 } from 'constants/actions';
 
+import { setLastSeenVisualization } from 'utils/store';
+import { createAction } from 'state/actions';
+import * as actionConstants from 'constants/actions';
+
 export const UPDATE_VISUALIZATION = 'VISUALIZATION_UPDATE_VISUALIZATION';
 export const LOAD_VISUALIZATION = 'VISUALIZATION_LOAD_VISUALIZATION';
 export const LOAD_VISUALIZATION_FAIL = 'VISUALIZATION_LOAD_VISUALIZATION_FAIL';
 export const LOAD_VISUALIZATION_SUCCESS = 'VISUALIZATION_LOAD_VISUALIZATION_SUCCESS'
+export const OPEN_EXPLANATION = 'VISUALIZATION_OPEN_EXPLANATION';
+export const CLOSE_EXPLANATION = 'VISUALIZATION_CLOSE_EXPLANATION';
 
 export function loadVisualization({ cache = true } = {}) {
   return (dispatch, getState) => {
     const {
-      plugin: { exerciseGroups },
+      plugin: { exerciseGroups, isOpen: pluginIsOpen },
       course: { id: courseId },
       visualization: { type: visualizationType }
     } = getState();
@@ -25,7 +29,51 @@ export function loadVisualization({ cache = true } = {}) {
         } else if(!cache) {
           dispatch(createAction({ name: UPDATE_VISUALIZATION_ACTION }));
         }
+
+        if(pluginIsOpen) {
+          setLastSeenVisualization(response.data);
+        }
       });
+  }
+}
+
+export function closeGradeEstimate() {
+  return dispatch => dispatch(createAction({ name: actionConstants.CLOSE_GRADE_ESTIMATE }));
+}
+
+export function openGradeEstimate() {
+  return dispatch => dispatch(createAction({ name: actionConstants.OPEN_GRADE_ESTIMATE }));
+}
+
+export function closeExplanation() {
+  return {
+    type: CLOSE_EXPLANATION,
+    payload: {
+      action: {
+        name: actionConstants.CLOSE_EXPLANATION
+      }
+    }
+  };
+}
+
+export function openExplanation() {
+  return {
+    type: OPEN_EXPLANATION,
+    payload: {
+      action: {
+        name: actionConstants.OPEN_EXPLANATION
+      }
+    }
+  };
+}
+
+export function toggleExplanation() {
+  return (dispatch, getState) => {
+    const { visualization: { explanationIsOpen } } = getState();
+
+    return explanationIsOpen
+      ? dispatch(closeExplanation())
+      : dispatch(openExplanation());
   }
 }
 

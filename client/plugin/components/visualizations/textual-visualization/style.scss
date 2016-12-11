@@ -1,0 +1,46 @@
+.textual-visualization {
+  position: relative;
+  margin-bottom: rem(1.15);
+
+  &__content {
+    max-height: $visualization__height;
+    overflow-y: scroll;
+
+    &--scroll-indicator {
+      border-bottom: 1px solid $colors__light-border;
+    }
+  }
+
+  &__scroll-indicator {
+    position: absolute;
+    bottom: rem(-1.15);
+    border-radius: 50%;
+    border: 1px solid $colors__light-border;
+    width: rem(2.3);
+    left: 50%;
+    text-align: center;
+    vertical-align: middle;
+    background-color: white;
+    cursor: pointer;
+    padding: rem(0.4) rem(0);
+    transform: translateX(-50%);
+    font-size: rem(1.2);
+    z-index: 99;
+    color: $colors__primary;
+    animation-name: sdBounce;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  }
+}
+
+@keyframes sdBounce {
+  0% {
+    bottom: rem(-0.5);
+  }
+  50% {
+    bottom: rem(-1.15);
+  }
+  100% {
+    bottom: rem(-0.5);
+  }
+}

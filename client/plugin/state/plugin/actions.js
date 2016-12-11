@@ -1,6 +1,6 @@
 import * as actionConstants from 'constants/actions';
-
 import { createAction } from 'state/actions';
+import { setLastSeenVisualization } from 'utils/store';
 
 export const OPEN_PLUGIN = 'PLUGIN_OPEN_PLUGIN';
 export const CLOSE_PLUGIN = 'PLUGIN_CLOSE_PLUGIN';
@@ -57,24 +57,14 @@ export function closePlugin() {
   }
 }
 
-export function closeGradeEstimate() {
-  return dispatch => dispatch(createAction({ name: actionConstants.CLOSE_GRADE_ESTIMATE }));
-}
-
-export function openGradeEstimate() {
-  return dispatch => dispatch(createAction({ name: actionConstants.OPEN_GRADE_ESTIMATE }));
-}
-
-export function closeExplanation() {
-  return dispatch => dispatch(createAction({ name: actionConstants.CLOSE_EXPLANATION }));
-}
-
-export function openExplanation() {
-  return dispatch => dispatch(createAction({ name: actionConstants.OPEN_EXPLANATION }));
-}
-
 export function openPlugin() {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { visualization: { data } } = getState();
+
+    if(data && data.raw) {
+      setLastSeenVisualization(data.raw);
+    }
+
     dispatch(createAction({ name: actionConstants.OPEN_PLUGIN }));
     dispatch(openPluginCreator());
   }

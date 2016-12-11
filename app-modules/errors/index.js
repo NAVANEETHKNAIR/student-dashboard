@@ -4,7 +4,8 @@ function ApiError(message, properties) {
   this.name = 'ApiError';
   this.message = message || 'Something went wrong';
   this.properties = properties || {};
-  this.stack = (new Error()).stack;
+
+  Error.captureStackTrace(this);
 }
 
 ApiError.prototype = Object.create(Error.prototype);

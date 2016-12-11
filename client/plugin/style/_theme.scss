@@ -34,7 +34,7 @@
   }
 
   .text-sm {
-    font-size: 0.8rem;
+    font-size: rem(0.8);
   }
 
   .link {
@@ -52,19 +52,26 @@
   }
 
   .chart-tooltip {
-    background-color: rgba(0, 0, 0, .7);
+    background-color: rgba(0, 0, 0, .75);
     color: white;
-    padding: 0.2rem 0.5rem;
-    border-radius: .25rem;
+    padding: rem(0.2) rem(0.5);
+    border-radius: rem(.25);
+    white-space: normal;
+    width: 180px;
+
+    &__footer {
+      font-size: rem(0.7);
+      color: darken(white, 20%);
+    }
   }
 
   .label {
-    font-size: 0.6rem;
+    font-size: rem(0.6);
     color: white;
-    border-radius: 1rem;
+    border-radius: rem(1);
     vertical-align: middle;
     text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
+    padding: rem(0.2) rem(0.5);
 
     &.label-primary {
       color: white;
@@ -75,7 +82,7 @@
   .btn {
     display: inline-block;
     font-weight: 400;
-    line-height: 1rem;
+    line-height: rem(1);
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
@@ -83,29 +90,29 @@
     outline: none !important;
     user-select: none;
     border: 1px solid transparent;
-    padding: .5rem 1rem;
-    font-size: 1rem;
-    border-radius: .25rem;
+    padding: rem(.5) rem(1);
+    font-size: rem(1);
+    border-radius: rem(.25);
 
     &.btn-sm {
-      padding: 0.15rem 0.65rem;
-      font-size: 0.8rem;
+      padding: rem(0.15) rem(0.65);
+      font-size: rem(0.8);
     }
 
     &.btn-circle {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: rem(2.5);
+      height: rem(2.5);
       border-radius: 50%;
-      line-height: 2.5rem;
+      line-height: rem(2.5);
       vertical-align: middle;
       text-align: center;
-      padding: 0rem;
+      padding: rem(0);
 
       &.btn-sm {
-        padding: 0rem;
-        width: 2.1rem;
-        height: 2.1rem;
-        line-height: 2.1rem;
+        padding: rem(0);
+        width: rem(1.9);
+        height: rem(1.9);
+        line-height: rem(1.9);
       }
     }
 

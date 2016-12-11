@@ -41,11 +41,11 @@
     padding: $spacing;
 
     > p:first-child {
-      margin-top: 0rem !important;
+      margin-top: rem(0) !important;
     }
 
     > p:last-child {
-      margin-bottom: 0rem !important;
+      margin-bottom: rem(0) !important;
     }
   }
 

@@ -3,112 +3,105 @@
 /**
  * Module dependencies.
  */
-
 const path = require('path');
-const throng = require('throng');
 
+require('app-module-path').addPath(path.resolve(__dirname, '..'));
 require('dotenv').config({ path: path.resolve(__dirname, '..', '.env')  });
-const throngConfig = {
-  workers: process.env.WEB_CONCURRENCY || 1,
-  lifetime: Infinity,
-  start
-}
 
-function start(id) {
-  var app = require('../app');
-  var debug = require('debug')('student-dashboard:server');
-  var http = require('http');
-  var mongoose = require('mongoose');
+const http = require('http');
+const mongoose = require('mongoose');
+const debug = require('debug')('server');
 
-  require('../app-modules/utils/cache').connect();
+require('app-modules/utils/cache').connect();
 
-  /**
-   * Get port from environment and store in Express.
-   */
+const app = require('../app');
 
-  var port = normalizePort(process.env.PORT || '3000');
-  app.set('port', port);
+/**
+ * Get port from environment and store in Express.
+ */
 
-  /**
-   * Create HTTP server.
-   */
+const port = normalizePort(process.env.PORT || '3000');
 
-  var server = http.createServer(app);
+app.set('port', port);
 
-  /**
-   * Listen on provided port, on all network interfaces.
-   */
+/**
+ * Create HTTP server.
+ */
 
-  mongoose.connect(process.env.MONGO_URI, err => {
-    if(err) {
-      throw err;
-    } else {
-      server.listen(port);
-    }
-  });
+const server = http.createServer(app);
 
-  server.on('error', onError);
-  server.on('listening', onListening);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
 
-  /**
-   * Normalize a port into a number, string, or false.
-   */
+mongoose.connect(process.env.MONGO_URI, err => {
+  if(err) {
+    throw err;
+  } else {
+    server.listen(port);
+  }
+});
 
-  function normalizePort(val) {
-    var port = parseInt(val, 10);
+server.on('error', onError);
+server.on('listening', onListening);
 
-    if (isNaN(port)) {
-      // named pipe
-      return val;
-    }
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
-    if (port >= 0) {
-      // port number
-      return port;
-    }
+function normalizePort(val) {
+  const port = parseInt(val, 10);
 
-    return false;
+  if (isNaN(port)) {
+    // named pipe
+    return val;
   }
 
-  /**
-   * Event listener for HTTP server "error" event.
-   */
+  if (port >= 0) {
+    // port number
+    return port;
+  }
 
-  function onError(error) {
-    if (error.syscall !== 'listen') {
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
       throw error;
-    }
-
-    var bind = typeof port === 'string'
-      ? 'Pipe ' + port
-      : 'Port ' + port;
-
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-      case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-      case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-      default:
-        throw error;
-    }
-  }
-
-  /**
-   * Event listener for HTTP server "listening" event.
-   */
-
-  function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + addr.port;
-    debug('Listening on ' + bind);
   }
 }
 
-throng(throngConfig);
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+
+  debug('Listening on ' + bind);
+}

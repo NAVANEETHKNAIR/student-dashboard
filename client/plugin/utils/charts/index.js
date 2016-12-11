@@ -25,25 +25,27 @@ export function withoutLegend(config) {
   });
 }
 
-export function withTooltip(config) {
-  return Object.assign({}, config, {
-    tooltip: {
-      backgroundColor: 'none',
-      borderWidth: 0,
-      shadow: false,
-      useHTML: true,
-      padding: 0,
-      formatter: function() {
-        return `
-          <div class="${withClassPrefix('chart-tooltip')}">
-            ${this.point.category}: ${this.y}
-          </div>
-        `;
+export function makeWithTooltip(getContent) {
+  return config => {
+    return Object.assign({}, config, {
+      tooltip: {
+        backgroundColor: 'none',
+        borderWidth: 0,
+        shadow: false,
+        useHTML: true,
+        padding: 0,
+        formatter: function() {
+          return `
+            <div class="${withClassPrefix('chart-tooltip')}">
+              ${getContent.call(this)}
+            </div>
+          `;
+        }
       }
-    }
-  });
+    });
+  };
 }
 
 export function withDefaults(config) {
-  return compose(withoutTitle, withoutCredits, withTooltip)(config);
+  return compose(withoutTitle, withoutCredits)(config);
 }

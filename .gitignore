@@ -4,3 +4,4 @@ rev-manifest.json
 .DS_Store
 .env
 train-data-parser/data
+npm-debug.log

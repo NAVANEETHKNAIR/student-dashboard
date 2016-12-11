@@ -1,5 +1,5 @@
 .week-selector {
-  padding: 0rem $spacing;
+  padding: rem(0) $spacing;
   display: flex;
 
   &__action {
@@ -16,8 +16,8 @@
 
   &__date-interval {
     font-weight: normal;
-    font-size: 0.7em;
-    margin-top: 0.25rem;
+    font-size: rem(0.7);
+    margin-top: rem(0.25);
   }
 
   &__current {
@@ -28,7 +28,7 @@
     text-overflow: ellipsis;
     text-align: center;
     position: relative;
-    height: 3.25rem;
+    height: rem(3.25);
   }
 
   &__label {

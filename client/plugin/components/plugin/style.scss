@@ -18,7 +18,7 @@
 
   @media(max-width: $plugin__width) {
     width: 100%;
-    bottom: 0rem;
-    right: 0rem;
+    bottom: rem(0);
+    right: rem(0);
   }
 }

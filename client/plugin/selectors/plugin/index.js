@@ -2,6 +2,8 @@ import { createSelector } from 'reselect';
 
 import { NO_VISUALIZATION } from 'constants/visualizations';
 
+export const selectIsOpen = state => state.plugin.isOpen;
+export const selectHasBeenOpened = state => state.plugin.hasBeenOpened;
 export const selectActiveExerciseGroup = state => state.plugin.activeExerciseGroup;
 export const selectExerciseGroupOrder = state => state.plugin.exerciseGroupOrder;
 export const selectExerciseGroups = state => state.plugin.exerciseGroups;

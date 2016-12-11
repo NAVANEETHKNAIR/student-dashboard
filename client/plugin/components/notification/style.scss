@@ -1,0 +1,13 @@
+.notification {
+  @include floating();
+
+  position: absolute;
+  right: rem(-0.25);
+  top: rem(-0.25);
+  width: rem(1.5);
+  height: rem(1.5);
+  background-color: $colors__danger;
+  border-radius: 50%;
+  font-size: rem(0.7);
+  border: 1px solid darken($colors__danger, 10%);
+}

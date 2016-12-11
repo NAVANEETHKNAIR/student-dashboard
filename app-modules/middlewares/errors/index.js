@@ -1,10 +1,13 @@
 const { mapValues } = require('lodash');
+const debug = require('debug')('server');
+const PrettyError = require('pretty-error');
+const pretty = new PrettyError();
 
 const errors = require('app-modules/errors');
 
 function apiErrorHandler() {
   return (err, req, res, next) => {
-    console.log(err);
+    debug(pretty.render(err));
 
     let statusCode = 500;
     let properties = {};

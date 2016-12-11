@@ -3,16 +3,16 @@
 
   &__motion-wrapper {
     position: relative;
-    z-index: 1;
+    z-index: 999;
   }
 
   &__wrapper {
     position: relative;
-    top: 0.25rem;
+    top: rem(0.25);
 
     &:after, &:before {
     	bottom: 100%;
-    	right: 0.5rem;
+    	right: rem(0.5);
     	border: solid transparent;
     	content: " ";
     	height: 0;
@@ -40,13 +40,13 @@
   &__container {
     @include floating;
 
-    border-radius: .25rem;
+    border-radius: rem(.25);
     overflow-y: auto;
     max-height: $visualization__explanation-height;
     width: $visualization_explanation-width;
     position: absolute;
-    right: 0rem;
-    top: 0rem;
+    right: rem(0);
+    top: rem(0);
     background-color: white;
     z-index: 1;
 
@@ -60,7 +60,7 @@
 
     > h4 {
       &:first-child {
-        margin-top: 0rem;
+        margin-top: rem(0);
       }
     }
   }

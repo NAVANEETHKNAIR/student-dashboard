@@ -7,7 +7,7 @@
     border-radius: 50%;
     width: 60px;
     line-height: 60px;
-    font-size: 1.2rem;
+    font-size: rem(1.2);
     font-weight: bold;
     vertical-align: middle;
     position: absolute;
@@ -15,6 +15,7 @@
     background-color: white;
     transform: translateX(-50%);
     cursor: pointer;
+    z-index: 999;
   }
 
   &__progress {

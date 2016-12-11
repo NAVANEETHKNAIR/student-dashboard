@@ -12,7 +12,7 @@ export class PluginHeader extends React.Component {
   renderCloseButton() {
     return (
       <button className={withClassPrefix('btn btn-sm btn-circle btn-danger pull-right')} onClick={this.props.onClose}>
-        <Icon name="eye-slash"/>
+        <Icon name="minus"/>
       </button>
     );
   }

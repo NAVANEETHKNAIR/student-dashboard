@@ -11,11 +11,9 @@ function getVisualizationTypeForUser(getGroup) {
   return (req, res, next) => {
     let group = getGroup(req);
 
-    if(!group) {
+    if(typeof group !== 'number') {
       return next(new errors.InvalidRequestError('Group is required'));
     }
-
-    group = +group;
 
     if(group >= Object.keys(visualizationTypes).length) {
       return next(new errors.InvalidRequestError(`Can't map group ${group} to a visualization`));
@@ -24,7 +22,9 @@ function getVisualizationTypeForUser(getGroup) {
     req.visualizationType = [
       visualizationTypes.NO_VISUALIZATION,
       visualizationTypes.RADAR_VISUALIZATION,
-      visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE
+      visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE,
+      visualizationTypes.TEXTUAL_VISUALIZATION,
+      visualizationTypes.TEXTUAL_VISUALIZATION_WITH_GRADE
     ][group];
 
     return next();
@@ -45,20 +45,23 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
     }
 
     const wrapToCache = getPromise => {
-      const cacheOptions = { key: `visualization-${courseId}-${userId}`, ttl: '2h' };
+      const cacheOptions = { key: `visualization-${courseId}-${userId}-${visualizationType}`, ttl: '2h' };
 
       return cache === true
         ? cacheUtil.withCacheGetAndSet(getPromise, cacheOptions)
         : cacheUtil.withCacheSet(getPromise, cacheOptions);
     }
 
-    let getData = () => wrapToCache(() => Promise.resolve({}));
+    let getData = () => Promise.resolve({});
 
     const visualizationQuery = { courseId, userId, accessToken, query: { exerciseGroups } };
+    const hasGradeEstimate = visualizationTypes.gradeEstimateTypes.includes(visualizationType);
 
-    if(visualizationType === visualizationTypes.RADAR_VISUALIZATION) {
+    if(visualizationType === visualizationTypes.NO_VISUALIZATION) {
+      getData = () => Promise.resolve({});
+    } else if(!hasGradeEstimate) {
       getData = () => wrapToCache(() => visualizations.getUsersProgressData(visualizationQuery));
-    } else if(visualizationType === visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE) {
+    } else {
       let data = {};
 
       getData = () => wrapToCache(() => {

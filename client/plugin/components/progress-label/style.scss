@@ -1,9 +1,9 @@
 .progress-label {
   background-color: darken(white, 20%);
   position: relative;
-  font-size: 0.6rem;
-  line-height: 0.8rem;
-  border-radius: 1rem;
+  font-size: rem(0.6);
+  line-height: rem(0.8);
+  border-radius: rem(1);
   overflow-y: hidden;
   vertical-align: middle;
   text-transform: uppercase;
@@ -13,15 +13,15 @@
     position: relative;
     z-index: 1;
     color: white;
-    padding: 0.1rem 0.6rem;
-    line-height: 0.8rem;
+    padding: rem(0.1) rem(0.6);
+    line-height: rem(0.8);
     display: inline-block;
     white-space: nowrap;
     font-weight: bold;
   }
 
   &__progress {
-    border-radius: 1rem 0px 0px 1rem;
+    border-radius: rem(1) 0px 0px rem(1);
     background-color: $colors__primary;
     z-index: 0;
     position: absolute;
