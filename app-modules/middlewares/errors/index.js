@@ -1,16 +1,12 @@
 const { mapValues } = require('lodash');
-const debug = require('debug')('server');
-const PrettyError = require('pretty-error');
-const pretty = new PrettyError();
-const _ = require('lodash');
 
 const errors = require('app-modules/errors');
-const errorLogger = require('app-modules/utils/error-logger');
+const logger = require('app-modules/utils/logger')('server');
 
 function apiErrorHandler() {
   return (err, req, res, next) => {
-    debug(pretty.render(err));
-
+    logger.error(err, req);
+    
     let statusCode = 500;
     let properties = {};
     let message = err instanceof errors.ApiError
@@ -30,15 +26,6 @@ function apiErrorHandler() {
       statusCode = 400;
       properties = mapValues(err.errors, value => [value.message]);
     }
-
-    errorLogger.logError(err, {
-      headers: _.omit(req.headers, ['Authorization']),
-      protocol: req.protocol,
-      url: req.path,
-      method: req.method,
-      body: req.body,
-      route: req.route
-    });
 
     res.status(statusCode).json({ message, properties: err.properties || properties, status: statusCode });
   }
