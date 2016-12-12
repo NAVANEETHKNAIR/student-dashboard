@@ -7,12 +7,12 @@
 Include the following script tag to your page:
 
 ```html
-  <script src="comingSoon.js"></script>
+  <script src="https://rage-student-dashboard.herokuapp.com/plugin-loader/script.js"></script>
 ```
 
 **2)**
 
-Call `window.StudentDashboard.initialize` after Student Dashboard has loaded. `studentDashboardLoaded` event will be dispatched in `document` when Student Dashboard is ready.
+Call `window.StudentDashboard.initialize` after Student Dashboard has loaded. `studentDashboardLoaded` event will be dispatched in the `document` object when Student Dashboard is ready.
 
 Example:
 

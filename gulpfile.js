@@ -44,7 +44,12 @@ gulp.task('rev', ['script.plugin'], makeRevTask({
   output: './dist'
 }));
 
-gulp.task('build', ['rev']);
+gulp.task('assets', () => {
+  return gulp.src('./assets/**/*')
+    .pipe(gulp.dest(dist));
+});
+
+gulp.task('build', ['assets', 'rev']);
 
 gulp.task('test', ['test.server']);
 

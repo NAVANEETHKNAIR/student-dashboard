@@ -48,7 +48,11 @@ function readResults() {
     .then(idToGrade => {
       const queue = async.queue((task, cb) => {
         task()
-          .then(cb)
+          .then(() => {
+            cb();
+
+            return null;
+          })
           .catch(console.log);
       }, 1);
 

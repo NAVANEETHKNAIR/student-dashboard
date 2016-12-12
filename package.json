@@ -114,6 +114,7 @@
     "request-promise": "^4.1.1",
     "reselect": "^2.5.3",
     "rewire": "^2.5.2",
+    "rollbar": "^0.6.3",
     "sass-loader": "^4.0.2",
     "scourjs": "^1.0.1",
     "serve-favicon": "~2.3.0",

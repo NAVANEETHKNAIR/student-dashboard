@@ -4,6 +4,7 @@ const PrettyError = require('pretty-error');
 const pretty = new PrettyError();
 
 const errors = require('app-modules/errors');
+const errorLogger = require('app-modules/utils/error-logger');
 
 function apiErrorHandler() {
   return (err, req, res, next) => {
@@ -28,6 +29,14 @@ function apiErrorHandler() {
       statusCode = 400;
       properties = mapValues(err.errors, value => [value.message]);
     }
+
+    errorLogger.logError({
+      endpoint: req.path,
+      message,
+      properties,
+      statusCode,
+      stack: err.stack
+    });
 
     res.status(statusCode).json({ message, properties: err.properties || properties, status: statusCode });
   }
