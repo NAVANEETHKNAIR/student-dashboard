@@ -15,7 +15,7 @@ function getVisualizationTypeForUser(getGroup) {
       return next(new errors.InvalidRequestError('Group is required'));
     }
 
-    if(group >= Object.keys(visualizationTypes).length) {
+    if(group < 0 || group >= Object.keys(visualizationTypes).length) {
       return next(new errors.InvalidRequestError(`Can't map group ${group} to a visualization`));
     }
 

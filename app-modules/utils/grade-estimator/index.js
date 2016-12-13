@@ -29,7 +29,11 @@ function getGradeEstimate(points) {
         if(err) {
           reject(err);
         } else {
-          resolve(Math.max(nearestNeighbours[0].grade, nearestNeighbours[1].grade));
+          if(nearestNeighbours.length < 2) {
+            resolve(0);
+          } else {
+            resolve(Math.max(nearestNeighbours[0].grade, nearestNeighbours[1].grade));
+          }
         }
       });
   });
