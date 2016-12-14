@@ -9,7 +9,7 @@ before_script:
   - echo "TMC_API_URL=$TMC_API_URL" >> .env
   - echo "TMC_ADMIN_ACCESS_TOKEN=$TMC_ADMIN_ACCESS_TOKEN" >> .env
   - echo "MONGO_DB=$MONGO_DB" >> .env
-  - docker-compose -f docker-compose.ci.yml -d up
+  - docker-compose -f docker-compose.ci.yml up -d
 script:
   - bash ./run-tests.sh
 after_script:
