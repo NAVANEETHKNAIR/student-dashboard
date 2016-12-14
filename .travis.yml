@@ -4,6 +4,7 @@ services:
   - docker
 install:
 before_script:
+  - echo "{}" > ./rev-manifest.json
   - docker-compose up -d
 script:
   - bash ./run-tests.sh

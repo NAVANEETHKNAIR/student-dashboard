@@ -4,8 +4,7 @@ RUN mkdir -p /student-dashboard/src
 WORKDIR /student-dashboard/src
 
 COPY . /student-dashboard/src
-RUN touch rev-manifest.json
-RUN echo "{}" > rev-manifest.json
+
 RUN npm install
 
 EXPOSE 3000
