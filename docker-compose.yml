@@ -5,7 +5,6 @@ web:
     - .:/student-dashboard/src
   ports:
     - 3000:3000
-  env_file: .env
   links:
     - mongo
 mongo:
