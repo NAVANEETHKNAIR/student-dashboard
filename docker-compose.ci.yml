@@ -4,6 +4,7 @@ web:
     - 3000:3000
   links:
     - mongo
+  env_file: .env
 mongo:
   image: mongo:3.2
   ports:

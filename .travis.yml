@@ -4,7 +4,12 @@ services:
   - docker
 install:
 before_script:
-  - docker-compose -f docker-compose.ci.yml -d -e NODE_ENV=production -e SD_API_URL=$SD_API_URL -e TMC_API_URL=$TMC_API_URL -e TMC_ADMIN_ACCESS_TOKEN=$TMC_ADMIN_ACCESS_TOKEN -e MONGO_DB=$MONGO_DB up
+  - echo "NODE_ENV=production" >> .env
+  - echo "SD_API_URL=$SD_API_URL" >> .env
+  - echo "TMC_API_URL=$TMC_API_URL" >> .env
+  - echo "TMC_ADMIN_ACCESS_TOKEN=$TMC_ADMIN_ACCESS_TOKEN" >> .env
+  - echo "MONGO_DB=$MONGO_DB" >> .env
+  - docker-compose -f docker-compose.ci.yml -d up
 script:
   - bash ./run-tests.sh
 after_script:
