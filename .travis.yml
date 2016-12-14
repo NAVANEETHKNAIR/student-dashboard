@@ -2,7 +2,7 @@ sudo: required
 language: node_js
 services:
   - docker
-install:
+install: true
 before_script:
   - echo "NODE_ENV=production" >> .env
   - echo "SD_API_URL=$SD_API_URL" >> .env
