@@ -85,6 +85,7 @@
     "map-values": "^1.0.1",
     "middleware-flow": "^0.8.0",
     "moment": "^2.14.1",
+    "mongodb": "^2.2.16",
     "mongoose": "^4.5.10",
     "morgan": "~1.6.1",
     "nock": "^9.0.2",
