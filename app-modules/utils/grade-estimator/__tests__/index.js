@@ -38,6 +38,13 @@ describe('Grade estimator', () => {
       });
   });
 
+  it('should return grade 3 if there\'s not enough data', () => {
+    return gradeEstimator.getGradeEstimate({ starting: 0.7, exercises: 0.7, scheduling: 0.7, earliness: 0.7 })
+      .then(grade => {
+        expect(grade).toBe(3)
+      });
+  });
+
   afterEach(database.clean);
 
   after(database.disconnect);

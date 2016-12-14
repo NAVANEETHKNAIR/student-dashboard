@@ -23,14 +23,17 @@ function getGradeEstimate(points) {
         };
       })
       .each(entity => {
-        nearestNeighbours = _.chain([...nearestNeighbours, entity]).sortBy(['distance']).take(n).value();
+        nearestNeighbours = _.chain([...nearestNeighbours, entity])
+          .sortBy(['distance'])
+          .take(n)
+          .value();
       })
       .toCallback(err => {
         if(err) {
           reject(err);
         } else {
           if(nearestNeighbours.length < 2) {
-            resolve(0);
+            resolve(3);
           } else {
             resolve(Math.max(nearestNeighbours[0].grade, nearestNeighbours[1].grade));
           }

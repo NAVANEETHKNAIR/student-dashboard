@@ -1,0 +1,14 @@
+web:
+  build: .
+  dockerfile: Dockerfile.dev
+  volumes:
+    - .:/student-dashboard/src
+  ports:
+    - 3000:3000
+  env_file: .env
+  links:
+    - mongo
+mongo:
+  image: mongo:3.2
+  ports:
+    - 2017:2017

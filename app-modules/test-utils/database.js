@@ -3,10 +3,12 @@ const Promise = require('bluebird');
 
 Promise.promisifyAll(require('mongodb'));
 
+const mongoConfig = require('app-modules/config/mongo');
+
 const mongoClient = Promise.promisifyAll(require('mongodb').MongoClient);
 
 function connect() {
-  return Promise.promisify(mongoose.connect, { context: mongoose })(process.env.MONGO_URI);
+  return Promise.promisify(mongoose.connect, { context: mongoose })(mongoConfig.uri);
 }
 
 function disconnect() {
@@ -14,7 +16,7 @@ function disconnect() {
 }
 
 function clean() {
-  return mongoClient.connectAsync(process.env.MONGO_URI)
+  return mongoClient.connectAsync(mongoConfig.uri)
     .then(db => {
       return db.dropDatabaseAsync()
         .then(() => db.closeAsync());

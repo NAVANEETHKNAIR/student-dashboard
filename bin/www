@@ -11,7 +11,9 @@ require('dotenv').config({ path: path.resolve(__dirname, '..', '.env'), silent: 
 const http = require('http');
 const mongoose = require('mongoose');
 
-require('app-modules/utils/cache').connect();
+const mongoConfig = require('app-modules/config/mongo');
+
+require('app-modules/utils/cache').connect(mongoConfig.uri);
 
 const logger = require('app-modules/utils/logger')('server');
 const app = require('../app');
@@ -34,10 +36,10 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-mongoose.connect(process.env.MONGO_URI, err => {
+mongoose.connect(mongoConfig.uri, err => {
   if(err) {
     logger.error(err);
-    
+
     throw err;
   } else {
     server.listen(port);

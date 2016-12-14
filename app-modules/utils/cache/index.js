@@ -8,9 +8,9 @@ const mongoCacheOptions = {
 
 let cache;
 
-function connect() {
+function connect(uri) {
   cache = new Cacheman('tmc', {
-    engine: new EngineMongo(process.env.MONGO_URI, mongoCacheOptions),
+    engine: new EngineMongo(uri, mongoCacheOptions),
     promise: Promise
   });
 }

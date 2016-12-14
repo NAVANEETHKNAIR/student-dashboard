@@ -1,19 +1,8 @@
+sudo: required
 language: node_js
-node_js:
-  - "6.3.0"
-services:
-  - mongodb
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
-    - g++-4.8
-env:
-  - TRAVIS=travis CXX=g++-4.8
 before_script:
-  - sleep 15
-  - npm run-script build
+  - docker-compose up -d
 script:
-  - npm test
+  - bash ./run-tests.sh
+after_script:
+  - docker-compose down

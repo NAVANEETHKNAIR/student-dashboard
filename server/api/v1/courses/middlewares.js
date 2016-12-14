@@ -38,6 +38,8 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
     const accessToken = getAccessToken(req);
     const visualizationType = getVisualizationType(req);
 
+    console.log('USER ID', userId);
+
     const { exerciseGroups, cache } = getQuery(req);
 
     if(!exerciseGroups) {
