@@ -4,8 +4,7 @@ services:
   - docker
 install:
 before_script:
-  - echo "{}" > ./rev-manifest.json
-  - docker-compose up -d
+  - docker-compose -f docker-compose.ci.yml up -d -e NODE_ENV=production -e SD_API_URL=$SD_API_URL -e TMC_API_URL=$TMC_API_URL -e TMC_ADMIN_ACCESS_TOKEN=$TMC_ADMIN_ACCESS_TOKEN -e MONGO_DB=$MONGO_DB
 script:
   - bash ./run-tests.sh
 after_script:
