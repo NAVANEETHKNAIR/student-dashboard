@@ -14,7 +14,7 @@ COPY . /student-dashboard/src
 
 RUN NODE_ENV=production npm run-script build
 
-RUN useradd -g users user
+RUN useradd -m -g users user
 RUN chown -R user:users /student-dashboard/src
 USER user
 
