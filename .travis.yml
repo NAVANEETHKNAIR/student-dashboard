@@ -4,7 +4,7 @@ services:
   - docker
 install: true
 before_script:
-  - echo "NODE_ENV=production" >> .env
+  - echo "NODE_ENV=$NODE_ENV" >> .env
   - echo "SD_API_URL=$SD_API_URL" >> .env
   - echo "TMC_API_URL=$TMC_API_URL" >> .env
   - echo "TMC_ADMIN_ACCESS_TOKEN=$TMC_ADMIN_ACCESS_TOKEN" >> .env
