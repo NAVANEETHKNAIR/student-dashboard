@@ -14,6 +14,10 @@ COPY . /student-dashboard/src
 
 RUN NODE_ENV=production npm run-script build
 
+RUN useradd -g users user
+RUN chown -R user:users /student-dashboard/src
+USER user
+
 EXPOSE 3000
 
 CMD ["pm2-docker", "process.yml"]
