@@ -12,6 +12,7 @@ const hl = require('highland');
 const byline = require('byline');
 const fs = require('fs');
 
+const mongoConfig = require('app-modules/config/mongo');
 const visualizations = require('app-modules/utils/visualizations');
 const GradeEntity = require('app-modules/models/grade-entity');
 
@@ -104,6 +105,6 @@ function readResults() {
     });
 }
 
-mongoose.connect(process.env.MONGO_URI, () => {
+mongoose.connect(mongoConfig.uri, () => {
   readResults();
 });
