@@ -1,3 +1,5 @@
+import lget from 'lodash.get';
+
 import {
   OPEN_PAGE,
   UPDATE_VISUALIZATION as UPDATE_VISUALIZATION_ACTION
@@ -38,11 +40,25 @@ export function loadVisualization({ cache = true } = {}) {
 }
 
 export function closeGradeEstimate() {
-  return dispatch => dispatch(createAction({ name: actionConstants.CLOSE_GRADE_ESTIMATE }));
+  return (dispatch, getState) => {
+    const estimatedGrade = lget(getState(), 'visualization.data.estimatedGrade') || null;
+
+    return dispatch(createAction({
+      name: actionConstants.CLOSE_GRADE_ESTIMATE,
+      meta: { estimatedGrade },
+    }));
+  }
 }
 
 export function openGradeEstimate() {
-  return dispatch => dispatch(createAction({ name: actionConstants.OPEN_GRADE_ESTIMATE }));
+  return (dispatch, getState) => {
+    const estimatedGrade = lget(getState(), 'visualization.data.estimatedGrade') || null;
+
+    return dispatch(createAction({
+      name: actionConstants.OPEN_GRADE_ESTIMATE,
+      meta: { estimatedGrade },
+    }));
+  }
 }
 
 export function closeExplanation() {
