@@ -41,7 +41,7 @@ export function loadVisualization({ cache = true } = {}) {
 
 export function closeGradeEstimate() {
   return (dispatch, getState) => {
-    const estimatedGrade = lget(getState(), 'visualization.data.estimatedGrade') || null;
+    const estimatedGrade = lget(getState(), 'visualization.data.estimatedGrade');
 
     return dispatch(createAction({
       name: actionConstants.CLOSE_GRADE_ESTIMATE,
@@ -52,7 +52,7 @@ export function closeGradeEstimate() {
 
 export function openGradeEstimate() {
   return (dispatch, getState) => {
-    const estimatedGrade = lget(getState(), 'visualization.data.estimatedGrade') || null;
+    const estimatedGrade = lget(getState(), 'visualization.data.estimatedGrade');
 
     return dispatch(createAction({
       name: actionConstants.OPEN_GRADE_ESTIMATE,
