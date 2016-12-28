@@ -7,7 +7,7 @@
 Include the following script tag to your page:
 
 ```html
-  <script src="https://rage-student-dashboard.herokuapp.com/plugin-loader/script.js"></script>
+  <script src="https://student-dashboard.testmycode.io/plugin-loader/script.js"></script>
 ```
 
 **2)**
