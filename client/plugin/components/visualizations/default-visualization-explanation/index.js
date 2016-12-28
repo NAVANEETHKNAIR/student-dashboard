@@ -56,7 +56,7 @@ class DefaultVisualizationExplanation extends React.Component {
 
         {this.withNoDataInfo(earliness)(
           <p>
-            Your submission are by average {earliness.meta.averageDays} days before the deadline while the optimal average is more than or equal to {earliness.meta.bestAverageDays} days.
+            Your submissions are by average {earliness.meta.averageDays} days before the deadline while the optimal average is more than or equal to {earliness.meta.bestAverageDays} days.
           </p>
         )}
 

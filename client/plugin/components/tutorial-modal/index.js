@@ -78,7 +78,7 @@ export class TutorialModal extends React.Component {
   renderGradeEstimationTutorial() {
     return (
       <p>
-        To see your estimated grade for the course, press the "Estimate my grade" button (the button with <Icon name="graduation-cap" /> icon). Estimation is based on the progress data of the students from previous courses and the grades they've received.
+        To see your estimated grade for the course, press the "Estimate my grade" button (the button with <Icon name="graduation-cap" /> icon). Estimation is based on the average of points you've received from every parameter during the current exercise week and the past exercise weeks in this course. 
       </p>
     );
   }

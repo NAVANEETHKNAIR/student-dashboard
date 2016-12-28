@@ -2,46 +2,65 @@ const expect = require('expect');
 
 const database = require('app-modules/test-utils/database');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
-const GradeEntity = require('app-modules/models/grade-entity');
 
-describe('Grade estimator', () => {
+describe.only('Grade estimator', () => {
 
   before(database.connect);
 
-  it('should return grade of the closest neighbor', () => {
-    const entityA = new GradeEntity({
-      userId: '1',
-      courseId: '1',
-      grade: 5,
-      starting: 0.8,
-      exercises: 0.8,
-      scheduling: 0.8,
-      earliness: 0.8
-    });
+  it('should return 0 when exercise points are less than 0.5', () => {
+    const points = {
+      exercises: 0.4,
+      starting: 0.9,
+      earliness: 0.9,
+      scheduling: 0.9,
+    };
 
-    const entityB = new GradeEntity({
-      userId: '2',
-      courseId: '1',
-      grade: 3,
-      starting: 0.5,
-      exercises: 0.5,
-      scheduling: 0.5,
-      earliness: 0.5
-    });
-
-    return Promise.all([entityA.save(), entityB.save()])
-      .then(() => {
-        return gradeEstimator.getGradeEstimate({ starting: 0.7, exercises: 0.7, scheduling: 0.7, earliness: 0.7 })
-      })
+    return gradeEstimator.getGradeEstimate(points)
       .then(grade => {
-        expect(grade).toBe(5);
+        expect(grade).toBe(0)
       });
   });
 
-  it('should return grade 3 if there\'s not enough data', () => {
-    return gradeEstimator.getGradeEstimate({ starting: 0.7, exercises: 0.7, scheduling: 0.7, earliness: 0.7 })
+  it('should return 0 when total points are below worst', () => {
+    const points = {
+      exercises: 0.5,
+      starting: 0.3,
+      earliness: 0.3,
+      scheduling: 0.3,
+    };
+
+    return gradeEstimator.getGradeEstimate(points)
       .then(grade => {
-        expect(grade).toBe(3)
+        expect(grade).toBe(0)
+      });
+  });
+
+  it('should return 5 when total points are above best', () => {
+    const points = {
+      exercises: 1,
+      starting: 0.9,
+      earliness: 0.9,
+      scheduling: 0.9,
+    };
+
+    return gradeEstimator.getGradeEstimate(points)
+      .then(grade => {
+        expect(grade).toBe(5)
+      });
+  });
+
+  it('should return a grade above 0 and below 5 with ok points', () => {
+    const points = {
+      exercises: 0.7,
+      starting: 0.6,
+      earliness: 0.7,
+      scheduling: 0.8,
+    };
+
+    return gradeEstimator.getGradeEstimate(points)
+      .then(grade => {
+        expect(grade).toBeGreaterThan(0);
+        expect(grade).toBeLessThan(5);
       });
   });
 

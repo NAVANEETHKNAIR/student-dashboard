@@ -1,45 +1,29 @@
-const hl = require('highland');
+const Promise = require('bluebird');
 const _ = require('lodash');
 
-const GradeEntity = require('app-modules/models/grade-entity');
-const Promise = require('bluebird');
-
 function getGradeEstimate(points) {
-  return new Promise((resolve, reject) => {
-    let nearestNeighbours = [];
-    let n = 2;
+  if(points.exercises < 0.5) {
+  	return Promise.resolve(0);
+  }
 
-    hl(GradeEntity.find().cursor())
-      .map(entity => {
-        const { exercises, earliness, starting, scheduling, grade } = entity;
-        const sqrt = value => Math.sqrt(value);
-        const pow2 = value => Math.pow(value, 2);
+  const weightedExercisePoints = points.exercises * 1.5;
+  const restPoints = _.chain(points).omit(['exercises']).values().mean().value();
+	const totalPoints = weightedExercisePoints + restPoints;
 
-        const sum = pow2(points.exercises - exercises) + pow2(points.earliness - earliness) + pow2(points.starting - starting) + pow2(points.scheduling - scheduling);
+  const worstPoints = 0.5 * 1.5 + 0.4;
+  const bestPoints = 0.9 * 1.5 + 0.9;
 
-        return {
-          grade,
-          distance: sqrt(sum)
-        };
-      })
-      .each(entity => {
-        nearestNeighbours = _.chain([...nearestNeighbours, entity])
-          .sortBy(['distance'])
-          .take(n)
-          .value();
-      })
-      .toCallback(err => {
-        if(err) {
-          reject(err);
-        } else {
-          if(nearestNeighbours.length < 2) {
-            resolve(3);
-          } else {
-            resolve(Math.max(nearestNeighbours[0].grade, nearestNeighbours[1].grade));
-          }
-        }
-      });
-  });
+  if(totalPoints < worstPoints) {
+  	return Promise.resolve(0);
+  }
+
+  if(totalPoints > bestPoints) {
+  	return Promise.resolve(5);
+  }
+
+  const gradeEstimate = Math.round((totalPoints - worstPoints) / (bestPoints - worstPoints) * 5);
+
+  return Promise.resolve(gradeEstimate);
 }
 
 module.exports = {
