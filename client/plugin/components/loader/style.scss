@@ -1,4 +1,6 @@
 .loader {
+  min-height: rem(3) + 2 * $spacing;
+
   &--without-children {
     padding: $spacing;
     text-align: center;
