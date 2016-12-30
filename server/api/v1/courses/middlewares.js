@@ -22,9 +22,7 @@ function getVisualizationTypeForUser(getGroup) {
     req.visualizationType = [
       visualizationTypes.NO_VISUALIZATION,
       visualizationTypes.RADAR_VISUALIZATION,
-      visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE,
       visualizationTypes.TEXTUAL_VISUALIZATION,
-      visualizationTypes.TEXTUAL_VISUALIZATION_WITH_GRADE
     ][group];
 
     return next();
@@ -45,9 +43,9 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
     }
 
     const wrapToCache = getPromise => {
-      const cacheOptions = { key: `visualization-${courseId}-${userId}-${visualizationType}`, ttl: '2h' };
+      const cacheOptions = { key: `visualization-${courseId}-${userId}-${visualizationType}`, ttl: '1h' };
 
-      return cache === true
+      return cache === 'kakka'
         ? cacheUtil.withCacheGetAndSet(getPromise, cacheOptions)
         : cacheUtil.withCacheSet(getPromise, cacheOptions);
     }

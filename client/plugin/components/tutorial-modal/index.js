@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TransitionMotion, spring } from 'react-motion';
 
 import withClassPrefix from 'utils/class-prefix';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'components/modal';
 import { closeTutorial } from 'state/tutorial';
 import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
 import { selectExerciseGroupOrder, selectActiveExerciseGroup } from 'selectors/plugin';
@@ -11,41 +11,32 @@ import { gradeEstimateTypes, radarVisualizationTypes, textualVisualizationTypes 
 import Icon from 'components/icon';
 
 export class TutorialModal extends React.Component {
-  renderContent({ opacity, top }) {
+  renderBody() {
     return (
-      <div className={withClassPrefix('tutorial-modal')} key={'tutorialModal'}>
-        <div className={withClassPrefix('tutorial-modal__layer')} style={{ opacity }}>
-        </div>
+      <div>
+        <p>
+          This is a visualization of your progress in course {this.props.courseName} during exercise groups {this.props.exerciseGroups.join(', ')}.
+        </p>
 
-        <div className={withClassPrefix('tutorial-modal__wrapper')}>
-          <div className={withClassPrefix('tutorial-modal__container')} style={{ opacity, top }}>
-            <div className={withClassPrefix('tutorial-modal__body')}>
-              <div className={withClassPrefix('tutorial-modal__body-content')}>
-                <p>
-                  This is a visualization of your progress in course {this.props.courseName} during exercise weeks {this.props.exerciseGroups.join(', ')}.
-                </p>
+        {textualVisualizationTypes.includes(this.props.visualizationType) && this.renderTextualTutorial()}
+        {radarVisualizationTypes.includes(this.props.visualizationType) && this.renderRadarTutorial()}
 
-                {textualVisualizationTypes.includes(this.props.visualizationType) && this.renderTextualTutorial()}
-                {radarVisualizationTypes.includes(this.props.visualizationType) && this.renderRadarTutorial()}
+        <p>
+          You can navigate between different exercise groups by pressing the arrow buttons (the <Icon name="chevron-left" /> and <Icon name="chevron-right" /> icons).
+        </p>
 
-                <p>
-                  You can navigate between different exercise weeks by pressing the arrow buttons (the <Icon name="chevron-left" /> and <Icon name="chevron-right" /> icons).
-                </p>
-
-                {gradeEstimateTypes.includes(this.props.visualizationType) && this.renderGradeEstimationTutorial()}
-              </div>
-            </div>
-
-            <div className={withClassPrefix('tutorial-modal__footer text-center')}>
-              <button className={withClassPrefix('btn btn-success btn-icon')} onClick={this.props.onClose}>
-                <Icon name="check"/>
-                {' '}
-                <span>Got it!</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        {gradeEstimateTypes.includes(this.props.visualizationType) && this.renderGradeEstimationTutorial()}
       </div>
+    );
+  }
+
+  renderFooter() {
+    return (
+      <button className={withClassPrefix('btn btn-success btn-icon')} onClick={this.props.onClose}>
+        <Icon name="check"/>
+        {' '}
+        <span>Got it!</span>
+      </button>
     );
   }
 
@@ -53,7 +44,7 @@ export class TutorialModal extends React.Component {
     return (
       <div>
         <p>
-          Parameters on the list describe your progress in a certain area during the chosen exercise week. You can receive from 0 up to 10 points from each parameter. The points you've received is indicated by a progress bar next to the parameter's name. Below the parameter's name you'll find a short description what the parameter is measuring. The way your points are calculated is described below parameter's description.
+          Parameters on the list describe your progress in a certain area during the chosen exercise group. You can receive from 0 up to 10 points from each parameter. The points you've received is indicated by a progress bar next to the parameter's name. Below the parameter's name you'll find a short description what the parameter is measuring. The way your points are calculated is described below parameter's description.
         </p>
       </div>
     );
@@ -69,7 +60,7 @@ export class TutorialModal extends React.Component {
         </p>
 
         <p>
-          The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of your overall average of the points you've received during all the exercise weeks.
+          The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of the average of the points received by all the students in the {this.props.courseName} course.
         </p>
       </div>
     );
@@ -78,33 +69,24 @@ export class TutorialModal extends React.Component {
   renderGradeEstimationTutorial() {
     return (
       <p>
-        To see your estimated grade for the course, press the "Estimate my grade" button (the button with <Icon name="graduation-cap" /> icon). Estimation is based on the average of points you've received from every parameter during the current exercise week and the past exercise weeks in this course. 
+        To see your estimated grade for the course, press the "Estimate my grade" button (the button with <Icon name="graduation-cap" /> icon). Estimation is based on the average of points you've received from every parameter during the current exercise groups and the past exercise groups in this course.
       </p>
     );
   }
 
   render() {
     return (
-      <TransitionMotion
-        willLeave={() => ({ opacity: spring(0), top: spring(0) })}
-        willEnter={() => ({ opacity: 0, top: 0 })}
-        styles={
-          this.props.isOpen
-            ? [{ key: 'tutorialModal', style: { opacity: spring(1), top: spring(100) } }]
-            : []
-        }
-      >
-        {interpolated => {
-          return (
-            <div>
-              {interpolated.map(({ style }) => this.renderContent({
-                top: `${style.top - 100}px`,
-                opacity: style.opacity
-              }))}
-            </div>
-          );
-        }}
-      </TransitionMotion>
+      <Modal isOpen={this.props.isOpen} onClose={this.props.onClose}>
+        <ModalHeader onClose={this.props.onClose}>
+          How to use this visualization
+        </ModalHeader>
+        <ModalBody>
+          {this.renderBody()}
+        </ModalBody>
+        <ModalFooter>
+          {this.renderFooter()}
+        </ModalFooter>
+      </Modal>
     );
   }
 }

@@ -46,7 +46,7 @@ describe('Points', () => {
 
     expect(pointsBad.value).toBe(0);
     expect(pointsBad.meta.averageDays).toBe(0);
-    expect(pointsBad.meta.bestAverageDays).toBe(4.8);
+    expect(pointsBad.meta.bestAverageDays).toBe(3.6);
 
     const submissionsOk = [
       {
@@ -65,9 +65,9 @@ describe('Points', () => {
 
     const pointsOk = points.getEarlinessPoints({ exercises, submissions: submissionsOk });
 
-    expect(pointsOk.value).toBeGreaterThan(0.4).toBeLessThan(0.6);
+    expect(pointsOk.value).toBeGreaterThan(0.4).toBeLessThan(0.8);
     expect(pointsOk.meta.averageDays).toBe(2.7);
-    expect(pointsOk.meta.bestAverageDays).toBe(4.8);
+    expect(pointsOk.meta.bestAverageDays).toBe(3.6);
 
     const submissionsGood = [
       {
@@ -88,7 +88,7 @@ describe('Points', () => {
 
     expect(pointsGood.value).toBe(1);
     expect(pointsGood.meta.averageDays).toBe(5);
-    expect(pointsGood.meta.bestAverageDays).toBe(4.8);
+    expect(pointsGood.meta.bestAverageDays).toBe(3.6);
   });
 
   it('should calculate scheduling points correctly', () => {
@@ -109,9 +109,9 @@ describe('Points', () => {
 
     const pointsBad = points.getSchedulingPoints({ exercises, submissions: submissionsBad });
 
-    expect(pointsBad.value).toBe(0.25);
+    expect(pointsBad.value).toBe(0.5);
     expect(pointsBad.meta.workingDays).toBe(1);
-    expect(pointsBad.meta.bestWorkingDays).toBe(4);
+    expect(pointsBad.meta.bestWorkingDays).toBe(2);
 
     const submissionsOk = [
       ...submissionsBad,
@@ -127,9 +127,9 @@ describe('Points', () => {
 
     const pointsOk = points.getSchedulingPoints({ exercises, submissions: submissionsOk });
 
-    expect(pointsOk.value).toBe(0.75);
+    expect(pointsOk.value).toBe(1);
     expect(pointsOk.meta.workingDays).toBe(3);
-    expect(pointsOk.meta.bestWorkingDays).toBe(4);
+    expect(pointsOk.meta.bestWorkingDays).toBe(2);
 
     const submissionsGood = [
       ...submissionsOk,
@@ -146,7 +146,7 @@ describe('Points', () => {
 
     expect(pointsGood.value).toBe(1);
     expect(pointsGood.meta.workingDays).toBe(5);
-    expect(pointsOk.meta.bestWorkingDays).toBe(4);
+    expect(pointsOk.meta.bestWorkingDays).toBe(2);
   });
 
   it('should calculate correct starting points', () => {

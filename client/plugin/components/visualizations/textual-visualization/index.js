@@ -6,6 +6,7 @@ import prefix from 'react-prefixer';
 
 import withClassPrefix from 'utils/class-prefix';
 import { selectActiveData } from 'selectors/visualization';
+import { scrollTextual } from 'state/visualization';
 import DefaultVisualizationExplanation from 'components/visualizations/default-visualization-explanation';
 import Icon from 'components/icon';
 
@@ -17,8 +18,15 @@ class TextualVisualization extends React.Component {
       scrollTop: 0
     };
 
+    this.hasBeenScrolled = false;
     this.onContentScroll = this.onContentScroll.bind(this);
     this.onScrollToBottom = this.onScrollToBottom.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.data !== this.props.data) {
+      this.hasBeenScrolled = false;
+    }
   }
 
   componentDidMount() {
@@ -31,6 +39,11 @@ class TextualVisualization extends React.Component {
   }
 
   onContentScroll() {
+    if(!this.hasBeenScrolled) {
+      this.props.onScroll();
+      this.hasBeenScrolled = true;
+    }
+
     this.setState({
       scrollTop: this.contentElem.scrollTop
     });
@@ -69,6 +82,11 @@ const mapStateToProps = state => ({
   data: selectActiveData(state)
 });
 
+const mapDispatchToProps = dispatch => ({
+  onScroll: () => dispatch(scrollTextual()),
+});
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(TextualVisualization);

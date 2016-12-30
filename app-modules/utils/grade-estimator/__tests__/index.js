@@ -3,7 +3,7 @@ const expect = require('expect');
 const database = require('app-modules/test-utils/database');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
 
-describe.only('Grade estimator', () => {
+describe('Grade estimator', () => {
 
   before(database.connect);
 

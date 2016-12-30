@@ -82,10 +82,10 @@ function getEarlinessPoints({ exercises, submissions }) {
   const deadlineDays = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
 
   return {
-    value: _.round(Math.min(averageSubmissionDifferenceToDeadline / (deadlineDays * 0.8), 1), 2),
+    value: _.round(Math.min(averageSubmissionDifferenceToDeadline / (deadlineDays * 0.6), 1), 2),
     meta: {
       averageDays: _.round(averageSubmissionDifferenceToDeadline, 1),
-      bestAverageDays: _.round(deadlineDays * 0.8, 1)
+      bestAverageDays: _.round(deadlineDays * 0.6, 1)
     }
   }
 }
@@ -112,7 +112,7 @@ function getSchedulingPoints({ exercises, submissions }) {
   }, {});
 
   const daysToFinnish = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
-  const optimalDayCount = Math.round(daysToFinnish * 0.6);
+  const optimalDayCount = Math.round(daysToFinnish * 0.4);
   const submissionDatesCount = _.keys(submissionDates).length;
 
   return {

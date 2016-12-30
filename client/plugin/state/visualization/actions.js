@@ -2,7 +2,9 @@ import lget from 'lodash.get';
 
 import {
   OPEN_PAGE,
-  UPDATE_VISUALIZATION as UPDATE_VISUALIZATION_ACTION
+  UPDATE_VISUALIZATION as UPDATE_VISUALIZATION_ACTION,
+  MOUSE_ENTER_RADAR_VISUALIZATION,
+  SCROLL_TEXTUAL_VISUALIZATION,
 } from 'constants/actions';
 
 import { setLastSeenVisualization } from 'utils/store';
@@ -59,6 +61,18 @@ export function openGradeEstimate() {
       meta: { estimatedGrade },
     }));
   }
+}
+
+export function mouseEnterRadar() {
+  return dispatch => {
+    return dispatch(createAction({ name: MOUSE_ENTER_RADAR_VISUALIZATION }));
+  };
+}
+
+export function scrollTextual() {
+  return dispatch => {
+    return dispatch(createAction({ name: SCROLL_TEXTUAL_VISUALIZATION }));
+  };
 }
 
 export function closeExplanation() {

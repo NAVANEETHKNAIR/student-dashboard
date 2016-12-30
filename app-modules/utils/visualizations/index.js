@@ -2,15 +2,10 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const moment = require('moment');
 
+const ParticipantPerformance = require('app-modules/models/participant/participant-performance');
 const tmcApi = require('app-modules/utils/tmc-api');
 const points = require('app-modules/utils/visualizations/points');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
-
-function formatExercise(exercise) {
-  return Object.assign({}, exercise, {
-    published: exercise.deadline ? moment.utc(exercise.deadline).subtract(7, 'days').toISOString() : null
-  });
-}
 
 function getExerciseIdToPoints(points) {
   return points.reduce((pointsMap, point) => {
@@ -31,8 +26,8 @@ function getExerciseNameToId(exercises) {
   }, {});
 }
 
-function groupByDateInterval({ dateGroups, value, getDate }) {
-  const timestamp = +getDate(value);
+function groupByDateInterval({ dateGroups, date }) {
+  const timestamp = +date;
   const groupNames = Object.keys(dateGroups);
 
   let groupName = '_';
@@ -50,17 +45,58 @@ function groupByDateInterval({ dateGroups, value, getDate }) {
   return groupName;
 }
 
+function groupByPrefix({ dateGroups, string }) {
+  const groupNames = Object.keys(dateGroups);
+
+  let groupName = '_';
+
+  groupNames.forEach(name => {
+    const [,,prefix] = dateGroups[name];
+    const regexp = new RegExp(`^${prefix}`);
+
+    if(regexp.test(string)) {
+      groupName = name;
+
+      return;
+    }
+  });
+
+  return groupName;
+}
+
+function groupExercise({ exercise, dateGroups }) {
+  const groupConfig = _.values(dateGroups) || [];
+
+  if(groupConfig[2]) {
+    return groupByPrefix({ dateGroups, string: exercise.name });
+  } else {
+    return groupByDateInterval({ dateGroups, date: new Date(exercise.deadline) });
+  }
+}
+
 function groupExercisesAndSubmissions({ exercises, submissions, dateGroups }) {
-  const groupedExercises = _.groupBy(exercises || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.deadline) }));
+  const groupedExercises = _.chain(exercises || [])
+    .groupBy(exercise => groupExercise({ exercise, dateGroups }))
+    .mapValues((exercises, groupName) => {
+      return (exercises || []).map(exercise => {
+        const [start] = (dateGroups[groupName] || []);
 
-  const exerciseIdToGroup = exercises.reduce((mapper, exercise) => {
-    mapper[exercise.id.toString()] = groupByDateInterval({ dateGroups, value: exercise, getDate: e => new Date(e.deadline) });
+        return Object.assign(
+          {},
+          exercise,
+          { exerciseGroup: groupName, published: start ? moment.utc(start * 1000).toISOString() : null }
+        );
+      });
+    })
+    .value();
 
-    return mapper;
-  }, {});
+  const exerciseIdToGroup = _.zipObject(
+    exercises.map(exercise => exercise.id.toString()),
+    exercises.map(exercise => groupExercise({ exercise, dateGroups }))
+  );
 
   return {
-    groupedExercises: _.groupBy(exercises || [], value => groupByDateInterval({ dateGroups, value, getDate: v => new Date(v.deadline) })),
+    groupedExercises,
     groupedSubmissions: _.groupBy(submissions || [], value => {
       return !value.exercise_id || !exerciseIdToGroup[value.exercise_id.toString()]
         ? '_'
@@ -106,6 +142,16 @@ function getPointAverages(groups) {
   return _.mapValues(groupSums, sum => _.round(sum / numberOfGroups, 1));
 }
 
+function updateParticipantPerformance({ userId, courseId, average }) {
+  const participantPerformanceAttributes = Object.assign(
+    {},
+    average,
+    { userId, courseId }
+  );
+
+  ParticipantPerformance.updateParticipantsPerformance(participantPerformanceAttributes);
+}
+
 function getUsersProgressData({ userId, courseId, accessToken, query }) {
   const { exerciseGroups } = query;
 
@@ -116,10 +162,18 @@ function getUsersProgressData({ userId, courseId, accessToken, query }) {
   const getUsersSubmissionsForCourse = tmcApi.getUsersSubmissionsForCourse({ courseId, userId, accessToken });
 
   let exerciseIdToPoints;
+  let courseAveragePerformance;
 
-  return Promise.all([getExercisesForCourse, getUsersSubmissionsForCourse, getUsersExercisePointsForCourse])
-    .spread((exercises, submissions, points) => {
-      exercises = exercises.map(formatExercise);
+  const promises = [
+    getExercisesForCourse,
+    getUsersSubmissionsForCourse,
+    getUsersExercisePointsForCourse,
+    ParticipantPerformance.getCourseAveragePerformance(courseId)
+  ];
+
+  return Promise.all(promises)
+    .spread((exercises, submissions, points, coursePerformance) => {
+      courseAveragePerformance = coursePerformance;
 
       const exerciseNameToId = getExerciseNameToId(exercises);
 
@@ -139,9 +193,14 @@ function getUsersProgressData({ userId, courseId, accessToken, query }) {
       return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
     })
     .then(groups => {
+      const participantAverage = getPointAverages(groups);
+
+      updateParticipantPerformance({ userId, courseId, average: participantAverage });
+
       return {
         groups,
-        average: getPointAverages(groups)
+        average: participantAverage,
+        courseAverage: courseAveragePerformance
       };
     });
 }

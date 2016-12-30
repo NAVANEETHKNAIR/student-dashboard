@@ -31,10 +31,10 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
     const { courseId, courseName, userId, accessToken } = options;
 
     const exerciseGroupsWithTimestamps = mapValues(options.exerciseGroups, interval => {
-      const [start, end] = interval;
+      const [start, end, exercisePrefix] = interval;
       const format = 'DD.MM.YYYY HH:mm';
 
-      return [moment.utc(start, format).unix(), moment.utc(end, format).unix()];
+      return [moment.utc(start, format).unix(), moment.utc(end, format).unix(), exercisePrefix || null];
     });
 
     const exerciseGroups = pickBy(exerciseGroupsWithTimestamps, interval => {

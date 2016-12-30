@@ -143,38 +143,12 @@ describe('Courses API', () => {
       },
       cb => {
         const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
-          .returns(Promise.resolve({ accessToken: '567', id: '2' }));
-
-        makeRequest()
-          .set('Authorization', 'Bearer 567')
-          .end((err, res) => {
-            expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION_WITH_GRADE);
-
-            tmcApiProfileStub.restore();
-            cb();
-          });
-      },
-      cb => {
-        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
           .returns(Promise.resolve({ accessToken: '678', id: '3' }));
 
         makeRequest()
           .set('Authorization', 'Bearer 678')
           .end((err, res) => {
             expect(res.body.type).toBe(visualizationTypes.TEXTUAL_VISUALIZATION);
-
-            tmcApiProfileStub.restore();
-            cb();
-          });
-      },
-      cb => {
-        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
-          .returns(Promise.resolve({ accessToken: '789', id: '4' }));
-
-        makeRequest()
-          .set('Authorization', 'Bearer 789')
-          .end((err, res) => {
-            expect(res.body.type).toBe(visualizationTypes.TEXTUAL_VISUALIZATION_WITH_GRADE);
 
             tmcApiProfileStub.restore();
             cb();
@@ -192,6 +166,19 @@ describe('Courses API', () => {
             tmcApiProfileStub.restore();
             cb();
           });
+      },
+      cb => {
+        const tmcApiProfileStub = sinon.stub(tmcApi, 'getProfile')
+          .returns(Promise.resolve({ accessToken: '891', id: '6' }));
+
+        makeRequest()
+          .set('Authorization', 'Bearer 891')
+          .end((err, res) => {
+            expect(res.body.type).toBe(visualizationTypes.RADAR_VISUALIZATION);
+
+            tmcApiProfileStub.restore();
+            cb();
+          })
       }
     ], done);
   });

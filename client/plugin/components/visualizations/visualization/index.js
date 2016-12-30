@@ -41,7 +41,7 @@ export class Visualization extends React.Component {
         {this.renderContent()}
 
         <div className={withClassPrefix('text-muted text-center text-sm m-t-1')}>
-          This visualization updates every two hours. <span className={withClassPrefix('link')} onClick={this.props.onUpdateVisualization}>Update the visualization now</span>.
+          This visualization updates every hour. <span className={withClassPrefix('link')} onClick={this.props.onUpdateVisualization}>Update the visualization now</span>.
         </div>
       </div>
     );

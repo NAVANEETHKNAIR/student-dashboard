@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 
 import withClassPrefix from 'utils/class-prefix';
+import round from 'lodash.round';
 import { selectActiveData } from 'selectors/visualization';
 import ProgressLabel from 'components/progress-label';
 
@@ -10,7 +11,7 @@ class DefaultVisualizationExplanation extends React.Component {
   renderPointLabel(points) {
     return (
       <ProgressLabel progress={points * 100}>
-        {points * 10} / 10 week points
+        {round(points * 10, 1)} / 10 group points
       </ProgressLabel>
     );
   }

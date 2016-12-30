@@ -1,3 +1,3 @@
 module.exports = {
-  GROUP_COUNT: 5
+  GROUP_COUNT: 3
 };

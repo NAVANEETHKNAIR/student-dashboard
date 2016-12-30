@@ -24,9 +24,7 @@ export class PluginHeader extends React.Component {
       </button>
     );
 
-    return !this.props.tutorialIsFinished
-      ? content
-      : null;
+    return content;
   }
 
   render() {

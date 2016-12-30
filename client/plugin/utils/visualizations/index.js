@@ -1,5 +1,6 @@
 import mapValues from 'map-values';
 import compose from 'compose-function';
+import round from 'lodash.round';
 
 import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
 import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE, gradeEstimateTypes } from 'constants/visualizations';
@@ -9,10 +10,10 @@ import withClassPrefix from 'utils/class-prefix';
 const categories = ['Starting', 'Exercise points', 'Earliness', 'Scheduling'];
 
 const categoryToExplanation = {
-  'Starting': 'How early you\'ve started solving exercises',
-  'Exercise points': 'How many exercise points you\'ve earned',
-  'Earliness': 'By average how far from the deadline you\'ve been solving exercises',
-  'Scheduling': 'On how many days you\'ve been solving exercises'
+  'Starting': 'How early student started solving exercises',
+  'Exercise points': 'How many exercise points student has earned',
+  'Earliness': 'By average how far from the deadline student has been solving exercises',
+  'Scheduling': 'On how many days student has been solving exercises'
 };
 
 function getTooltip() {
@@ -50,15 +51,15 @@ export function getRadarChart({ points, name, average }) {
     },
     series: [
       {
-        name: 'My average',
-        data: [average.starting * 10, average.exercises * 10, average.earliness * 10, average.scheduling * 10],
+        name: 'Course\'s average points',
+        data: [average.starting * 10, average.exercises * 10, average.earliness * 10, average.scheduling * 10].map(value => round(value, 1)),
         color: CHART_SECONDARY_COLOR,
-        fillOpacity: 0,
+        fillOpacity: 0.25,
         pointPlacement: 'on'
       },
       {
         name,
-        data: [points.starting.value * 10, points.exercises.value * 10, points.earliness.value * 10, points.scheduling.value * 10],
+        data: [points.starting.value * 10, points.exercises.value * 10, points.earliness.value * 10, points.scheduling.value * 10].map(value => round(value, 1)),
         color: CHART_PRIMARY_COLOR,
         fillOpacity: 0.5,
         pointPlacement: 'on'
@@ -71,7 +72,7 @@ export function getVisualization({ type, data }) {
   let charts = null;
 
   if([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE].includes(type)) {
-    charts = mapValues(data.groups, (value, key) => getRadarChart({ name: key, points: value, average: data.average }));
+    charts = mapValues(data.groups, (value, key) => getRadarChart({ name: `My points on ${key}`, points: value, average: data.courseAverage }));
   }
 
   const visualization = charts ? { charts, raw: data } : { raw: data };
