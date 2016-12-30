@@ -16,7 +16,7 @@ export const selectActiveExerciseGroupDateInterval = createSelector(
   }
 );
 
-export const selectOpenerIsVisible = state => !state.visualization.loading && state.visualization.type !== NO_VISUALIZATION && !state.plugin.isOpen;
+export const selectOpenerIsVisible = state => state.visualization.type && state.visualization.type !== NO_VISUALIZATION && !state.plugin.isOpen;
 
 export const selectActiveIsLastExerciseGroup = createSelector(
   selectExerciseGroupOrder,

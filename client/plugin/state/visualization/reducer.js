@@ -2,7 +2,7 @@ import { createReducer } from 'redux-create-reducer';
 
 import { getLastSeenVisualization } from 'utils/store';
 import { getVisualization } from 'utils/visualizations';
-import { OPEN_EXPLANATION, CLOSE_EXPLANATION, UPDATE_VISUALIZATION, LOAD_VISUALIZATION, LOAD_VISUALIZATION_FAIL, LOAD_VISUALIZATION_SUCCESS } from 'state/visualization';
+import { SET_UPDATE_TIMEOUT, OPEN_EXPLANATION, CLOSE_EXPLANATION, UPDATE_VISUALIZATION, LOAD_VISUALIZATION, LOAD_VISUALIZATION_FAIL, LOAD_VISUALIZATION_SUCCESS } from 'state/visualization';
 import { RESET_PLUGIN } from 'state/plugin';
 
 const initialState = {
@@ -11,7 +11,8 @@ const initialState = {
   isFresh: false,
   loading: true,
   error: false,
-  explanationIsOpen: false
+  explanationIsOpen: false,
+  updateTimeout: null
 };
 
 function isFresh(previousVisualization, visualization) {
@@ -51,5 +52,14 @@ export default createReducer(initialState, {
   },
   [CLOSE_EXPLANATION](state, action) {
     return Object.assign({}, state, { explanationIsOpen: false });
+  },
+  [SET_UPDATE_TIMEOUT](state, action) {
+    const currentTimeout = state.updateTimeout;
+
+    if(currentTimeout) {
+      clearTimeout(currentTimeout);
+    }
+
+    return Object.assign({}, state, { updateTimeout: action.timeout });
   }
 });

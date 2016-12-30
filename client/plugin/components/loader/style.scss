@@ -1,6 +1,33 @@
 .loader {
-  color: $colors__primary;
-  font-size: rem(2.5);
-  text-align: center;
-  padding: $spacing;
+  &--without-children {
+    padding: $spacing;
+    text-align: center;
+  }
+
+  &--with-children {
+    position: relative;
+  }
+
+  &__layer {
+    background-color: fade-out(white, 0.2);
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__children {
+    position: relative;
+    z-index: 0;
+  }
+
+  &__spinner {
+    color: $colors__primary;
+    font-size: rem(3);
+  }
 }

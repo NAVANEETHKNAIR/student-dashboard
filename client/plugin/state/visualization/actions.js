@@ -17,8 +17,9 @@ export const LOAD_VISUALIZATION_FAIL = 'VISUALIZATION_LOAD_VISUALIZATION_FAIL';
 export const LOAD_VISUALIZATION_SUCCESS = 'VISUALIZATION_LOAD_VISUALIZATION_SUCCESS'
 export const OPEN_EXPLANATION = 'VISUALIZATION_OPEN_EXPLANATION';
 export const CLOSE_EXPLANATION = 'VISUALIZATION_CLOSE_EXPLANATION';
+export const SET_UPDATE_TIMEOUT = 'SET_UPDATE_TIMEOUT';
 
-export function loadVisualization({ cache = true } = {}) {
+export function loadVisualization({ cache = true, actionify = true } = {}) {
   return (dispatch, getState) => {
     const {
       plugin: { exerciseGroups, isOpen: pluginIsOpen },
@@ -28,17 +29,24 @@ export function loadVisualization({ cache = true } = {}) {
 
     return dispatch(loadVisualizationRequest({ courseId, exerciseGroups, cache }))
       .then(response => {
-        if(!visualizationType) {
+        if(!visualizationType && actionify) {
           dispatch(createAction({ name: OPEN_PAGE }));
-        } else if(!cache) {
+        } else if(!cache && actionify) {
           dispatch(createAction({ name: UPDATE_VISUALIZATION_ACTION }));
         }
 
-        if(pluginIsOpen) {
-          setLastSeenVisualization(response.data);
+        if(pluginIsOpen && lget(response, 'payload.data.data')) {
+          setLastSeenVisualization(response.payload.data.data);
         }
       });
   }
+}
+
+export function setUpdateTimeout(timeout) {
+  return {
+    type: SET_UPDATE_TIMEOUT,
+    timeout
+  };
 }
 
 export function closeGradeEstimate() {

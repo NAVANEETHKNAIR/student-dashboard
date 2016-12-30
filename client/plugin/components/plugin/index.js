@@ -13,19 +13,22 @@ import Visualization from 'components/visualizations/visualization';
 import Icon from 'components/icon';
 
 export class Plugin extends React.Component {
+  renderError() {
+    return (
+      <div className={withClassPrefix('text-muted text-center')}>
+        Couldn't load the visualization from the server.
+        Try logging in again and <a className={withClassPrefix('link')} onClick={this.props.onReloadVisualization}>reloading the visualization</a>.
+      </div>
+    );
+  }
+
   renderVisualization() {
-    if(this.props.visualizationLoading) {
-      return <Loader/>;
-    } else if(!this.props.visualizationLoading && !this.props.visualizationError) {
-      return <Visualization/>;
-    } else {
-      return (
-        <div className={withClassPrefix('text-muted text-center')}>
-          Couldn't load the visualization from the server.
-          Try logging in again and <a className={withClassPrefix('link')} onClick={this.props.onReloadVisualization}>reloading the visualization</a>.
-        </div>
-      )
-    }
+    return (
+      <Loader loading={this.props.visualizationLoading}>
+        {this.props.visualizationError && this.renderError()}
+        {!this.props.visualizationError && !!this.props.visualizationData && <Visualization/>}
+      </Loader>
+    );
   }
 
   renderContent(style) {
@@ -68,6 +71,7 @@ export class Plugin extends React.Component {
 const mapStateToProps = state => ({
   visualizationLoading: state.visualization.loading,
   visualizationError: state.visualization.error,
+  visualizationData: state.visualization.data,
   courseName: state.course.name,
   isOpen: state.plugin.isOpen
 });

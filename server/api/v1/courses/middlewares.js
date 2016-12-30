@@ -45,7 +45,7 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
     const wrapToCache = getPromise => {
       const cacheOptions = { key: `visualization-${courseId}-${userId}-${visualizationType}`, ttl: '1h' };
 
-      return cache === 'kakka'
+      return cache === true
         ? cacheUtil.withCacheGetAndSet(getPromise, cacheOptions)
         : cacheUtil.withCacheSet(getPromise, cacheOptions);
     }
