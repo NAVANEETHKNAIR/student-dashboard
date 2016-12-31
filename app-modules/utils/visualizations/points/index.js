@@ -2,7 +2,11 @@ const _ = require('lodash');
 const moment = require('moment');
 
 function differenceInDays(dateA, dateB) {
-  return Math.round((+dateA - +dateB) / (1000 * 60 * 60 * 24));
+  return Math.abs(Math.round((+dateA - +dateB) / (1000 * 60 * 60 * 24)));
+}
+
+function dateIsBefore(dateA, dateB) {
+  return +dateA < +dateB;
 }
 
 function exerciseIdExists(exerciseIdToExercise) {
@@ -112,7 +116,7 @@ function getSchedulingPoints({ exercises, submissions }) {
   }, {});
 
   const daysToFinnish = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
-  const optimalDayCount = Math.round(daysToFinnish * 0.4);
+  const optimalDayCount = Math.round(daysToFinnish * 0.5);
   const submissionDatesCount = _.keys(submissionDates).length;
 
   return {
@@ -164,7 +168,9 @@ function getStartingPoints({ exercises, submissions }) {
   const submissionDelay = differenceInDays(new Date(earliestSubmission.created_at), new Date(submissionExercise.published));
 
   return {
-    value: Math.min(1, _.round(1 - submissionDelay / submissionExercise.daysToFinnish, 2)),
+    value: dateIsBefore(new Date(earliestSubmission.created_at), new Date(submissionExercise.published))
+      ? 1
+      : Math.min(1, _.round(1 - submissionDelay / submissionExercise.daysToFinnish, 2)),
     meta: {
       startingDate: new Date(earliestSubmission.created_at),
       bestStartingDate: new Date(submissionExercise.published)

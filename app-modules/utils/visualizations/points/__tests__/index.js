@@ -7,7 +7,7 @@ const points = require('../index.js');
 const isAround = (a, b, maxDistance = 0.2) => Math.abs(a - b) <= maxDistance;
 const toDate = dateString => moment(dateString, 'DD.MM').unix() * 1000;
 
-describe('Points', () => {
+describe.only('Points', () => {
 
   it('should calculate exercise points correctly', () => {
     const exercises = _.chain(new Array(5)).fill(0).map((e, i) => ({ exercise_id: i.toString(), available_points: _.fill(new Array(2), '1') })).value();
@@ -94,7 +94,7 @@ describe('Points', () => {
   it('should calculate scheduling points correctly', () => {
     const exercises = [
       {
-        exercise_id: '0',
+        id: '0',
         published: toDate('14.11'),
         deadline: toDate('20.11')
       }
@@ -109,9 +109,9 @@ describe('Points', () => {
 
     const pointsBad = points.getSchedulingPoints({ exercises, submissions: submissionsBad });
 
-    expect(pointsBad.value).toBe(0.5);
+    expect(pointsBad.value).toBe(0.33);
     expect(pointsBad.meta.workingDays).toBe(1);
-    expect(pointsBad.meta.bestWorkingDays).toBe(2);
+    expect(pointsBad.meta.bestWorkingDays).toBe(3);
 
     const submissionsOk = [
       ...submissionsBad,
@@ -129,7 +129,7 @@ describe('Points', () => {
 
     expect(pointsOk.value).toBe(1);
     expect(pointsOk.meta.workingDays).toBe(3);
-    expect(pointsOk.meta.bestWorkingDays).toBe(2);
+    expect(pointsOk.meta.bestWorkingDays).toBe(3);
 
     const submissionsGood = [
       ...submissionsOk,
@@ -146,7 +146,26 @@ describe('Points', () => {
 
     expect(pointsGood.value).toBe(1);
     expect(pointsGood.meta.workingDays).toBe(5);
-    expect(pointsOk.meta.bestWorkingDays).toBe(2);
+    expect(pointsOk.meta.bestWorkingDays).toBe(3);
+  });
+
+  it('should give full starting points if submission is before exercise has been published', () => {
+    const exercises = [
+      {
+        id: '0',
+        published: toDate('14.11'),
+        deadline: toDate('20.11')
+      }
+    ];
+
+    const submissions = [
+      {
+        exercise_id: '0',
+        created_at: toDate('13.11')
+      }
+    ];
+
+    expect(points.getStartingPoints({ exercises, submissions }).value).toBe(1);
   });
 
   it('should calculate correct starting points', () => {
