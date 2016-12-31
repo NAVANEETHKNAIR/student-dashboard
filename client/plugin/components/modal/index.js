@@ -30,7 +30,7 @@ class Modal extends React.Component {
         willEnter={() => ({ opacity: 0, top: 0 })}
         styles={
           this.props.isOpen
-            ? [{ key: 'tutorialModal', style: { opacity: spring(1), top: spring(100) } }]
+            ? [{ key: 'tutorialModal', style: { opacity: spring(1), top: spring(180) } }]
             : []
         }
       >
