@@ -38,12 +38,13 @@ function getVisualizationForUser({ getUserId, getCourseId, getAccessToken, getVi
 
     const { exerciseGroups, cache } = getQuery(req);
 
-    if(!exerciseGroups) {
-      return next(new errors.InvalidRequestError('Exercise groups are required'));
+    if(!exerciseGroups || typeof exerciseGroups !== 'object' || Object.keys(exerciseGroups).length === 0) {
+      return next(new errors.InvalidRequestError('Valid exercise groups are required'));
     }
 
     const wrapToCache = getPromise => {
-      const cacheOptions = { key: `visualization-${courseId}-${userId}-${visualizationType}`, ttl: '1h' };
+      const exerciseGroupNames = Object.keys(exerciseGroups).map(_.snakeCase).join(',');
+      const cacheOptions = { key: `${courseId}-${userId}-${visualizationType}-${exerciseGroupNames}`, ttl: '1h' };
 
       return cache === true
         ? cacheUtil.withCacheGetAndSet(getPromise, cacheOptions)
