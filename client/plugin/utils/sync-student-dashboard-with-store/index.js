@@ -71,12 +71,14 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
   }
 
   self.destroy = () => {
-    const body = document.querySelector('body');
-    const container = document.querySelector(`.${withClassPrefix('plugin-wrapper')}`);
-
     store.dispatch(resetPlugin());
 
-    body.removeChild(container);
+    setTimeout(() => {
+      const body = document.querySelector('body');
+      const container = document.querySelector(`.${withClassPrefix('plugin-wrapper')}`);
+
+      body.removeChild(container);
+    }, 1000);
 
     return self;
   }
