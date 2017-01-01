@@ -139,7 +139,7 @@ function getPointAverages(groups) {
     return sums;
   }, {});
 
-  return _.mapValues(groupSums, sum => _.round(sum / numberOfGroups, 1));
+  return _.mapValues(groupSums, sum => _.round(sum / numberOfGroups, 2));
 }
 
 function updateParticipantPerformance({ userId, courseId, average }) {
