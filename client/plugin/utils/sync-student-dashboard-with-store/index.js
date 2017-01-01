@@ -1,6 +1,7 @@
 import pickBy from 'lodash.pickby';
 import mapValues from 'map-values';
 import moment from 'moment';
+import { unmountComponentAtNode } from 'react-dom';
 
 import withClassPrefix from 'utils/class-prefix';
 import { setActiveExerciseGroup, setExerciseGroupOrder, setExerciseGroups, resetPlugin } from 'state/plugin';
@@ -71,14 +72,14 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
   }
 
   self.destroy = () => {
+    const body = document.querySelector('body');
+    const container = document.querySelector(`.${withClassPrefix('plugin-wrapper')}`);
+
+    unmountComponentAtNode(container);
+
+    body.removeChild(container);
+
     store.dispatch(resetPlugin());
-
-    setTimeout(() => {
-      const body = document.querySelector('body');
-      const container = document.querySelector(`.${withClassPrefix('plugin-wrapper')}`);
-
-      body.removeChild(container);
-    }, 1000);
 
     return self;
   }

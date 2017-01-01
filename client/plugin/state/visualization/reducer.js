@@ -24,7 +24,7 @@ function isFresh(previousVisualization, visualization) {
 
 export default createReducer(initialState, {
   [RESET_PLUGIN](state, action) {
-    return initialState;
+    return Object.assign({}, initialState);
   },
   [LOAD_VISUALIZATION](state, action) {
     return Object.assign({}, state, { loading: true });

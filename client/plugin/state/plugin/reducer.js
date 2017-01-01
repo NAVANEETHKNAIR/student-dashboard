@@ -12,7 +12,7 @@ const initialState = {
 
 export default createReducer(initialState, {
   [RESET_PLUGIN](state, action) {
-    return initialState;
+    return Object.assign({}, initialState);
   },
   [OPEN_PLUGIN](state, action) {
     return Object.assign({}, state, { isOpen: true, hasBeenOpened: true });

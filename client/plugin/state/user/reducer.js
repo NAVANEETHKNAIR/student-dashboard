@@ -12,7 +12,7 @@ const initialState = {
 
 export default createReducer(initialState, {
   [RESET_PLUGIN](state, action) {
-    return initialState;
+    return Object.assign({}, initialState);
   },
   [UPDATE_USER](state, action) {
     return Object.assign({}, state, action.update);
