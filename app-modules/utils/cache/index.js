@@ -41,7 +41,7 @@ function withCacheGetAndSet(getPromise, { key, ttl } = {}) {
       if(!cacheData) {
         return getPromise()
           .then(data => {
-            set(key, data);
+            set(key, data, { ttl });
 
             return data;
           });
