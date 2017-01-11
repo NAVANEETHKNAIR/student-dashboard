@@ -7,7 +7,7 @@ const points = require('../index.js');
 const isAround = (a, b, maxDistance = 0.2) => Math.abs(a - b) <= maxDistance;
 const toDate = dateString => moment(dateString, 'DD.MM').unix() * 1000;
 
-describe.only('Points', () => {
+describe('Points', () => {
 
   it('should calculate exercise points correctly', () => {
     const exercises = _.chain(new Array(5)).fill(0).map((e, i) => ({ exercise_id: i.toString(), available_points: _.fill(new Array(2), '1') })).value();
@@ -109,9 +109,9 @@ describe.only('Points', () => {
 
     const pointsBad = points.getSchedulingPoints({ exercises, submissions: submissionsBad });
 
-    expect(pointsBad.value).toBe(0.33);
+    expect(pointsBad.value).toBe(0.5);
     expect(pointsBad.meta.workingDays).toBe(1);
-    expect(pointsBad.meta.bestWorkingDays).toBe(3);
+    expect(pointsBad.meta.bestWorkingDays).toBe(2);
 
     const submissionsOk = [
       ...submissionsBad,
@@ -129,7 +129,7 @@ describe.only('Points', () => {
 
     expect(pointsOk.value).toBe(1);
     expect(pointsOk.meta.workingDays).toBe(3);
-    expect(pointsOk.meta.bestWorkingDays).toBe(3);
+    expect(pointsOk.meta.bestWorkingDays).toBe(2);
 
     const submissionsGood = [
       ...submissionsOk,
@@ -146,7 +146,7 @@ describe.only('Points', () => {
 
     expect(pointsGood.value).toBe(1);
     expect(pointsGood.meta.workingDays).toBe(5);
-    expect(pointsOk.meta.bestWorkingDays).toBe(3);
+    expect(pointsOk.meta.bestWorkingDays).toBe(2);
   });
 
   it('should give full starting points if submission is before exercise has been published', () => {

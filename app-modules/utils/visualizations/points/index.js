@@ -116,7 +116,7 @@ function getSchedulingPoints({ exercises, submissions }) {
   }, {});
 
   const daysToFinnish = differenceInDays(new Date(exercises[0].deadline), new Date(exercises[0].published));
-  const optimalDayCount = Math.round(daysToFinnish * 0.5);
+  const optimalDayCount = Math.round(daysToFinnish * 0.4);
   const submissionDatesCount = _.keys(submissionDates).length;
 
   return {
