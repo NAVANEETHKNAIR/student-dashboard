@@ -187,10 +187,11 @@ function getUsersProgressData({ userId, courseId, accessToken, query }) {
       return mergeGroupedExercisesAndSubmissions({ groupedExercises, groupedSubmissions });
     })
     .then(groups => {
-      return _.omit(groups, ['_']);
-    })
-    .then(groups => {
-      return _.mapValues(groups, ({ submissions, exercises }) => getPoints({ submissions, exercises, exerciseIdToPoints }));
+      return _.mapValues(exerciseGroups, (value, groupName) => {
+        const { submissions, exercises } = groups[groupName] || {};
+
+        return getPoints({ submissions: submissions || [], exercises: exercises || [], exerciseIdToPoints: exerciseIdToPoints || {} })
+      });
     })
     .then(groups => {
       const participantAverage = getPointAverages(groups);
