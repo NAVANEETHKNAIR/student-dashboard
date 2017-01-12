@@ -13,7 +13,7 @@ const nop = () => () => {};
 function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
   const self = {};
 
-  self.initialize = options => {
+  self.initialize = (options = {}) => {
     if(document.querySelector(withClassPrefix('plugin-loader'))) {
       throw new Error('Student dashboard already exists');
     }
@@ -42,7 +42,7 @@ function syncStudentDashboardWithStore(store, { onInitialize = nop() } = {}) {
       const [start, end] = interval;
       const now = Math.floor(+new Date() / 1000);
 
-      return start <= now;
+      return options.showAllExerciseGroups === true ? true : start <= now;
     });
 
     const groupNames = Object.keys(exerciseGroups);
