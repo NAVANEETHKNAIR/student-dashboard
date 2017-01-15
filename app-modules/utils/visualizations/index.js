@@ -143,13 +143,17 @@ function getPointAverages(groups) {
 }
 
 function updateParticipantPerformance({ userId, courseId, average }) {
+  if(_.sum(_.values(average || {})) === 0) {
+    return Promise.resolve(null);
+  }
+
   const participantPerformanceAttributes = Object.assign(
     {},
     average,
     { userId, courseId }
   );
 
-  ParticipantPerformance.updateParticipantsPerformance(participantPerformanceAttributes);
+  return ParticipantPerformance.updateParticipantsPerformance(participantPerformanceAttributes);
 }
 
 function getUsersProgressData({ userId, courseId, accessToken, query }) {
@@ -195,6 +199,8 @@ function getUsersProgressData({ userId, courseId, accessToken, query }) {
     })
     .then(groups => {
       const participantAverage = getPointAverages(groups);
+
+
 
       updateParticipantPerformance({ userId, courseId, average: participantAverage });
 
