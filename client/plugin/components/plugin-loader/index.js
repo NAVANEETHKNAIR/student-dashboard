@@ -7,6 +7,7 @@ import { loadVisualization } from 'state/visualization';
 import Plugin from 'components/plugin';
 import PluginOpener from 'components/plugin-opener';
 import TutorialModal from 'components/tutorial-modal';
+import SurveyModal from 'components/survey-modal';
 
 export class PluginLoader extends React.Component {
   componentDidMount() {
@@ -16,9 +17,9 @@ export class PluginLoader extends React.Component {
   render() {
     return (
       <div>
-        <Plugin/>
-        <PluginOpener/>
-        <TutorialModal/>
+        <Plugin />
+        <PluginOpener />
+        <TutorialModal />
       </div>
     );
   }

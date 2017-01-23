@@ -85,6 +85,7 @@
     "lodash.round": "^4.0.4",
     "map-values": "^1.0.1",
     "middleware-flow": "^0.8.0",
+    "mocha": "^3.2.0",
     "moment": "^2.14.1",
     "mongodb": "^2.2.16",
     "mongoose": "^4.5.10",

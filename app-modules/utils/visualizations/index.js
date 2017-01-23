@@ -67,7 +67,7 @@ function groupByPrefix({ dateGroups, string }) {
 function groupExercise({ exercise, dateGroups }) {
   const groupConfig = _.values(dateGroups) || [];
 
-  if(groupConfig[2]) {
+  if(groupConfig[0] && groupConfig[0][2]) {
     return groupByPrefix({ dateGroups, string: exercise.name });
   } else {
     return groupByDateInterval({ dateGroups, date: new Date(exercise.deadline) });

@@ -5,6 +5,8 @@ const participantMiddlewares = require('app-modules/middlewares/participants');
 const middlewares = require('./middlewares');
 const gradeEstimator = require('app-modules/utils/grade-estimator');
 
+router.use('/:courseId/survey-answers', require('./survey-answers'));
+
 router.post('/:courseId/visualization/user',
   tmcMiddlewares.getProfile(),
   participantMiddlewares.getGroup({

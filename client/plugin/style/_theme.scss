@@ -51,6 +51,14 @@
     text-align: center;
   }
 
+  .text-size-base {
+    font-size: $font__size !important;
+  }
+
+  .text-weight-normal {
+    font-weight: normal !important;
+  }
+
   .chart-tooltip {
     background-color: rgba(0, 0, 0, .75);
     color: white;

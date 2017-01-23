@@ -7,7 +7,10 @@ import {
   SCROLL_TEXTUAL_VISUALIZATION,
 } from 'constants/actions';
 
+import { NO_VISUALIZATION } from 'constants/visualizations';
+
 import { setLastSeenVisualization } from 'utils/store';
+import { fetchSurveyAnswer, openSurveyModal } from 'state/survey-modal';
 import { createAction } from 'state/actions';
 import * as actionConstants from 'constants/actions';
 
@@ -24,19 +27,26 @@ export function loadVisualization({ cache = true, actionify = true } = {}) {
     const {
       plugin: { exerciseGroups, isOpen: pluginIsOpen },
       course: { id: courseId },
-      visualization: { type: visualizationType }
+      visualization: { type: visualizationType },
     } = getState();
 
-    return dispatch(loadVisualizationRequest({ courseId, exerciseGroups, cache }))
-      .then(response => {
+    return Promise.all([
+      dispatch(loadVisualizationRequest({ courseId, exerciseGroups, cache })),
+      cache && actionify ? dispatch(fetchSurveyAnswer({ courseId })) : Promise.resolve({})
+    ])
+      .then(([visualizationResponse, surveyResponse]) => {
         if(!visualizationType && actionify) {
           dispatch(createAction({ name: OPEN_PAGE }));
         } else if(!cache && actionify) {
           dispatch(createAction({ name: UPDATE_VISUALIZATION_ACTION }));
         }
 
-        if(pluginIsOpen && lget(response, 'payload.data.data')) {
-          setLastSeenVisualization(response.payload.data.data);
+        if (lget(visualizationResponse, 'payload.data.type') !== NO_VISUALIZATION, lget(surveyResponse, 'error.response.status') === 404) {
+          dispatch(openSurveyModal());
+        }
+
+        if(pluginIsOpen && lget(visualizationResponse, 'payload.data.data')) {
+          setLastSeenVisualization(visualizationResponse.payload.data.data);
         }
       });
   }
