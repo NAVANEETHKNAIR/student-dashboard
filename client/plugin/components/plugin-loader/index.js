@@ -18,6 +18,7 @@ export class PluginLoader extends React.Component {
     return (
       <div>
         <Plugin />
+        <SurveyModal />
         <PluginOpener />
         <TutorialModal />
       </div>
