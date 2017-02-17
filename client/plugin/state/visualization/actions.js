@@ -41,7 +41,7 @@ export function loadVisualization({ cache = true, actionify = true } = {}) {
           dispatch(createAction({ name: UPDATE_VISUALIZATION_ACTION }));
         }
 
-        if (lget(visualizationResponse, 'payload.data.type') !== NO_VISUALIZATION, lget(surveyResponse, 'error.response.status') === 404) {
+        if (lget(visualizationResponse, 'payload.data.type') !== NO_VISUALIZATION && lget(surveyResponse, 'error.response.status') === 404 && !!window.SD_SHOW_SURVEY) {
           dispatch(openSurveyModal());
         }
 
