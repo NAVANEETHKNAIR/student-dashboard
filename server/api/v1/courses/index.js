@@ -13,7 +13,10 @@ router.post('/:courseId/visualization/user',
     getCourseId: req => req.params.courseId,
     getUserId: req => req.tmcProfile.id
   }),
-  middlewares.getVisualizationTypeForUser(req => req.group),
+  middlewares.getVisualizationTypeForUser({
+    getGroup: req => req.group,
+    getCourseId: req => req.params.courseId
+  }),
   middlewares.getVisualizationForUser({
     getUserId: req => req.tmcProfile.id,
     getCourseId: req => req.params.courseId,

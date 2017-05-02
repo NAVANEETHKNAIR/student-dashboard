@@ -1,21 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE, TEXTUAL_VISUALIZATION, TEXTUAL_VISUALIZATION_WITH_GRADE } from 'constants/visualizations';
+import { RADAR_VISUALIZATION, TEXTUAL_VISUALIZATION, RADAR_VISUALIZATION_PLAIN } from 'constants/visualizations';
 import withClassPrefix from 'utils/class-prefix';
 import { loadVisualization } from 'state/visualization';
 import RadarVisualization from 'components/visualizations/radar-visualization';
-import RadarVisualizationWithGrade from 'components/visualizations/radar-visualization-with-grade';
 import TextualVisualization from 'components/visualizations/textual-visualization';
-import TextualVisualizationWithGrade from 'components/visualizations/textual-visualization-with-grade';
 
 export class Visualization extends React.Component {
   static propTypes = {
     type: React.PropTypes.oneOf([
       RADAR_VISUALIZATION,
-      RADAR_VISUALIZATION_WITH_GRADE,
       TEXTUAL_VISUALIZATION,
-      TEXTUAL_VISUALIZATION_WITH_GRADE
+      RADAR_VISUALIZATION_PLAIN,
     ]).isRequired,
     onUpdateVisualization: React.PropTypes.func
   }
@@ -23,9 +20,8 @@ export class Visualization extends React.Component {
   renderContent() {
     const mapTypeToComponent = {
       [RADAR_VISUALIZATION]: RadarVisualization,
-      [RADAR_VISUALIZATION_WITH_GRADE]: RadarVisualizationWithGrade,
       [TEXTUAL_VISUALIZATION]: TextualVisualization,
-      [TEXTUAL_VISUALIZATION_WITH_GRADE]: TextualVisualizationWithGrade
+      [RADAR_VISUALIZATION_PLAIN]: RadarVisualization,
     };
 
     const Component = mapTypeToComponent[this.props.type];

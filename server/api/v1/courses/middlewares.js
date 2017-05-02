@@ -6,10 +6,12 @@ const errors = require('app-modules/errors');
 const visualizations = require('app-modules/utils/visualizations');
 const cacheUtil = require('app-modules/utils/cache');
 const Participant = require('app-modules/models/participant');
+const CourseConfig = require('app-modules/models/course-config');
 
-function getVisualizationTypeForUser(getGroup) {
+function getVisualizationTypeForUser({ getGroup, getCourseId }) {
   return (req, res, next) => {
-    let group = getGroup(req);
+    const group = getGroup(req);
+    const courseId = getCourseId(req);
 
     if(typeof group !== 'number') {
       return next(new errors.InvalidRequestError('Group is required'));
@@ -19,13 +21,22 @@ function getVisualizationTypeForUser(getGroup) {
       return next(new errors.InvalidRequestError(`Can't map group ${group} to a visualization`));
     }
 
-    req.visualizationType = [
+    const defaultVisualizations = [
       visualizationTypes.NO_VISUALIZATION,
       visualizationTypes.RADAR_VISUALIZATION,
       visualizationTypes.TEXTUAL_VISUALIZATION,
-    ][group];
+    ];
 
-    return next();
+    CourseConfig.findById(courseId)
+      .then(courseConfig => {
+        const visualizations = courseConfig && courseConfig.visualizations
+          ? courseConfig.visualizations
+          : defaultVisualizations;
+
+        req.visualizationType = visualizations[group];
+
+        next();
+      });
   }
 }
 

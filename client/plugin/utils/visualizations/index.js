@@ -3,7 +3,7 @@ import compose from 'compose-function';
 import round from 'lodash.round';
 
 import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
-import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE, gradeEstimateTypes } from 'constants/visualizations';
+import { RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE, RADAR_VISUALIZATION_PLAIN, gradeEstimateTypes } from 'constants/visualizations';
 import { withDefaults, makeWithTooltip } from 'utils/charts';
 import withClassPrefix from 'utils/class-prefix';
 
@@ -28,6 +28,16 @@ function getTooltip() {
 }
 
 export function getRadarChart({ points, name, average }) {
+  const averageSerie = average
+    ? {
+        name: 'Course\'s average points',
+        data: [average.starting * 10, average.exercises * 10, average.earliness * 10, average.scheduling * 10].map(value => round(value, 1)),
+        color: CHART_SECONDARY_COLOR,
+        fillOpacity: 0.25,
+        pointPlacement: 'on'
+      }
+    : null;
+
   return compose(makeWithTooltip(getTooltip), withDefaults)({
     chart: {
         polar: true,
@@ -50,13 +60,7 @@ export function getRadarChart({ points, name, average }) {
       tickInterval: 5
     },
     series: [
-      {
-        name: 'Course\'s average points',
-        data: [average.starting * 10, average.exercises * 10, average.earliness * 10, average.scheduling * 10].map(value => round(value, 1)),
-        color: CHART_SECONDARY_COLOR,
-        fillOpacity: 0.25,
-        pointPlacement: 'on'
-      },
+      averageSerie,
       {
         name,
         data: [points.starting.value * 10, points.exercises.value * 10, points.earliness.value * 10, points.scheduling.value * 10].map(value => round(value, 1)),
@@ -64,15 +68,17 @@ export function getRadarChart({ points, name, average }) {
         fillOpacity: 0.5,
         pointPlacement: 'on'
       }
-    ]
+    ].filter(s => !!s),
   });
 }
 
 export function getVisualization({ type, data }) {
   let charts = null;
 
-  if([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE].includes(type)) {
-    charts = mapValues(data.groups, (value, key) => getRadarChart({ name: `My points on ${key}`, points: value, average: data.courseAverage }));
+  if([RADAR_VISUALIZATION, RADAR_VISUALIZATION_WITH_GRADE, RADAR_VISUALIZATION_PLAIN].includes(type)) {
+    const average = type !== RADAR_VISUALIZATION_PLAIN ? data.courseAverage : null;
+
+    charts = mapValues(data.groups, (value, key) => getRadarChart({ name: `My points on ${key}`, points: value, average }));
   }
 
   const visualization = charts ? { charts, raw: data } : { raw: data };

@@ -6,7 +6,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'components/modal';
 import { closeTutorial } from 'state/tutorial';
 import { CHART_PRIMARY_COLOR, CHART_SECONDARY_COLOR } from 'constants/colors';
 import { selectExerciseGroupOrder, selectActiveExerciseGroup } from 'selectors/plugin';
-import { gradeEstimateTypes, radarVisualizationTypes, textualVisualizationTypes } from 'constants/visualizations';
+import { gradeEstimateTypes, radarVisualizationTypes, textualVisualizationTypes, RADAR_VISUALIZATION_PLAIN } from 'constants/visualizations';
 
 import Icon from 'components/icon';
 
@@ -51,6 +51,14 @@ export class TutorialModal extends React.Component {
   }
 
   renderRadarTutorial() {
+    const averageTutorial = this.props.visualizationType !== RADAR_VISUALIZATION_PLAIN
+      ? (
+        <p>
+          The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of the average of the points received by all the students in the {this.props.courseName} course.
+        </p>
+      )
+      : null;
+
     return (
       <div>
         <p>
@@ -59,9 +67,7 @@ export class TutorialModal extends React.Component {
           Press the "info" button (the button with <Icon name="info" /> icon) above the radar to see what the parameters mean and how they are calculated.
         </p>
 
-        <p>
-          The <strong style={{ color: CHART_SECONDARY_COLOR }}>gray</strong> area of the radar consists of the average of the points received by all the students in the {this.props.courseName} course.
-        </p>
+        {averageTutorial}
       </div>
     );
   }
