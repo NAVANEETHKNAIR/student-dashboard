@@ -7,11 +7,11 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "node ./node_modules/gulp/bin/gulp",
+    "dev": "./node_modules/.bin/gulp && webpack",
     "test": "node ./node_modules/gulp/bin/gulp test",
     "postinstall": "if [ $RUN_BUILD ]; then npm run-script build; fi",
     "clean-dist": "rm -rf ./dist",
-    "build": "npm run-script clean-dist && node ./node_modules/gulp/bin/gulp build"
+    "build": "npm run-script clean-dist && node ./node_modules/.bin/webpack && ./node_modules/.bin/gulp build"
   },
   "dependencies": {
     "app-module-path": "^1.1.0",
@@ -51,7 +51,7 @@
     "expect": "^1.20.2",
     "express": "~4.13.1",
     "express-handlebars": "^3.0.0",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^2.1.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-buster": "^1.1.0",
@@ -95,7 +95,7 @@
     "normalizr": "^2.2.1",
     "oauth2-server": "^2.4.1",
     "postcss-class-prefix": "^0.3.0",
-    "postcss-loader": "^1.3.3",
+    "postcss-loader": "1.2.2",
     "precss": "^1.4.0",
     "pretty-error": "^2.0.2",
     "pubsub-js": "^1.5.4",
@@ -119,7 +119,7 @@
     "reselect": "^2.5.3",
     "rewire": "^2.5.2",
     "rollbar": "^0.6.3",
-    "sass-loader": "^4.0.2",
+    "sass-loader": "^6.0.3",
     "scourjs": "^1.0.1",
     "serve-favicon": "~2.3.0",
     "sinon": "^1.17.6",
@@ -129,7 +129,7 @@
     "throng": "^4.0.0",
     "uglify-js": "^2.7.3",
     "validate.js": "^0.10.0",
-    "webpack": "^1.13.3",
+    "webpack": "^2.4.1",
     "webpack-stream": "^3.2.0"
   }
 }
