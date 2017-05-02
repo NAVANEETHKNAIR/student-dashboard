@@ -17,10 +17,6 @@ function getVisualizationTypeForUser({ getGroup, getCourseId }) {
       return next(new errors.InvalidRequestError('Group is required'));
     }
 
-    if(group < 0 || group >= Object.keys(visualizationTypes).length) {
-      return next(new errors.InvalidRequestError(`Can't map group ${group} to a visualization`));
-    }
-
     const defaultVisualizations = [
       visualizationTypes.NO_VISUALIZATION,
       visualizationTypes.RADAR_VISUALIZATION,
@@ -29,11 +25,15 @@ function getVisualizationTypeForUser({ getGroup, getCourseId }) {
 
     CourseConfig.findById(courseId)
       .then(courseConfig => {
-        const visualizations = courseConfig && courseConfig.visualizations
+        const visualizationPool = courseConfig && courseConfig.visualizations
           ? courseConfig.visualizations
           : defaultVisualizations;
 
-        req.visualizationType = visualizations[group];
+        if(group < 0 || group >= visualizationPool.length) {
+          return next(new errors.InvalidRequestError(`Can't map group ${group} to a visualization`));
+        }
+
+        req.visualizationType = visualizationPool[group];
 
         next();
       });
