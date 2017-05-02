@@ -20,7 +20,7 @@ module.exports = options => {
         },
         {
           test: /.scss$/,
-          loader: ExtractTextPlugin.extract('css-loader!postcss-loader!sass-loader')
+          loader: ExtractTextPlugin.extract(['css-loader', 'postcss-loader', 'sass-loader'])
         },
         {
             test: /\.json$/,
