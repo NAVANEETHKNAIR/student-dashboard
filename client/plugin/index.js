@@ -8,7 +8,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import ReactHighcharts from 'react-highcharts';
-import highchartsMore from 'highcharts-more';
 
 import './style';
 
@@ -17,8 +16,6 @@ import store from 'state/store';
 import syncStudentDashboardWithStore from 'utils/sync-student-dashboard-with-store';
 import withClassPrefix from 'utils/class-prefix';
 import { CLASS_PREFIX } from 'utils/class-prefix';
-
-highchartsMore(ReactHighcharts.Highcharts);
 
 window.StudentDashboard = syncStudentDashboardWithStore(store, {
   onInitialize: initialize
